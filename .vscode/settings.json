@@ -1,0 +1,8 @@
+{
+	"editor.formatOnSave": true,
+	"editor.fontFamily": "Fira Code Light, Consolas, 'Courier New', monospace",
+	"editor.fontSize": 12,
+	"debug.console.fontFamily": "Fira Code Light, Consolas, 'Courier New', monospace",
+	"terminal.integrated.fontFamily": "Fira Code Light, Consolas, 'Courier New', monospace",
+	"terminal.integrated.fontSize": 12
+}
