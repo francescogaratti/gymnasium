@@ -12,14 +12,14 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { LoginComponent } from './pages/login/login.component';
 
 const firebaseConfig = {
-	apiKey: 'AIzaSyCfIewpp1YDPGodxTimFiLqmI4u5KwfQbc',
-	authDomain: 'now-you-book.firebaseapp.com',
-	databaseURL: 'https://now-you-book.firebaseio.com',
-	projectId: 'now-you-book',
-	storageBucket: 'now-you-book.appspot.com',
-	messagingSenderId: '861332451705',
-	appId: '1:861332451705:web:723d46375c09a91f987fa8',
-	measurementId: 'G-8VHNST93GD',
+	apiKey: 'AIzaSyAX-eB7XUbfgRKxpq3y4nFnSkF2-iBv2Wk',
+	authDomain: 'ultra-gymnasium.firebaseapp.com',
+	databaseURL: 'https://ultra-gymnasium.firebaseio.com',
+	projectId: 'ultra-gymnasium',
+	storageBucket: 'ultra-gymnasium.appspot.com',
+	messagingSenderId: '13160087679',
+	appId: '1:13160087679:web:636c78361cf50f78773f4a',
+	measurementId: 'G-N3YW5GFN8D',
 };
 
 import { MatCardModule } from '@angular/material/card';
@@ -33,6 +33,7 @@ import { MenuComponent } from '@components/menu/menu.component';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { OrderComponent } from './pages/order/order.component';
 import { OverviewComponent } from './pages/overview/overview.component';
+import { CreateWorkoutRoutineComponent } from './pages/create-workout-routine/create-workout-routine.component';
 
 @NgModule({
 	declarations: [
@@ -45,6 +46,7 @@ import { OverviewComponent } from './pages/overview/overview.component';
 		MenuComponent,
 		OrderComponent,
 		OverviewComponent,
+		CreateWorkoutRoutineComponent,
 	],
 	imports: [
 		BrowserModule,

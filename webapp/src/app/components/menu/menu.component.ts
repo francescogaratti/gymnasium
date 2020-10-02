@@ -9,6 +9,7 @@ import { AuthService } from '@services/auth.service';
 })
 export class MenuComponent implements OnInit {
 	title: string = 'Gymnasium';
+	type: string = 'Trainer';
 	constructor(public router: Router, public auth: AuthService) {}
 
 	ngOnInit(): void {}
