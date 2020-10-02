@@ -1,0 +1,76 @@
+<mat-toolbar color="accent">
+	<span (click)="router.navigateByUrl('home')" style="cursor: pointer">
+		<h1>{{ title }}</h1>
+	</span>
+	<span class="fill-remaining-space"></span>
+	<span>
+		<!-- <div *ngIf="(auth.user$ | async)?.uid === auth.getAdminUid(); then admin"></div> -->
+		<ng-template #admin>
+			<button
+				color="primary"
+				mat-raised-button
+				(click)="router.navigateByUrl('admin')"
+				class="menu-tab"
+			>
+				Admin
+				<mat-icon>admin_panel_settings</mat-icon>
+			</button>
+		</ng-template>
+		<div *ngIf="auth.user$ | async; then authenticated; else guest"></div>
+		<ng-template #guest>
+			<button color="accent" mat-raised-button (click)="router.navigateByUrl('login')">
+				<i class="material-icons md-48">login</i>
+				Login
+			</button>
+		</ng-template>
+		<ng-template #authenticated>
+			<!-- <button color="primary" mat-button (click)="router.navigateByUrl('calendar')">
+				Calendar
+				<mat-icon color="primary">calendar_today</mat-icon>
+			</button>
+			<button color="primary" mat-button (click)="router.navigateByUrl('diary')">
+				Diary
+				<mat-icon color="primary">book</mat-icon>
+			</button> -->
+			<!-- <button
+				color="accent"
+				mat-raised-button
+				(click)="router.navigateByUrl('book')"
+				class="menu-tab"
+			>
+				Book
+				<mat-icon>shopping_cart</mat-icon>
+			</button> -->
+			<!-- <button
+				color="primary"
+				mat-raised-button
+				(click)="router.navigateByUrl('shirts')"
+				class="menu-tab"
+			>
+				My Shirts
+				<i class="material-icons md-48">favorite</i>
+			</button> -->
+			<!-- <button
+				color="primary"
+				mat-raised-button
+				(click)="router.navigateByUrl('contacts')"
+				class="menu-tab"
+			>
+				Contacts
+				<mat-icon>question_answer</mat-icon>
+			</button> -->
+			<button
+				color="accent"
+				mat-raised-button
+				(click)="router.navigateByUrl('personal-area')"
+			>
+				Personal Area
+				<mat-icon>person</mat-icon>
+			</button>
+			<button color="accent" mat-raised-button (click)="auth.signOut()" class="menu-tab">
+				<!-- Sign out -->
+				<mat-icon>exit_to_app</mat-icon>
+			</button>
+		</ng-template>
+	</span>
+</mat-toolbar>

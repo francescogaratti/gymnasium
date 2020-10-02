@@ -1,0 +1,13 @@
+<mat-card *ngIf="companyId" align="center">
+	<mat-card-title>{{ companyId }}</mat-card-title>
+	<mat-card-subtitle>{{ local }}</mat-card-subtitle>
+	<mat-card-content>
+		Your reservation number <br />
+		<strong>
+			{{ reservation_number }}
+		</strong>
+	</mat-card-content>
+	<mat-card-actions>
+		<button mat-raised-button color="accent" (click)="loadCompanyMenu(companyId)">Menù</button>
+	</mat-card-actions>
+</mat-card>
