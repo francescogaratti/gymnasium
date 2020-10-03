@@ -1,5 +1,137 @@
 <mat-card align="center">
 	<mat-card-title> Create a workout routine </mat-card-title>
 	<!-- <mat-card-actions>		
-	</mat-card-actions> -->
+    </mat-card-actions> -->
+	<mat-card-content>
+		<mat-horizontal-stepper [linear]="true" #stepper class="form">
+			<ng-template matStepperIcon="edit">
+				<mat-icon>insert_emoticon</mat-icon>
+			</ng-template>
+			<form [formGroup]="recordFormGroup">
+				<mat-step [stepControl]="date">
+					<ng-template matStepLabel>Choose the Day</ng-template>
+					<mat-form-field>
+						<mat-label>Choose a date</mat-label>
+						<input
+							matInput
+							formControlName="date"
+							[max]="maxDate"
+							[matDatepicker]="picker"
+						/>
+						<mat-error *ngIf="date.invalid && date.touched">
+							<span *ngIf="date.errors.required"> You must choose a valid date </span>
+							<span *ngIf="date.errors.matDatepickerMax">
+								You must choose a date before {{ maxDate.toLocaleDateString() }}
+							</span>
+						</mat-error>
+						<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+						<mat-datepicker #picker></mat-datepicker>
+					</mat-form-field>
+					<div>
+						<button
+							matTooltip="Set today as the date"
+							mat-stroked-button
+							(click)="date.setValue(maxDate)"
+						>
+							Today
+						</button>
+						<button
+							[disabled]="
+								date.value == null || (date.invalid && (date.dirty || date.touched))
+							"
+							mat-button
+							matStepperNext
+						>
+							Next
+						</button>
+					</div>
+				</mat-step>
+				<!-- <mat-step [stepControl]="emotion">
+					<ng-template matStepLabel>How you feel</ng-template>
+					<mat-form-field>
+						<mat-label>I'm feeling...</mat-label>
+						<mat-select formControlName="emotion">
+							<h3>
+								<mat-option *ngFor="let emotion of emotions" [value]="emotion">
+									{{ emotion.text | titlecase }} {{ emotion.emoji }}
+								</mat-option>
+							</h3>
+						</mat-select>
+						<mat-error *ngIf="emotion.invalid && emotion.touched"
+							>You must select the emotion</mat-error
+						>
+					</mat-form-field>
+					<div>
+						<button mat-button matStepperPrevious>Back</button>
+						<button
+							mat-button
+							matStepperNext
+							[disabled]="
+								emotion.value == null ||
+								(emotion.invalid && (emotion.dirty || emotion.touched))
+							"
+						>
+							Next
+						</button>
+					</div>
+				</mat-step> -->
+				<mat-step>
+					<ng-template matStepLabel>Add some notes</ng-template>
+					<p>Tell me more about it</p>
+					<mat-form-field class="full-width">
+						<mat-label>✍️ Write down your thoughts </mat-label>
+						<textarea
+							matInput
+							placeholder="Ex. Dear diary, today..."
+							formControlName="notes"
+						></textarea>
+					</mat-form-field>
+					<div>
+						<button mat-button matStepperPrevious>Back</button>
+						<button mat-button matStepperNext>Next</button>
+					</div>
+				</mat-step>
+				<mat-step>
+					<ng-template matStepLabel>Overview</ng-template>
+
+					<mat-form-field class="full-width">
+						<mat-label>📅 Day</mat-label>
+						<input matInput [value]="date.value?.toLocaleDateString()" disabled />
+						<mat-datepicker #overviewDate></mat-datepicker>
+					</mat-form-field>
+					<!-- <mat-form-field class="full-width">
+						<mat-label>❤️ You felted</mat-label>
+						<input
+							matInput
+							[value]="
+								emotion.value
+									? (emotion.value?.text | titlecase) + emotion.value?.emoji
+									: ''
+							"
+							disabled
+						/>
+					</mat-form-field> -->
+					<mat-form-field class="full-width">
+						<mat-label>✍️ Extra notes </mat-label>
+						<textarea
+							matInput
+							disabled
+							value="{{ recordFormGroup.value?.notes }}"
+						></textarea>
+					</mat-form-field>
+					<div>
+						<button
+							mat-raised-button
+							color="warn"
+							(click)="recordFormGroup.reset(); stepper.reset()"
+						>
+							Cancel
+						</button>
+						<button mat-button matStepperPrevious>Back</button>
+						<button mat-raised-button color="accent" (click)="newRecord()">Save</button>
+					</div>
+				</mat-step>
+			</form>
+		</mat-horizontal-stepper>
+	</mat-card-content>
 </mat-card>

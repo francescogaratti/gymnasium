@@ -1,9 +1,10 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
@@ -22,15 +23,36 @@ const firebaseConfig = {
 	measurementId: 'G-N3YW5GFN8D',
 };
 
-import { MatCardModule } from '@angular/material/card';
+/** @angular/material */
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInput, MatInputModule } from '@angular/material/input';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+
 import { HomeComponent } from './pages/home/home.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { PersonalAreaComponent } from './pages/personal-area/personal-area.component';
 import { BookComponent } from '@pages/book/book.component';
 import { MenuComponent } from '@components/menu/menu.component';
-import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { OrderComponent } from './pages/order/order.component';
 import { OverviewComponent } from './pages/overview/overview.component';
 import { CreateWorkoutRoutineComponent } from './pages/create-workout-routine/create-workout-routine.component';
@@ -52,16 +74,40 @@ import { CreateWorkoutRoutineComponent } from './pages/create-workout-routine/cr
 		BrowserModule,
 		AppRoutingModule,
 		BrowserAnimationsModule,
-		AngularFireModule.initializeApp(firebaseConfig),
-		AngularFirestoreModule,
-		AngularFireAuthModule,
-		AngularFireStorageModule,
 		MatToolbarModule,
 		MatButtonModule,
 		MatCardModule,
 		MatIconModule,
+		MatFormFieldModule,
+		FormsModule,
+		MatInputModule,
+		MatNativeDateModule,
+		MatDatepickerModule,
+		MatStepperModule,
+		ReactiveFormsModule,
+		AngularFireModule.initializeApp(firebaseConfig),
+		AngularFirestoreModule,
+		AngularFireAuthModule,
+		MatSelectModule,
+		MatProgressBarModule,
+		MatRadioModule,
+		MatTooltipModule,
+		MatSnackBarModule,
+		MatChipsModule,
+		MatDialogModule,
+		MatBadgeModule,
+		MatDividerModule,
+		MatGridListModule,
+		MatTableModule,
+		MatPaginatorModule,
+		MatSortModule,
 	],
-	providers: [],
+	providers: [
+		MatDatepickerModule,
+		MatInputModule,
+		FormsModule,
+		{ provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } },
+	],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}
