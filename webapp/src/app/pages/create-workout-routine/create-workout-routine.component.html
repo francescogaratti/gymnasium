@@ -8,6 +8,35 @@
 				<mat-icon>insert_emoticon</mat-icon>
 			</ng-template>
 			<form [formGroup]="workoutFormGroup">
+				<mat-step [stepControl]="client">
+					<ng-template matStepLabel>Client</ng-template>
+					<mat-form-field>
+						<mat-label>Choose a client</mat-label>
+						<mat-select formControlName="client">
+							<h3>
+								<mat-option *ngFor="let client of clients" [value]="client">
+									{{ client.displayName | titlecase }}
+								</mat-option>
+							</h3>
+						</mat-select>
+						<mat-error *ngIf="client.invalid && client.touched"
+							>You must select a client</mat-error
+						>
+					</mat-form-field>
+					<div>
+						<!-- <button mat-button matStepperPrevious>Back</button> -->
+						<button
+							mat-button
+							matStepperNext
+							[disabled]="
+								client.value == null ||
+								(client.invalid && (client.dirty || client.touched))
+							"
+						>
+							Next
+						</button>
+					</div>
+				</mat-step>
 				<mat-step [stepControl]="startingDate">
 					<ng-template matStepLabel>Starting date</ng-template>
 					<mat-form-field>
@@ -99,35 +128,6 @@
 						</button>
 					</div>
 				</mat-step>
-				<!-- <mat-step [stepControl]="emotion">
-					<ng-template matStepLabel>How you feel</ng-template>
-					<mat-form-field>
-						<mat-label>I'm feeling...</mat-label>
-						<mat-select formControlName="emotion">
-							<h3>
-								<mat-option *ngFor="let emotion of emotions" [value]="emotion">
-									{{ emotion.text | titlecase }} {{ emotion.emoji }}
-								</mat-option>
-							</h3>
-						</mat-select>
-						<mat-error *ngIf="emotion.invalid && emotion.touched"
-							>You must select the emotion</mat-error
-						>
-					</mat-form-field>
-					<div>
-						<button mat-button matStepperPrevious>Back</button>
-						<button
-							mat-button
-							matStepperNext
-							[disabled]="
-								emotion.value == null ||
-								(emotion.invalid && (emotion.dirty || emotion.touched))
-							"
-						>
-							Next
-						</button>
-					</div>
-				</mat-step> -->
 				<mat-step>
 					<ng-template matStepLabel>Add some notes</ng-template>
 					<p>Tell me more about it</p>
@@ -135,7 +135,7 @@
 						<mat-label>✍️ Write down your thoughts </mat-label>
 						<textarea
 							matInput
-							placeholder="Ex. Dear diary, today..."
+							placeholder="Ex. Do the appropriate stretching after every workout"
 							formControlName="notes"
 						></textarea>
 					</mat-form-field>
@@ -146,9 +146,12 @@
 				</mat-step>
 				<mat-step>
 					<ng-template matStepLabel>Overview</ng-template>
-
 					<mat-form-field class="full-width">
-						<mat-label>📅 Starting Day</mat-label>
+						<mat-label>👤 Client</mat-label>
+						<input matInput [value]="client.value?.displayName" disabled />
+					</mat-form-field>
+					<mat-form-field class="full-width">
+						<mat-label>📅 Starting Date</mat-label>
 						<input
 							matInput
 							[value]="startingDate.value?.toLocaleDateString()"
@@ -157,7 +160,7 @@
 						<mat-datepicker #overviewDate></mat-datepicker>
 					</mat-form-field>
 					<mat-form-field class="full-width">
-						<mat-label>📅 Ending Day</mat-label>
+						<mat-label>📅 Ending Date</mat-label>
 						<input matInput [value]="endingDate.value?.toLocaleDateString()" disabled />
 						<mat-datepicker #overviewDate></mat-datepicker>
 					</mat-form-field>

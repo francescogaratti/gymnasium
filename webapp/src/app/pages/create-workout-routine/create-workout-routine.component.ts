@@ -11,6 +11,7 @@ import {
 import { MatHorizontalStepper } from '@angular/material/stepper';
 import { AuthService } from '@services/auth.service';
 import { Workout } from '@models/workout';
+import { Client, mocks as clients } from '@models/client';
 // import { UtilsService } from '@services/utils.service';
 // import { Settings } from '@models/settings';
 
@@ -34,7 +35,7 @@ function checkDate(utc: string, incomplete: Date): boolean {
 })
 export class CreateWorkoutRoutineComponent implements OnInit {
 	workouts: Workout[] = [];
-
+	clients: Client[] = clients;
 	minDate: Date;
 	maxDate: Date;
 	workoutFormGroup: FormGroup;
@@ -54,15 +55,16 @@ export class CreateWorkoutRoutineComponent implements OnInit {
 		// 		.then((settings: Settings) => (this.emotions = settings.customEmotions));
 		// });
 		this.workoutFormGroup = this.fb.group({
+			client: [null, [Validators.required]],
 			startingDate: [null, [Validators.required]],
 			endingDate: [null, [Validators.required]],
 			notes: null,
 		});
 		this.workoutFormGroup.valueChanges.subscribe((w: Workout) => {
 			this.percentage = 0;
-			if (w) this.percentage += 33;
-			if (w) this.percentage += 34;
-			if (w) this.percentage += 33;
+			if (w.client) this.percentage += 33;
+			if (w.startingDate) this.percentage += 34;
+			if (w.endingDate) this.percentage += 33;
 		});
 		// let testworkout: workout = {
 		// 	date: 'Thu, 16 Apr 2020 22:00:00 GMT',
@@ -71,15 +73,15 @@ export class CreateWorkoutRoutineComponent implements OnInit {
 		// };
 		// this.findDate(testworkout);
 	}
+	get client() {
+		return this.workoutFormGroup.get('client');
+	}
 	get startingDate() {
 		return this.workoutFormGroup.get('startingDate');
 	}
 	get endingDate() {
 		return this.workoutFormGroup.get('endingDate');
 	}
-	// get emotion() {
-	// 	return this.recordFormGroup.get('emotion');
-	// }
 	get notes() {
 		return this.workoutFormGroup.get('notes');
 	}
@@ -109,8 +111,14 @@ export class CreateWorkoutRoutineComponent implements OnInit {
 	 * @description inserisce il nuovo record nel database
 	 */
 	newWorkout() {
-		// let workout: workout = this.workoutFormGroup.value;
-		// workout.date = new Date(workout.date).toUTCString();
+		let workout: Workout = this.workoutFormGroup.value;
+		workout.startingDate = new Date(workout.startingDate).toUTCString();
+		workout.endingDate = new Date(workout.endingDate).toUTCString();
+		console.info({ workout });
+		this.workouts.push(workout);
+		console.table(this.workouts);
+		this.workoutFormGroup.reset();
+		this.stepper.reset();
 		// this.auth
 		// 	.newworkout(workout) // TODO cambiare la variabile mocked con un valore contenuto nel AuthService senza bisogno di passarlo dal component
 		// 	.then((res: boolean) => {
