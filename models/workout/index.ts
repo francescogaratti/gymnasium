@@ -1,4 +1,6 @@
+import { Trainer } from '../trainer';
 export interface Workout {
-    id: string;
-    
+	id: string;
+	startDate: Date;
+	trainer: Trainer;
 }

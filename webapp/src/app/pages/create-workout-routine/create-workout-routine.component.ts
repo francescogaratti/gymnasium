@@ -7,9 +7,7 @@ import {
 	AbstractControl,
 	ValidatorFn,
 } from '@angular/forms';
-import { MatCalendarCellCssClasses } from '@angular/material/datepicker';
-// import { Emotion } from '@models/emotion/';
-// import { Record } from '@models/record/';
+// import { MatCalendarCellCssClasses } from '@angular/material/datepicker';
 import { MatHorizontalStepper } from '@angular/material/stepper';
 import { AuthService } from '@services/auth.service';
 import { Workout } from '@models/workout';
@@ -35,62 +33,55 @@ function checkDate(utc: string, incomplete: Date): boolean {
 	encapsulation: ViewEncapsulation.None,
 })
 export class CreateWorkoutRoutineComponent implements OnInit {
-	// records: Record[] = [];
-	// emotions: Emotion[];
+	workouts: Workout[] = [];
+
 	minDate: Date;
 	maxDate: Date;
-	startingDate: Date;
-	recordFormGroup: FormGroup;
+	workoutFormGroup: FormGroup;
 	percentage: number;
-	// dateClass: Function = (d: Date): MatCalendarCellCssClasses => {
-	// let record = this.records.find((record: Record) => {
-	// 	return checkDate(record.date, d);
-	// });
-	// let classes: string = '';
-	// if (checkDate(this.startingDate.toUTCString(), d)) classes += 'startingDate ';
-	// if (record) classes += record.emotion.text;
-	// return classes;
-	// };
 	@ViewChild('stepper') stepper: MatHorizontalStepper;
 	constructor(private fb: FormBuilder, public auth: AuthService) {
 		this.maxDate = new Date();
-		// this.emotions = this.utils.getEmotions();
+		this.minDate = new Date();
 	}
 
 	ngOnInit(): void {
-		// this.auth.records$.subscribe((records: Record[]) => {
-		// 	this.records = records;
+		// this.auth.workouts$.subscribe((workouts: workout[]) => {
+		// 	this.workouts = workouts;
 		// 	this.startingDate = new Date(this.auth.getUserInfo().metadata.creationTime);
 		// 	this.auth
 		// 		.readUserSettings()
 		// 		.then((settings: Settings) => (this.emotions = settings.customEmotions));
 		// });
-		this.recordFormGroup = this.fb.group({
-			date: [null, [Validators.required]],
-			// emotion: [null, [Validators.required]],
+		this.workoutFormGroup = this.fb.group({
+			startingDate: [null, [Validators.required]],
+			endingDate: [null, [Validators.required]],
 			notes: null,
 		});
-		this.recordFormGroup.valueChanges.subscribe((w: Workout) => {
+		this.workoutFormGroup.valueChanges.subscribe((w: Workout) => {
 			this.percentage = 0;
 			if (w) this.percentage += 33;
 			if (w) this.percentage += 34;
 			if (w) this.percentage += 33;
 		});
-		// let testRecord: Record = {
+		// let testworkout: workout = {
 		// 	date: 'Thu, 16 Apr 2020 22:00:00 GMT',
 		// 	emotion: { text: 'happy', emoji: '😄', color: '#95fc95' },
 		// 	notes: 'weila',
 		// };
-		// this.findDate(testRecord);
+		// this.findDate(testworkout);
 	}
-	get date() {
-		return this.recordFormGroup.get('date');
+	get startingDate() {
+		return this.workoutFormGroup.get('startingDate');
+	}
+	get endingDate() {
+		return this.workoutFormGroup.get('endingDate');
 	}
 	// get emotion() {
 	// 	return this.recordFormGroup.get('emotion');
 	// }
 	get notes() {
-		return this.recordFormGroup.get('notes');
+		return this.workoutFormGroup.get('notes');
 	}
 
 	/**
@@ -117,21 +108,21 @@ export class CreateWorkoutRoutineComponent implements OnInit {
 	/**
 	 * @description inserisce il nuovo record nel database
 	 */
-	newRecord() {
-		// let record: Record = this.recordFormGroup.value;
-		// record.date = new Date(record.date).toUTCString();
+	newWorkout() {
+		// let workout: workout = this.workoutFormGroup.value;
+		// workout.date = new Date(workout.date).toUTCString();
 		// this.auth
-		// 	.newRecord(record) // TODO cambiare la variabile mocked con un valore contenuto nel AuthService senza bisogno di passarlo dal component
+		// 	.newworkout(workout) // TODO cambiare la variabile mocked con un valore contenuto nel AuthService senza bisogno di passarlo dal component
 		// 	.then((res: boolean) => {
 		// 		if (res) {
-		// 			this.records.push(record); // mi salvo la copia locale
-		// 			this.auth.records$.next(this.records); // invio l'aggiornamento alle altre componenti
-		// 			this.utils.openSnackBar('New record inserted', 'Keep going 💪😉');
-		// 			this.recordFormGroup.reset(); // reset del form di inserimento
+		// 			this.workouts.push(workout); // mi salvo la copia locale
+		// 			this.auth.workouts$.next(this.workouts); // invio l'aggiornamento alle altre componenti
+		// 			this.utils.openSnackBar('New workout inserted', 'Keep going 💪😉');
+		// 			this.workoutFormGroup.reset(); // reset del form di inserimento
 		// 			this.stepper.reset();
 		// 		} else
 		// 			this.utils.openSnackBar(
-		// 				'Error while inserting new Record',
+		// 				'Error while inserting new workout',
 		// 				'Please try again 🙏'
 		// 			);
 		// 	})
@@ -139,5 +130,12 @@ export class CreateWorkoutRoutineComponent implements OnInit {
 		// 		console.error(err);
 		// 		this.utils.openSnackBar('Something went wrong', '💀💀💀');
 		// 	});
+	}
+
+	addMonths(date: Date, months: number): Date {
+		// console.info(date);
+		let newDate: Date = new Date();
+		newDate.setMonth(date.getMonth() + months);
+		return newDate;
 	}
 }
