@@ -192,6 +192,10 @@
 						<mat-datepicker #overviewDate></mat-datepicker>
 					</mat-form-field>
 					<mat-form-field class="full-width">
+						<mat-label>Attached File</mat-label>
+						<input matInput [value]="attachedFile.value?.name" disabled />
+					</mat-form-field>
+					<mat-form-field class="full-width">
 						<mat-label>✍️ Extra notes </mat-label>
 						<textarea
 							matInput
