@@ -40,6 +40,7 @@ export class CreateWorkoutRoutineComponent implements OnInit {
 	maxDate: Date;
 	workoutFormGroup: FormGroup;
 	percentage: number;
+	private selectedFile: File;
 	@ViewChild('stepper') stepper: MatHorizontalStepper;
 	constructor(private fb: FormBuilder, public auth: AuthService) {
 		this.maxDate = new Date();
@@ -58,6 +59,7 @@ export class CreateWorkoutRoutineComponent implements OnInit {
 			client: [null, [Validators.required]],
 			startingDate: [null, [Validators.required]],
 			endingDate: [null, [Validators.required]],
+			attachedFile: [null, [Validators.required]],
 			notes: null,
 		});
 		this.workoutFormGroup.valueChanges.subscribe((w: Workout) => {
@@ -81,6 +83,9 @@ export class CreateWorkoutRoutineComponent implements OnInit {
 	}
 	get endingDate() {
 		return this.workoutFormGroup.get('endingDate');
+	}
+	get attachedFile() {
+		return this.workoutFormGroup.get('attachedFile');
 	}
 	get notes() {
 		return this.workoutFormGroup.get('notes');
@@ -145,5 +150,19 @@ export class CreateWorkoutRoutineComponent implements OnInit {
 		let newDate: Date = new Date();
 		newDate.setMonth(date.getMonth() + months);
 		return newDate;
+	}
+
+	// uploadFile() {
+	// 	document.getElementById('upload-input').click();
+	// }
+
+	downloadFile() {
+		console.info('file', this.selectedFile);
+		console.info('attachedFile', this.attachedFile);
+	}
+	onFileSelect(event) {
+		this.selectedFile = event.target.files[0];
+		console.log(this.selectedFile.name);
+		this.attachedFile.setValue(this.selectedFile);
 	}
 }

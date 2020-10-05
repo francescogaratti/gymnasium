@@ -128,6 +128,33 @@
 						</button>
 					</div>
 				</mat-step>
+				<!-- attached file -->
+				<mat-step [stepControl]="attachedFile">
+					<ng-template matStepLabel>Upload file</ng-template>
+					<input
+						style="display: none"
+						type="file"
+						(change)="onFileSelect($event)"
+						#hiddenfileinput
+					/>
+					<button mat-button (click)="hiddenfileinput.click()">
+						{{ attachedFile.value ? attachedFile.value.name : 'Upload file' }}
+					</button>
+					<div>
+						<button mat-button matStepperPrevious>Back</button>
+						<button
+							[disabled]="
+								attachedFile.value == null ||
+								(attachedFile.invalid &&
+									(attachedFile.dirty || attachedFile.touched))
+							"
+							mat-button
+							matStepperNext
+						>
+							Next
+						</button>
+					</div>
+				</mat-step>
 				<mat-step>
 					<ng-template matStepLabel>Add some notes</ng-template>
 					<p>Tell me more about it</p>
