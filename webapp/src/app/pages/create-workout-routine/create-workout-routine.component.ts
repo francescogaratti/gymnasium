@@ -152,17 +152,28 @@ export class CreateWorkoutRoutineComponent implements OnInit {
 		return newDate;
 	}
 
-	// uploadFile() {
-	// 	document.getElementById('upload-input').click();
-	// }
+	async downloadFile() {
+		let file = this.selectedFile;
+		let fr: FileReader = new FileReader();
+		fr.readAsDataURL(file);
 
-	downloadFile() {
-		console.info('file', this.selectedFile);
-		console.info('attachedFile', this.attachedFile);
+		var blob: Blob = new Blob([file], { type: 'application/pdf' });
+
+		var objectURL = window.URL.createObjectURL(blob);
+
+		if (navigator.appVersion.toString().indexOf('.NET') > 0) {
+			window.navigator.msSaveOrOpenBlob(blob, this.selectedFile.name);
+		} else {
+			var link = document.createElement('a');
+			link.href = objectURL;
+			link.download = this.selectedFile.name;
+			document.body.appendChild(link);
+			link.click();
+			link.remove();
+		}
 	}
-	onFileSelect(event) {
+	onFileSelect(event: any) {
 		this.selectedFile = event.target.files[0];
-		console.log(this.selectedFile.name);
 		this.attachedFile.setValue(this.selectedFile);
 	}
 }

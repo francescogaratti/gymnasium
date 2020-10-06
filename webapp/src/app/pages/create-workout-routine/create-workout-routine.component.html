@@ -1,11 +1,11 @@
-<mat-card align="center">
+<mat-card align="center" [class.mat-elevation-z0]="true">
 	<mat-card-title> Create a workout routine </mat-card-title>
 	<!-- <mat-card-actions>		
     </mat-card-actions> -->
 	<mat-card-content>
 		<mat-horizontal-stepper [linear]="true" #stepper class="form">
 			<ng-template matStepperIcon="edit">
-				<mat-icon>insert_emoticon</mat-icon>
+				<mat-icon>fitness_center</mat-icon>
 			</ng-template>
 			<form [formGroup]="workoutFormGroup">
 				<mat-step [stepControl]="client">
@@ -24,7 +24,6 @@
 						>
 					</mat-form-field>
 					<div>
-						<!-- <button mat-button matStepperPrevious>Back</button> -->
 						<button
 							mat-button
 							matStepperNext
@@ -32,6 +31,8 @@
 								client.value == null ||
 								(client.invalid && (client.dirty || client.touched))
 							"
+							color="primary"
+							mat-raised-button
 						>
 							Next
 						</button>
@@ -59,6 +60,7 @@
 						<mat-datepicker #picker></mat-datepicker>
 					</mat-form-field>
 					<div>
+						<button mat-raised-button matStepperPrevious color="warn">Back</button>
 						<button
 							matTooltip="Set today as the date"
 							mat-stroked-button
@@ -74,6 +76,8 @@
 							"
 							mat-button
 							matStepperNext
+							color="primary"
+							mat-raised-button
 						>
 							Next
 						</button>
@@ -101,7 +105,7 @@
 						<mat-datepicker #pickerEnd></mat-datepicker>
 					</mat-form-field>
 					<div>
-						<button mat-button matStepperPrevious>Back</button>
+						<button mat-raised-button matStepperPrevious color="warn">Back</button>
 						<button
 							matTooltip="Ending date one month from now"
 							mat-stroked-button
@@ -121,16 +125,17 @@
 								endingDate.value == null ||
 								(endingDate.invalid && (endingDate.dirty || endingDate.touched))
 							"
-							mat-button
+							color="primary"
+							mat-raised-button
 							matStepperNext
 						>
 							Next
 						</button>
 					</div>
 				</mat-step>
-				<!-- attached file -->
+				<!-- workout program -->
 				<mat-step [stepControl]="attachedFile">
-					<ng-template matStepLabel>Upload file</ng-template>
+					<ng-template matStepLabel>Workout Program</ng-template>
 					<input
 						style="display: none"
 						type="file"
@@ -141,7 +146,7 @@
 						{{ attachedFile.value ? attachedFile.value.name : 'Upload file' }}
 					</button>
 					<div>
-						<button mat-button matStepperPrevious>Back</button>
+						<button mat-raised-button matStepperPrevious color="warn">Back</button>
 						<button
 							[disabled]="
 								attachedFile.value == null ||
@@ -150,6 +155,8 @@
 							"
 							mat-button
 							matStepperNext
+							color="primary"
+							mat-raised-button
 						>
 							Next
 						</button>
@@ -167,8 +174,8 @@
 						></textarea>
 					</mat-form-field>
 					<div>
-						<button mat-button matStepperPrevious>Back</button>
-						<button mat-button matStepperNext>Next</button>
+						<button mat-raised-button matStepperPrevious color="warn">Back</button>
+						<button mat-raised-button matStepperNext color="primary">Next</button>
 					</div>
 				</mat-step>
 				<mat-step>
@@ -192,8 +199,16 @@
 						<mat-datepicker #overviewDate></mat-datepicker>
 					</mat-form-field>
 					<mat-form-field class="full-width">
-						<mat-label>Attached File</mat-label>
-						<input matInput [value]="attachedFile.value?.name" disabled />
+						<mat-label>📄 Workout Program</mat-label>
+						<input
+							matInput
+							[value]="attachedFile.value?.name"
+							disabled
+							style="display: inline-block"
+						/>
+						<mat-icon (click)="downloadFile()" style="cursor: pointer" matSuffix
+							>get_app</mat-icon
+						>
 					</mat-form-field>
 					<mat-form-field class="full-width">
 						<mat-label>✍️ Extra notes </mat-label>
