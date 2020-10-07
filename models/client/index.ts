@@ -2,6 +2,8 @@ export interface Client {
 	id: string;
 	displayName: string;
 	fiscalCode: string;
+	address?: string;
+	address2?: string;
 }
 
 export const mocks: Client[] = [

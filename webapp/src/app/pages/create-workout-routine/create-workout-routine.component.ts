@@ -62,18 +62,6 @@ export class CreateWorkoutRoutineComponent implements OnInit {
 			attachedFile: [null, [Validators.required]],
 			notes: null,
 		});
-		this.workoutFormGroup.valueChanges.subscribe((w: Workout) => {
-			this.percentage = 0;
-			if (w.client) this.percentage += 33;
-			if (w.startingDate) this.percentage += 34;
-			if (w.endingDate) this.percentage += 33;
-		});
-		// let testworkout: workout = {
-		// 	date: 'Thu, 16 Apr 2020 22:00:00 GMT',
-		// 	emotion: { text: 'happy', emoji: '😄', color: '#95fc95' },
-		// 	notes: 'weila',
-		// };
-		// this.findDate(testworkout);
 	}
 	get client() {
 		return this.workoutFormGroup.get('client');

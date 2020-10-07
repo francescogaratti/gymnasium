@@ -56,6 +56,7 @@ import { MenuComponent } from '@components/menu/menu.component';
 import { OrderComponent } from './pages/order/order.component';
 import { OverviewComponent } from './pages/overview/overview.component';
 import { CreateWorkoutRoutineComponent } from './pages/create-workout-routine/create-workout-routine.component';
+import { AdminComponent } from './pages/admin/admin.component';
 
 @NgModule({
 	declarations: [
@@ -69,6 +70,7 @@ import { CreateWorkoutRoutineComponent } from './pages/create-workout-routine/cr
 		OrderComponent,
 		OverviewComponent,
 		CreateWorkoutRoutineComponent,
+		AdminComponent,
 	],
 	imports: [
 		BrowserModule,

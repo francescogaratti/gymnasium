@@ -5,5 +5,13 @@ export interface Workout {
 	startingDate: string;
 	endingDate: string;
 	trainer: Trainer;
+}
+
+export interface WorkoutOld {
+	id: string;
+	startingDate: string;
+	endingDate: string;
+	trainer: Trainer;
 	client: Client;
+	fileId: string;
 }
