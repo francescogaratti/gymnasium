@@ -19,6 +19,7 @@ import { Observable, of, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import { User } from '@models/user';
+import { Client } from '@models/client';
 
 // configuration for the ui
 const uiConfig = {
@@ -68,5 +69,47 @@ export class AuthService {
 
 	signOut() {
 		this.afAuth.signOut();
+	}
+
+	firestore() {
+		return this.afs;
+	}
+
+	public async readClients() {
+		console.info('📘 - read');
+		this.asyncOperation.next(true);
+		let res = await this.afs
+			.collection('clients')
+			// .doc(this.user.uid)
+			// .collection('records')
+			.get()
+			.toPromise()
+			.then(snapshot => {
+				let values: Client[] = [];
+				snapshot.forEach(doc => values.push(doc.data() as Client));
+				return values;
+			})
+			.catch(err => {
+				console.error(err);
+				return [];
+			});
+		this.asyncOperation.next(false);
+		console.info(res);
+		// this.records$.next(res); // send to subscribers
+	}
+
+	async newClient(client: Client): Promise<boolean> {
+		this.asyncOperation.next(true);
+		console.info('📗 - write');
+		let res: boolean = await this.afs
+			.collection('clients')
+			.add(client)
+			.then(() => true)
+			.catch(err => {
+				console.error(err);
+				return false;
+			});
+		this.asyncOperation.next(false);
+		return res;
 	}
 }

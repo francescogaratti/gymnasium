@@ -10,6 +10,7 @@ import {
 import { Client } from '@models/client';
 import { EmployeeType } from '@models/employee';
 import { Trainer } from '@models/trainer';
+import { AuthService } from '@services/auth.service';
 
 export function checkFiscalCode(nameRe: RegExp): ValidatorFn {
 	return (control: AbstractControl): { [key: string]: any } | null => {
@@ -56,7 +57,7 @@ export class AdminComponent implements OnInit {
 		this.cittaFormControl,
 	];
 
-	constructor() {}
+	constructor(private auth: AuthService) {}
 
 	ngOnInit(): void {
 		this.resetClient(this.client);
@@ -70,19 +71,16 @@ export class AdminComponent implements OnInit {
 			fiscalCode: this.codiceFiscaleFormControl.value,
 			address: this.indirizzoFormControl.value,
 			address2: this.indirizzo2FormControl.value,
+			city: this.cittaFormControl.value,
+			postalCode: this.codicePostaleFormControl.value,
 		};
 		console.info('Adding new client: ', client);
+		this.auth.newClient(client);
 		this.resetClient(client);
 	}
 
 	resetClient(client: Client): void {
-		client = {
-			id: null,
-			displayName: null,
-			fiscalCode: null,
-			address: null,
-			address2: null,
-		};
+		client = new Client();
 		this.formsControl.forEach((form: FormControl) => form.setValue(null));
 	}
 
@@ -98,5 +96,9 @@ export class AdminComponent implements OnInit {
 			shifts: [],
 			trainees: [],
 		};
+	}
+
+	showClients() {
+		this.auth.readClients();
 	}
 }

@@ -1,7 +1,7 @@
 <mat-card style="overflow: hidden" align="center" [class.mat-elevation-z0]="true">
 	<mat-card-title>Admin panel</mat-card-title>
 	<mat-card-content>
-		<mat-card [class.mat-elevation-z0]="true">
+		<mat-card [class.mat-elevation-z0]="true" style="float: left">
 			<mat-card-title style="margin-bottom: 20px">Add a new client</mat-card-title>
 			<mat-card-content>
 				<form class="example-form">
@@ -148,7 +148,12 @@
 							<td>
 								<mat-form-field class="example-full-width">
 									<mat-label>Città</mat-label>
-									<input matInput placeholder="Ex. Milano" />
+									<input
+										matInput
+										placeholder="Ex. Milano"
+										[formControl]="cittaFormControl"
+										required
+									/>
 								</mat-form-field>
 							</td>
 							<td>
@@ -160,6 +165,7 @@
 										maxlength="5"
 										placeholder="Ex. 36000"
 										[formControl]="codicePostaleFormControl"
+										required
 									/>
 									<mat-hint align="end"
 										>{{ postalCode.value.length }} / 5</mat-hint
@@ -196,17 +202,12 @@
 				</button>
 			</mat-card-actions>
 		</mat-card>
-		<!-- <mat-card [class.mat-elevation-z0]="true">
-			<mat-card-title>Add a new trainer</mat-card-title>
+		<mat-card [class.mat-elevation-z0]="true" style="float: left">
+			<mat-card-title>Get Clients</mat-card-title>
 			<mat-card-content></mat-card-content>
 			<mat-card-actions>
-				<button mat-raised-button color="warn" (click)="resetTrainer(trainer)">
-					Reset
-				</button>
-				<button mat-raised-button color="primary" (click)="addTrainer(trainer)">
-					Add Trainer
-				</button>
+				<button mat-raised-button color="warn" (click)="showClients()">Show Clients</button>
 			</mat-card-actions>
-		</mat-card> -->
+		</mat-card>
 	</mat-card-content>
 </mat-card>
