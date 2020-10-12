@@ -57,15 +57,11 @@ export class AdminComponent implements OnInit {
 		this.provinciaFormControl,
 		this.cittaFormControl,
 	];
-
-	displayedColumns: string[] = ['id', 'name','fiscalCode', 'address','remove','detail'];
-	clients:Client[] = [];
 	constructor(private auth: AuthService, private utils:UtilsService, public router:Router) {}
 
 	ngOnInit(): void {
 		this.resetClient(this.client);
 		this.resetTrainer(this.trainer);
-		this.auth.clients$.subscribe((clients:Client[])=>this.clients = clients);
 	}
 
 	addClient(client: Client): void {
@@ -105,24 +101,5 @@ export class AdminComponent implements OnInit {
 			shifts: [],
 			trainees: [],
 		};
-	}
-
-	showClients() {
-		this.auth.readClients();
-	}
-
-	remove(client:Client){
-		console.info("remove",client);
-		this.auth.deleteClient(client).then(res=>{
-			if(res) {
-				console.info("removed");
-				this.utils.openSnackBar("Il cliente "+client.displayName+" è stato correttamente rimosso",'👋👋'); 
-				this.auth.readClients();
-			}
-		});
-	}
-
-	detail(client:Client){
-		this.router.navigateByUrl("client?id="+client.id);
 	}
 }
