@@ -85,11 +85,20 @@ export class CreateWorkoutRoutineComponent implements OnInit {
 			fileId:this.attachedFile.value.name
 		};
 		console.info({ workout });
-		this.auth.newWorkoutOld(workout).then((value:boolean)=>{
-			if(value){
-				this.utils.openSnackBar("L'allenamento è stato salvato correttamente",'💪😉');
-				this.workoutFormGroup.reset();
-				this.stepper.reset();
+		this.auth.newWorkoutOld(workout).then((id:string)=>{
+			if(id){
+				let client:Client = this.clients.find((client:Client)=>workout.clientId == client.id);
+				this.auth.newClientWorkout(client,workout.id).then((value:boolean)=>{
+					if(value){
+						this.utils.openSnackBar("L'allenamento è stato salvato correttamente",'💪😉');
+						this.workoutFormGroup.reset();
+						this.stepper.reset();
+					}
+					else this.utils.openSnackBar("Si è verificato un errore durante il salvataggio dell'allenamento","Riprovare, per favore 🙏");
+				}).catch(err=>{
+					console.error(err);
+					this.utils.openSnackBar("Ops! Qualcosa è andato storto!","💀💀💀");
+				});
 			}
 			else this.utils.openSnackBar("Si è verificato un errore durante il salvataggio dell'allenamento","Riprovare, per favore 🙏");
 		}).catch(err=>{

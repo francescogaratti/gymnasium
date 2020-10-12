@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Client } from '@models/client';
+import { WorkoutOld } from '@models/workout';
 import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
 
@@ -27,6 +28,9 @@ export class ClientComponent implements OnInit {
 
   getClientWorkouts(){
     console.info("get client workouts");
+    this.auth.readClientWorkouts(this.client).then((workouts:WorkoutOld[])=>{
+      console.info(workouts);
+    }).catch(err=>console.error(err));
   }
 
 }

@@ -194,23 +194,82 @@ export class AuthService {
 
 	// workouts
 
-	async newWorkoutOld(workout:WorkoutOld):Promise<boolean>{
+	async newWorkoutOld(workout:WorkoutOld):Promise<string>{
 		this.asyncOperation.next(true);
 		console.info('📗 - write');
-		let res: boolean = await this.afs
+		let res:string = await this.afs
 			.collection('workouts')
 			.add(workout)
 			.then(async (docRef:DocumentReference) => {
-				// workout.id = docRef.id;
-				// let update_res = await this.updateWorkout(workout);
-				// return update_res;
-				return true;
+				workout.id = docRef.id;
+				// todo: add this workout to the client's workout
+				let update_workout_res = await this.updateWorkout(workout);
+				return update_workout_res ? workout.id:null;
 			})
+			.catch(err => {
+				console.error(err);
+				return null;
+			});
+		this.asyncOperation.next(false);
+		return res;
+	}
+
+	async updateWorkout(workout:WorkoutOld): Promise<boolean>{
+		this.asyncOperation.next(true);
+		console.info('📗 - update workout');
+		let res: boolean = await this.afs
+			.collection('workouts')
+			.doc(workout.id)
+			.set(workout, { merge: true })
+			.then(() => true)
 			.catch(err => {
 				console.error(err);
 				return false;
 			});
 		this.asyncOperation.next(false);
 		return res;
+	}
+
+	async newClientWorkout(client:Client, workoutId:string):Promise<boolean>{
+		this.asyncOperation.next(true);
+		let new_workout_ref: DocumentReference = this.afs.collection('workouts').doc(workoutId).ref;
+		if (client.workouts) client.workouts.push(new_workout_ref);
+		else client.workouts = [new_workout_ref];
+		console.info('📗 - append workout');
+		let res: boolean = await this.afs
+			.collection('clients')
+			.doc(client.id)
+			.set({ workouts: client.workouts }, { merge: true })
+			.then(() => true)
+			.catch(err => {
+				console.error(err);
+				return false;
+			});
+		this.asyncOperation.next(false);
+		return res;
+	}
+
+	public async readClientWorkouts(client:Client): Promise<WorkoutOld[]> {
+		this.asyncOperation.next(true);
+		let workouts:WorkoutOld[] = await this.afs
+			.collection('clients')
+			.doc(client.id)
+			.get()
+			.toPromise()
+			.then(async snapshot => {
+				let refs: DocumentReference[] = snapshot.get('workouts');
+				let promises: Promise<WorkoutOld>[] = [];
+				refs.forEach((ref: DocumentReference) =>
+					promises.push(ref.get().then(res => res.data() as WorkoutOld))
+				);
+				const shirts = await Promise.all(promises);
+				return shirts;
+			})
+			.catch(err => {
+				console.error(err);
+				return [];
+			});
+		this.asyncOperation.next(false);
+		return workouts;
 	}
 }
