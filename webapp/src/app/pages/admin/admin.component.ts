@@ -7,10 +7,12 @@ import {
 	ValidatorFn,
 	Validators,
 } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Client } from '@models/client';
 import { EmployeeType } from '@models/employee';
 import { Trainer } from '@models/trainer';
 import { AuthService } from '@services/auth.service';
+import { UtilsService } from '@services/utils.service';
 
 export function checkFiscalCode(nameRe: RegExp): ValidatorFn {
 	return (control: AbstractControl): { [key: string]: any } | null => {
@@ -21,7 +23,6 @@ export function checkFiscalCode(nameRe: RegExp): ValidatorFn {
 // '(?:[\\dLMNP-V]{2}(?:[A-EHLMPR-T](?:[04LQ][1-9MNP-V]|[15MR][\\dLMNP-V]|[26NS][0-8LMNP-U])|[DHPS][37PT][0L]|[ACELMRT][37PT][01LM]|[AC-EHLMPR-T][26NS][9V])|(?:[02468LNQSU][048LQU]|[13579MPRTV][26NS])B[26NS][9V])(?:[A-MZ][1-9MNP-V][\\dLMNP-V]{2}|[A-M][0L](?:[1-9MNP-V][\\dLMNP-V]|[0L][1-9MNP-V]))'
 const fiscalCodePattern: string =
 	'(?:[\\dLMNP-V]{2}(?:[A-EHLMPR-T](?:[04LQ][1-9MNP-V]|[15MR][\\dLMNP-V]|[26NS][0-8LMNP-U])|[DHPS][37PT][0L]|[ACELMRT][37PT][01LM]|[AC-EHLMPR-T][26NS][9V])|(?:[02468LNQSU][048LQU]|[13579MPRTV][26NS])B[26NS][9V])(?:[A-MZ][1-9MNP-V][\\dLMNP-V]{2}|[A-M][0L](?:[1-9MNP-V][\\dLMNP-V]|[0L][1-9MNP-V]))';
-
 @Component({
 	selector: 'app-admin',
 	templateUrl: './admin.component.html',
@@ -57,11 +58,14 @@ export class AdminComponent implements OnInit {
 		this.cittaFormControl,
 	];
 
-	constructor(private auth: AuthService) {}
+	displayedColumns: string[] = ['id', 'name','fiscalCode', 'address','remove','detail'];
+	clients:Client[] = [];
+	constructor(private auth: AuthService, private utils:UtilsService, public router:Router) {}
 
 	ngOnInit(): void {
 		this.resetClient(this.client);
 		this.resetTrainer(this.trainer);
+		this.auth.clients$.subscribe((clients:Client[])=>this.clients = clients);
 	}
 
 	addClient(client: Client): void {
@@ -75,8 +79,13 @@ export class AdminComponent implements OnInit {
 			postalCode: this.codicePostaleFormControl.value,
 		};
 		console.info('Adding new client: ', client);
-		this.auth.newClient(client);
-		this.resetClient(client);
+		this.auth.newClient(client).then((value:boolean)=>{
+			if(value){
+				this.utils.openSnackBar('Il cliente '+client.displayName+' è stato aggiunto con successo','😉');
+				this.resetClient(client);
+			}
+			else this.utils.openSnackBar('Attenzione, si è verificato un errore nel salvataggio del nuovo utente','Riprovare');
+		});
 	}
 
 	resetClient(client: Client): void {
@@ -100,5 +109,20 @@ export class AdminComponent implements OnInit {
 
 	showClients() {
 		this.auth.readClients();
+	}
+
+	remove(client:Client){
+		console.info("remove",client);
+		this.auth.deleteClient(client).then(res=>{
+			if(res) {
+				console.info("removed");
+				this.utils.openSnackBar("Il cliente "+client.displayName+" è stato correttamente rimosso",'👋👋'); 
+				this.auth.readClients();
+			}
+		});
+	}
+
+	detail(client:Client){
+		this.router.navigateByUrl("client?id="+client.id);
 	}
 }

@@ -3,6 +3,7 @@ import { Routes, RouterModule, UrlSegment } from '@angular/router';
 import { AuthGuard } from '@guards/auth.guard';
 import { LoggedGuard } from '@guards/logged.guard';
 import { AdminComponent } from '@pages/admin/admin.component';
+import { ClientComponent } from '@pages/client/client.component';
 import { CreateWorkoutRoutineComponent } from '@pages/create-workout-routine/create-workout-routine.component';
 import { HomeComponent } from '@pages/home/home.component';
 import { LoginComponent } from '@pages/login/login.component';
@@ -19,6 +20,7 @@ const routes: Routes = [
 	{ path: 'home', component: HomeComponent },
 	{ path: 'admin', component: AdminComponent },
 	{ path: 'personal-area', component: PersonalAreaComponent, canActivate: [AuthGuard] },
+	{ path: 'client', component: ClientComponent },
 	{
 		path: 'create-workout-routine',
 		component: CreateWorkoutRoutineComponent,

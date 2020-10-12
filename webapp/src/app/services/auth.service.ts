@@ -37,6 +37,8 @@ export class AuthService {
 	user: User;
 	ui: firebaseui.auth.AuthUI = new firebaseui.auth.AuthUI(auth()); // login firebase ui
 	asyncOperation: Subject<boolean> = new Subject<boolean>(); // signal to the progress bar
+
+	clients$:Subject<Client[]> = new Subject<Client[]>();
 	constructor(
 		private afAuth: AngularFireAuth,
 		private afs: AngularFirestore,
@@ -95,7 +97,7 @@ export class AuthService {
 			});
 		this.asyncOperation.next(false);
 		console.info(res);
-		// this.records$.next(res); // send to subscribers
+		this.clients$.next(res); // send to subscribers
 	}
 
 	async newClient(client: Client): Promise<boolean> {
@@ -109,6 +111,45 @@ export class AuthService {
 				console.error(err);
 				return false;
 			});
+		this.asyncOperation.next(false);
+		return res;
+	}
+
+	async deleteClient(client: Client): Promise<boolean> {
+		this.asyncOperation.next(true);
+		console.info('📘 - read');
+		let res: boolean = false;
+		// records reference
+		let clientsRef = this.afs.collection('clients').ref;
+		// prepare query
+		let query = clientsRef.where('fiscalCode', '==', client.fiscalCode);
+		// find doc id with date == record.date
+		let id: string = await query
+			.get()
+			.then(found => {
+				if (!found) return null;
+				else {
+					if (found.docs.length > 1)
+						console.warn('more than one records found with fiscalCode: ', client.fiscalCode);
+					return found.docs[0].id; // me fido
+				}
+			})
+			.catch(err => {
+				console.error(err);
+				return null;
+			});
+		if (id) {
+			console.info('📕 - delete');
+			// delete that doc
+			res = await clientsRef
+				.doc(id)
+				.delete()
+				.then(() => true) // unica possibilità di diventare "true"
+				.catch(err => {
+					console.error(err);
+					return false;
+				});
+		}
 		this.asyncOperation.next(false);
 		return res;
 	}
