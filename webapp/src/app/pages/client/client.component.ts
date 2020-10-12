@@ -13,6 +13,8 @@ import { UtilsService } from '@services/utils.service';
 export class ClientComponent implements OnInit {
   id:string;
   client:Client = null;
+  workouts:WorkoutOld[] = [];
+  displayedColumns: string[] = ['id', 'startingDate','endingDate', 'fileId'];
   constructor(private router:ActivatedRoute, private auth:AuthService, private utils:UtilsService) {
     this.id = this.router.snapshot.queryParams['id'];
    }
@@ -27,10 +29,9 @@ export class ClientComponent implements OnInit {
   }
 
   getClientWorkouts(){
-    console.info("get client workouts");
-    this.auth.readClientWorkouts(this.client).then((workouts:WorkoutOld[])=>{
-      console.info(workouts);
-    }).catch(err=>console.error(err));
+    this.auth.readClientWorkouts(this.client)
+      .then((workouts:WorkoutOld[])=>this.workouts = workouts)
+      .catch(err=>console.error(err));
   }
 
 }
