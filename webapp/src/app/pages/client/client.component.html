@@ -1,3 +1,14 @@
-<mat-card>
-    <mat-card-title>Client {{id}}</mat-card-title>
+<mat-card *ngIf="client">
+    <mat-card-title>Cliente: {{client.displayName}}</mat-card-title>
+    <mat-card-content>
+        <p>Id: {{client.id}}</p>
+        <p>Codice Fiscale: {{client.fiscalCode}}</p>
+        <br>
+        <p>Indirizzo: {{client.address}}</p>
+        <p>Città: {{client.city}}</p>
+        <p>Codice Postale: {{client.postalCode}}</p>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-raised-button color="primary" (click)="getClientWorkouts()">Workouts</button>
+    </mat-card-actions>
 </mat-card>

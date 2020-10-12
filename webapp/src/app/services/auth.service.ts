@@ -20,6 +20,7 @@ import { switchMap } from 'rxjs/operators';
 
 import { User } from '@models/user';
 import { Client } from '@models/client';
+import { Workout, WorkoutOld } from '@models/workout';
 
 // configuration for the ui
 const uiConfig = {
@@ -100,12 +101,49 @@ export class AuthService {
 		this.clients$.next(res); // send to subscribers
 	}
 
+	async readClient(id:string):Promise<Client>{
+		console.info('📘 - get client ' + id);
+		this.asyncOperation.next(true);
+		let client:Client = await this.afs
+			.collection('clients')
+			.doc(id)
+			.get()
+			.toPromise()
+			.then(snapshot => snapshot.data() as Client)
+			.catch(err => {
+				console.error(err);
+				return null;
+			});
+		this.asyncOperation.next(false);
+		return client;
+	}
+
 	async newClient(client: Client): Promise<boolean> {
 		this.asyncOperation.next(true);
 		console.info('📗 - write');
 		let res: boolean = await this.afs
 			.collection('clients')
 			.add(client)
+			.then(async (docRef:DocumentReference) => {
+				client.id = docRef.id;
+				let update_res = await this.updateClient(client);
+				return update_res;
+			})
+			.catch(err => {
+				console.error(err);
+				return false;
+			});
+		this.asyncOperation.next(false);
+		return res;
+	}
+
+	async updateClient(client:Client): Promise<boolean>{
+		this.asyncOperation.next(true);
+		console.info('📗 - update client');
+		let res: boolean = await this.afs
+			.collection('clients')
+			.doc(client.id)
+			.set(client, { merge: true })
 			.then(() => true)
 			.catch(err => {
 				console.error(err);
@@ -150,6 +188,28 @@ export class AuthService {
 					return false;
 				});
 		}
+		this.asyncOperation.next(false);
+		return res;
+	}
+
+	// workouts
+
+	async newWorkoutOld(workout:WorkoutOld):Promise<boolean>{
+		this.asyncOperation.next(true);
+		console.info('📗 - write');
+		let res: boolean = await this.afs
+			.collection('workouts')
+			.add(workout)
+			.then(async (docRef:DocumentReference) => {
+				// workout.id = docRef.id;
+				// let update_res = await this.updateWorkout(workout);
+				// return update_res;
+				return true;
+			})
+			.catch(err => {
+				console.error(err);
+				return false;
+			});
 		this.asyncOperation.next(false);
 		return res;
 	}

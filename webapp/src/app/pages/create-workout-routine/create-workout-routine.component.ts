@@ -10,8 +10,9 @@ import {
 // import { MatCalendarCellCssClasses } from '@angular/material/datepicker';
 import { MatHorizontalStepper } from '@angular/material/stepper';
 import { AuthService } from '@services/auth.service';
-import { Workout } from '@models/workout';
+import { Workout, WorkoutOld } from '@models/workout';
 import { Client, mocks as clients } from '@models/client';
+import { UtilsService } from '@services/utils.service';
 // import { UtilsService } from '@services/utils.service';
 // import { Settings } from '@models/settings';
 
@@ -34,27 +35,22 @@ function checkDate(utc: string, incomplete: Date): boolean {
 	encapsulation: ViewEncapsulation.None,
 })
 export class CreateWorkoutRoutineComponent implements OnInit {
-	workouts: Workout[] = [];
-	clients: Client[] = clients;
+	// workouts: Workout[] = [];
+	clients: Client[] = [];
 	minDate: Date;
 	maxDate: Date;
 	workoutFormGroup: FormGroup;
 	percentage: number;
 	private selectedFile: File;
 	@ViewChild('stepper') stepper: MatHorizontalStepper;
-	constructor(private fb: FormBuilder, public auth: AuthService) {
+	constructor(private fb: FormBuilder, public auth: AuthService, private utils:UtilsService) {
 		this.maxDate = new Date();
 		this.minDate = new Date();
+		this.auth.clients$.subscribe((clients:Client[])=>this.clients = clients);
 	}
-
+	
 	ngOnInit(): void {
-		// this.auth.workouts$.subscribe((workouts: workout[]) => {
-		// 	this.workouts = workouts;
-		// 	this.startingDate = new Date(this.auth.getUserInfo().metadata.creationTime);
-		// 	this.auth
-		// 		.readUserSettings()
-		// 		.then((settings: Settings) => (this.emotions = settings.customEmotions));
-		// });
+		this.auth.readClients();
 		this.workoutFormGroup = this.fb.group({
 			client: [null, [Validators.required]],
 			startingDate: [null, [Validators.required]],
@@ -79,62 +75,30 @@ export class CreateWorkoutRoutineComponent implements OnInit {
 		return this.workoutFormGroup.get('notes');
 	}
 
-	/**
-	 * @description ricerca se la data che si è scelta è già parte di un record
-	 * e in quel caso carica le informazioni precedenti, per sovrascriverle
-	 * @param record record in inserimento
-	 */
-	// findDate(record: Record) {
-	// 	console.info('findDate');
-	// 	if (!record || !record.date) return;
-	// 	record.date = new Date(record.date).toUTCString();
-	// 	let x: Record = this.records.find((r: Record) => r.date === record.date);
-	// 	if (x) {
-	// 		// console.info('found', x);
-	// 		// found
-	// 		this.recordFormGroup.setValue(
-	// 			{ date: x.date, emotion: x.emotion, notes: x.notes },
-	// 			{ emitEvent: false }
-	// 		);
-	// 		console.info(this.recordFormGroup);
-	// 	}
-	// }
-
-	/**
-	 * @description inserisce il nuovo record nel database
-	 */
 	newWorkout() {
-		let workout: Workout = this.workoutFormGroup.value;
-		workout.startingDate = new Date(workout.startingDate).toUTCString();
-		workout.endingDate = new Date(workout.endingDate).toUTCString();
+		let workout: WorkoutOld = {
+			id:null,
+			clientId:this.client.value,
+			trainerId:null,
+			startingDate:new Date(this.startingDate.value).toUTCString(),
+			endingDate: new Date(this.endingDate.value).toUTCString(),
+			fileId:this.attachedFile.value.name
+		};
 		console.info({ workout });
-		this.workouts.push(workout);
-		console.table(this.workouts);
-		this.workoutFormGroup.reset();
-		this.stepper.reset();
-		// this.auth
-		// 	.newworkout(workout) // TODO cambiare la variabile mocked con un valore contenuto nel AuthService senza bisogno di passarlo dal component
-		// 	.then((res: boolean) => {
-		// 		if (res) {
-		// 			this.workouts.push(workout); // mi salvo la copia locale
-		// 			this.auth.workouts$.next(this.workouts); // invio l'aggiornamento alle altre componenti
-		// 			this.utils.openSnackBar('New workout inserted', 'Keep going 💪😉');
-		// 			this.workoutFormGroup.reset(); // reset del form di inserimento
-		// 			this.stepper.reset();
-		// 		} else
-		// 			this.utils.openSnackBar(
-		// 				'Error while inserting new workout',
-		// 				'Please try again 🙏'
-		// 			);
-		// 	})
-		// 	.catch(err => {
-		// 		console.error(err);
-		// 		this.utils.openSnackBar('Something went wrong', '💀💀💀');
-		// 	});
+		this.auth.newWorkoutOld(workout).then((value:boolean)=>{
+			if(value){
+				this.utils.openSnackBar("L'allenamento è stato salvato correttamente",'💪😉');
+				this.workoutFormGroup.reset();
+				this.stepper.reset();
+			}
+			else this.utils.openSnackBar("Si è verificato un errore durante il salvataggio dell'allenamento","Riprovare, per favore 🙏");
+		}).catch(err=>{
+			console.error(err);
+			this.utils.openSnackBar("Ops! Qualcosa è andato storto!","💀💀💀");
+		});
 	}
 
 	addMonths(date: Date, months: number): Date {
-		// console.info(date);
 		let newDate: Date = new Date();
 		newDate.setMonth(date.getMonth() + months);
 		return newDate;
