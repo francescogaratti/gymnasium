@@ -1,9 +1,9 @@
 import { Client } from '@models/client';
+import {Exercise} from "@models/exercise";
 import { Trainer } from '@models/trainer';
 export interface Workout {
 	id: string;
-	startingDate: string;
-	endingDate: string;
+	exercises:Exercise[];
 	trainer: Trainer;
 }
 

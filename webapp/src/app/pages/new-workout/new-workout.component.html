@@ -1,283 +1,184 @@
 
 <mat-card [class.mat-elevation-z0]="true" align="center" style="float: left; overflow: hidden;" class="example-full-width">
     <mat-card-title style="margin-bottom: 20px">Aggiungi un nuovo cliente</mat-card-title>
-    <!-- <mat-card-content>
-        <form class="example-form">
-            <mat-form-field class="example-full-width">
-                <mat-label>Sede</mat-label>
-                <input matInput disabled value="Gymnasium #1" />
-            </mat-form-field>
-
+    <!-- list of exercises -->
+    <mat-card-content style="display: table; margin: auto;">
+        <form *ngFor="let exercise of exercises">
             <table class="example-full-width" cellspacing="0">
                 <tr>
                     <td>
                         <mat-form-field class="example-full-width">
-                            <mat-label>Nome</mat-label>
+                            <mat-label>Esercizio</mat-label>
                             <input
-                                #nome
+                                disabled
                                 matInput
-                                required
-                                placeholder="Mario"
-                                [formControl]="nomeFormControl"
+                                
+                                [value]="exercise.name"
+                                color="accent"
                             />
-                            <button
-                                mat-button
-                                *ngIf="nomeFormControl.value"
-                                matSuffix
-                                mat-icon-button
-                                aria-label="Clear"
-                                (click)="nomeFormControl.setValue(null)"
-                            >
-                                <mat-icon>close</mat-icon>
-                            </button>
                         </mat-form-field>
                     </td>
                     <td>
-                        <mat-form-field class="example-full-width">
-                            <mat-label>Cognome</mat-label>
+                        <mat-form-field class="number" color="accent">
+                            <mat-label>Sets</mat-label>
                             <input
-                                #cognome
                                 matInput
-                                required
-                                placeholder="Rossi"
-                                [formControl]="cognomeFormControl"
+                                
+                                type="number"
+                                [value]="exercise.sets"
+                                disabled
                             />
-                            <button
-                                mat-button
-                                *ngIf="cognomeFormControl.value"
-                                matSuffix
-                                mat-icon-button
-                                aria-label="Clear"
-                                (click)="cognomeFormControl.setValue(null)"
-                            >
-                                <mat-icon>close</mat-icon>
-                            </button>
-                        </mat-form-field>
-                    </td>
-                </tr>
-            </table>
-
-            <p>
-                <mat-form-field class="example-full-width">
-                    <mat-label>Codice Fiscale</mat-label>
-                    <input
-                        matInput
-                        #codiceFiscale
-                        maxlength="16"
-                        minlength="16"
-                        required
-                        [formControl]="codiceFiscaleFormControl"
-                    />
-                    <mat-hint align="end">{{ codiceFiscale.value.length }} / 16</mat-hint>
-                    <mat-error *ngIf="codiceFiscaleFormControl.hasError('required')">
-                        Codice fiscale <strong>obbligatorio</strong>
-                    </mat-error>
-                    <mat-error *ngIf="codiceFiscaleFormControl.hasError('minlength')">
-                        Minimo 16 caratteri
-                    </mat-error>
-                    <mat-error *ngIf="codiceFiscaleFormControl.hasError('maxlength')">
-                        Massimo 16 caratteri
-                    </mat-error>
-                    <mat-error *ngIf="codiceFiscaleFormControl.hasError('pattern')">
-                        Inserisci un codice fiscale <strong>valido</strong>
-                    </mat-error>
-                    <button
-                        mat-button
-                        *ngIf="codiceFiscaleFormControl.value"
-                        matSuffix
-                        mat-icon-button
-                        aria-label="Clear"
-                        (click)="codiceFiscaleFormControl.setValue(null)"
-                    >
-                        <mat-icon>close</mat-icon>
-                    </button>
-                </mat-form-field>
-            </p>
-
-            <p>
-                <mat-form-field class="example-full-width">
-                    <mat-label>Indirizzo</mat-label>
-                    <textarea
-                        #indirizzo
-                        matInput
-                        placeholder="Es. Via Roma 100"
-                        required
-                        [formControl]="indirizzoFormControl"
-                    ></textarea>
-                    <button
-                        mat-button
-                        *ngIf="indirizzoFormControl.value"
-                        matSuffix
-                        mat-icon-button
-                        aria-label="Clear"
-                        (click)="indirizzoFormControl.setValue(null)"
-                    >
-                        <mat-icon>close</mat-icon>
-                    </button>
-                </mat-form-field>
-                <mat-form-field class="example-full-width">
-                    <mat-label>Secondo Indirizzo</mat-label>
-                    <textarea
-                        #indirizzo2
-                        matInput
-                        [formControl]="indirizzo2FormControl"
-                    ></textarea>
-                    <button
-                        mat-button
-                        *ngIf="indirizzo2FormControl.value"
-                        matSuffix
-                        mat-icon-button
-                        aria-label="Clear"
-                        (click)="indirizzo2FormControl.setValue(null)"
-                    >
-                        <mat-icon>close</mat-icon>
-                    </button>
-                </mat-form-field>
-            </p>
-
-            <table class="example-full-width" cellspacing="0">
-                <tr>
-                    <td>
-                        <mat-form-field class="example-full-width">
-                            <mat-label>Stato</mat-label>
-                            <input matInput value="Italia" disabled />
                         </mat-form-field>
                     </td>
                     <td>
-                        <mat-form-field class="example-full-width">
-                            <mat-label>Città</mat-label>
+                        <mat-form-field class="number" color="accent">
+                            <mat-label>Reps</mat-label>
                             <input
                                 matInput
-                                placeholder="Ex. Milano"
-                                [formControl]="cittaFormControl"
-                                required
+                                
+                                type="number"
+                                [value]="exercise.reps"
+                                disabled
+                            />
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <mat-form-field class="number" color="accent">
+                            <mat-label>Min</mat-label>
+                            <input
+                                matInput
+                                
+                                type="number"
+                                [value]="exercise.rest.minutes"
+                                disabled
+                            />
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <mat-form-field class="number" color="accent">
+                            <mat-label>Sec</mat-label>
+                            <input
+                                matInput
+                                
+                                type="number"
+                                [value]="exercise.rest.seconds"
+                                disabled
                             />
                         </mat-form-field>
                     </td>
                     <td>
                         <mat-form-field class="example-full-width">
-                            <mat-label>Codice Postale</mat-label>
+                            <mat-label>Note</mat-label>
                             <input
                                 matInput
-                                #postalCode
-                                maxlength="5"
-                                placeholder="Ex. 36000"
-                                [formControl]="codicePostaleFormControl"
-                                required
+                                
+                                [value]="exercise.notes"
+                                color="accent"
+                                disabled
                             />
-                            <mat-hint align="end"
-                                >{{ postalCode.value.length }} / 5</mat-hint
-                            >
-                            <mat-error
-                                *ngIf="codicePostaleFormControl.hasError('required')"
-                            >
-                                Codice postale <strong>obbligatorio</strong>
-                            </mat-error>
                         </mat-form-field>
                     </td>
                 </tr>
             </table>
         </form>
-    </mat-card-content> -->
-    <mat-card-content style="display: table; margin: auto;">
         <form>
-        <table class="example-full-width" cellspacing="0">
-            <tr>
-                <td>
-                    <mat-form-field class="example-full-width">
-                        <mat-label>Esercizio</mat-label>
-                        <input
-                            #nome
-                            matInput
-                            required
-                            placeholder="Panca piana"
-                            [formControl]="esercizioFormControl"
-                            color="accent"
-                        />
-                        <button
-                            mat-button
-                            *ngIf="esercizioFormControl.value"
-                            matSuffix
-                            mat-icon-button
-                            aria-label="Clear"
-                            (click)="esercizioFormControl.setValue(null)"
-                        >
-                            <mat-icon>close</mat-icon>
-                        </button>
-                    </mat-form-field>
-                </td>
-                <td>
-                    <mat-form-field class="number" color="accent">
-                        <mat-label>Sets</mat-label>
-                        <input
-                            #sets
-                            matInput
-                            required
-                            type="number"
-                            placeholder="3"
-                            [formControl]="setsFormControl"
-                        />
-                    </mat-form-field>
-                </td>
-                <td>
-                    <mat-form-field class="number" color="accent">
-                        <mat-label>Reps</mat-label>
-                        <input
-                            #sets
-                            matInput
-                            required
-                            type="number"
-                            placeholder="10"
-                            [formControl]="repsFormControl"
-                        />
-                    </mat-form-field>
-                </td>
-                <td>
-                    <mat-form-field class="number" color="accent">
-                        <mat-label>Rest Min</mat-label>
-                        <input
-                            #restMin
-                            matInput
-                            required
-                            type="number"
-                            placeholder="1"
-                            [formControl]="restMinFormControl"
-                        />
-                    </mat-form-field>
-                </td>
-                <td>
-                    <mat-form-field class="number" color="accent">
-                        <mat-label>Rest Sec</mat-label>
-                        <input
-                            #restSec
-                            matInput
-                            required
-                            type="number"
-                            placeholder="30"
-                            [formControl]="restSecFormControl"
-                        />
-                    </mat-form-field>
-                </td>
-            </tr>
-        </table>
+            <table class="example-full-width" cellspacing="0">
+                <tr>
+                    <td>
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Esercizio</mat-label>
+                            <input
+                                matInput
+                                required
+                                placeholder="Panca piana"
+                                [formControl]="esercizioFormControl"
+                                color="accent"
+                            />
+                            <button
+                                mat-button
+                                *ngIf="esercizioFormControl.value"
+                                matSuffix
+                                mat-icon-button
+                                aria-label="Clear"
+                                (click)="esercizioFormControl.setValue(null)"
+                            >
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <mat-form-field class="number" color="accent">
+                            <mat-label>Sets</mat-label>
+                            <input
+                                matInput
+                                required
+                                type="number"
+                                placeholder="3"
+                                [formControl]="setsFormControl"
+                            />
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <mat-form-field class="number" color="accent">
+                            <mat-label>Reps</mat-label>
+                            <input
+                                matInput
+                                required
+                                type="number"
+                                placeholder="10"
+                                [formControl]="repsFormControl"
+                            />
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <mat-form-field class="number" color="accent">
+                            <mat-label>Rest Min</mat-label>
+                            <input
+                                matInput
+                                type="number"
+                                placeholder="1"
+                                [formControl]="restMinFormControl"
+                            />
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <mat-form-field class="number" color="accent">
+                            <mat-label>Rest Sec</mat-label>
+                            <input
+                                matInput
+                                type="number"
+                                placeholder="30"
+                                [formControl]="restSecFormControl"
+                            />
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Note</mat-label>
+                            <input
+                                matInput
+                                placeholder="Ex. Controllo esecuzione"
+                                [formControl]="notesFormControl"
+                                color="accent"
+                            />
+                            <button
+                                mat-button
+                                *ngIf="notesFormControl.value"
+                                matSuffix
+                                mat-icon-button
+                                aria-label="Clear"
+                                (click)="notesFormControl.setValue(null)"
+                            >
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </td>
+                </tr>
+            </table>
         </form>
     </mat-card-content>
     <mat-card-actions>
-        <!-- <button mat-raised-button color="warn" (click)="resetClient(client)">Reset</button>
-        <button
-            mat-raised-button
-            color="primary"
-            (click)="addClient(client)"
-            [disabled]="
-                nomeFormControl.invalid ||
-                cognomeFormControl.invalid ||
-                codiceFiscaleFormControl.invalid ||
-                codicePostaleFormControl.invalid ||
-                indirizzoFormControl.invalid
-            "
-        >
-            Aggiungi Cliente
-        </button> -->
         <button mat-raised-button color="accent" (click)="addExercise()">Aggiungi Esercizio</button>
+        <button mat-raised-button color="primary" (click)="createWorkout()">Crea Allenamento</button>
     </mat-card-actions>
 </mat-card>

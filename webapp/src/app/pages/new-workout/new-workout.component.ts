@@ -10,6 +10,7 @@ import {
 import { Router } from '@angular/router';
 import { Client } from '@models/client';
 import { EmployeeType } from '@models/employee';
+import { Exercise } from '@models/exercise';
 import { Trainer } from '@models/trainer';
 import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
@@ -30,95 +31,51 @@ const fiscalCodePattern: string =
 	encapsulation: ViewEncapsulation.None,
 })
 export class NewWorkoutComponent implements OnInit {
-	client: Client = null;
-	trainer: Trainer = null;
-
-	nomeFormControl: FormControl = new FormControl('', [Validators.required]);
-	cognomeFormControl: FormControl = new FormControl('', [Validators.required]);
-	codicePostaleFormControl: FormControl = new FormControl('', [Validators.required]);
-	codiceFiscaleFormControl: FormControl = new FormControl('', [
-		Validators.required,
-		Validators.maxLength(16),
-		Validators.minLength(16),
-		// Validators.pattern(fiscalCodePattern),
-	]);
-	indirizzoFormControl: FormControl = new FormControl('', [Validators.required]);
-	indirizzo2FormControl: FormControl = new FormControl('', []);
-	provinciaFormControl: FormControl = new FormControl('', [Validators.required]);
-  cittaFormControl: FormControl = new FormControl('', [Validators.required]);
   
-  // esercizio
-  esercizioFormControl:FormControl = new FormControl('',[Validators.required]);
-  setsFormControl:FormControl = new FormControl('',[Validators.required]);
-  repsFormControl:FormControl = new FormControl('',[Validators.required]);
-  restMinFormControl:FormControl = new FormControl('',[Validators.required]);
-  restSecFormControl:FormControl = new FormControl('',[Validators.required]);
+	new_exercise:Exercise;
+	exercises:Exercise[] = [];
 
-
+	esercizioFormControl:FormControl = new FormControl('',[Validators.required]);
+	setsFormControl:FormControl = new FormControl('',[Validators.required]);
+	repsFormControl:FormControl = new FormControl('',[Validators.required]);
+	restMinFormControl:FormControl = new FormControl('',[Validators.required]);
+	restSecFormControl:FormControl = new FormControl('',[Validators.required]);
+	notesFormControl:FormControl = new FormControl('',[]);
 
 
 	formsControl: FormControl[] = [
-		this.nomeFormControl,
-		this.cognomeFormControl,
-		this.codicePostaleFormControl,
-		this.codiceFiscaleFormControl,
-		this.indirizzoFormControl,
-		this.indirizzo2FormControl,
-		this.provinciaFormControl,
-		this.cittaFormControl,
+		this.esercizioFormControl,
+		this.setsFormControl,
+		this.repsFormControl,
+		this.restMinFormControl,
+		this.restSecFormControl,
+		this.notesFormControl
 	];
 	constructor(private auth: AuthService, private utils:UtilsService, public router:Router) {}
 
 	ngOnInit(): void {
-		this.resetClient(this.client);
-		this.resetTrainer(this.trainer);
 	}
 
-	addClient(client: Client): void {
-		client = {
-			id: String(Math.round(Math.random() * 1000000)),
-			displayName: this.nomeFormControl.value + ' ' + this.cognomeFormControl.value,
-			fiscalCode: this.codiceFiscaleFormControl.value,
-			address: this.indirizzoFormControl.value,
-			address2: this.indirizzo2FormControl.value,
-			city: this.cittaFormControl.value,
-			postalCode: this.codicePostaleFormControl.value,
-		};
-		console.info('Adding new client: ', client);
-		this.auth.newClient(client).then((value:boolean)=>{
-			if(value){
-				this.utils.openSnackBar('Il cliente '+client.displayName+' è stato aggiunto con successo','😉');
-				this.resetClient(client);
-			}
-			else this.utils.openSnackBar('Attenzione, si è verificato un errore nel salvataggio del nuovo utente','Riprovare');
-		});
+	newExercise(){
+		// todo: create new input row
+	}
+	addExercise(){
+		this.new_exercise = {
+			id:null,
+			name:this.esercizioFormControl.value,
+			reps:this.repsFormControl.value,
+			sets:this.setsFormControl.value,
+			rest: {
+				minutes:this.restMinFormControl.value,
+				seconds:this.restSecFormControl.value
+			},
+			notes: this.notesFormControl.value
+		}
+		this.exercises.push(this.new_exercise);
+		this.formsControl.forEach((f:FormControl)=>f.setValue(null));
 	}
 
-	resetClient(client: Client): void {
-		client = new Client();
-		this.formsControl.forEach((form: FormControl) => form.setValue(null));
+	createWorkout(){
+		console.info("create workout");
 	}
-
-	addTrainer(trainer: Trainer): void {
-		console.info('Adding new trainer: ', trainer);
-	}
-
-	resetTrainer(trainer: Trainer): void {
-		trainer = {
-			id: null,
-			displayName: null,
-			type: EmployeeType.Trainer,
-			shifts: [],
-			trainees: [],
-		};
-  }
-  
-  // exercises
-
-  newExercise(){
-    // todo: create new input row
-  }
-  addExercise(){
-    // todo: add new exercise to existing list
-  }
 }
