@@ -50,6 +50,11 @@ export class NewWorkoutComponent implements OnInit {
   // esercizio
   esercizioFormControl:FormControl = new FormControl('',[Validators.required]);
   setsFormControl:FormControl = new FormControl('',[Validators.required]);
+  repsFormControl:FormControl = new FormControl('',[Validators.required]);
+  restMinFormControl:FormControl = new FormControl('',[Validators.required]);
+  restSecFormControl:FormControl = new FormControl('',[Validators.required]);
+
+
 
 
 	formsControl: FormControl[] = [

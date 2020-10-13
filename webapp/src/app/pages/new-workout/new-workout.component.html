@@ -179,8 +179,8 @@
             </table>
         </form>
     </mat-card-content> -->
-    <mat-card-content>
-        <form class="example-form">
+    <mat-card-content style="display: table; margin: auto;">
+        <form>
         <table class="example-full-width" cellspacing="0">
             <tr>
                 <td>
@@ -192,6 +192,7 @@
                             required
                             placeholder="Panca piana"
                             [formControl]="esercizioFormControl"
+                            color="accent"
                         />
                         <button
                             mat-button
@@ -206,7 +207,7 @@
                     </mat-form-field>
                 </td>
                 <td>
-                    <mat-form-field class="half">
+                    <mat-form-field class="number" color="accent">
                         <mat-label>Sets</mat-label>
                         <input
                             #sets
@@ -216,16 +217,45 @@
                             placeholder="3"
                             [formControl]="setsFormControl"
                         />
-                        <button
-                            mat-button
-                            *ngIf="setsFormControl.value"
-                            matSuffix
-                            mat-icon-button
-                            aria-label="Clear"
-                            (click)="setsFormControl.setValue(null)"
-                        >
-                            <mat-icon>close</mat-icon>
-                        </button>
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field class="number" color="accent">
+                        <mat-label>Reps</mat-label>
+                        <input
+                            #sets
+                            matInput
+                            required
+                            type="number"
+                            placeholder="10"
+                            [formControl]="repsFormControl"
+                        />
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field class="number" color="accent">
+                        <mat-label>Rest Min</mat-label>
+                        <input
+                            #restMin
+                            matInput
+                            required
+                            type="number"
+                            placeholder="1"
+                            [formControl]="restMinFormControl"
+                        />
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field class="number" color="accent">
+                        <mat-label>Rest Sec</mat-label>
+                        <input
+                            #restSec
+                            matInput
+                            required
+                            type="number"
+                            placeholder="30"
+                            [formControl]="restSecFormControl"
+                        />
                     </mat-form-field>
                 </td>
             </tr>
