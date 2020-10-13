@@ -6,6 +6,7 @@ import { AdminComponent } from '@pages/admin/admin.component';
 import { ClientComponent } from '@pages/client/client.component';
 import { ClientsComponent } from '@pages/clients/clients.component';
 import { CreateWorkoutRoutineComponent } from '@pages/create-workout-routine/create-workout-routine.component';
+import { ExercisesComponent } from '@pages/exercises/exercises.component';
 import { HomeComponent } from '@pages/home/home.component';
 import { LoginComponent } from '@pages/login/login.component';
 import { NewWorkoutComponent } from '@pages/new-workout/new-workout.component';
@@ -25,6 +26,7 @@ const routes: Routes = [
 	{ path: 'personal-area', component: PersonalAreaComponent, canActivate: [AuthGuard] },
 	{ path: 'client', component: ClientComponent, canActivate:[AuthGuard] },
 	{ path: 'clients', component: ClientsComponent, canActivate:[AuthGuard] },
+	{ path: 'exercises',component:ExercisesComponent, canActivate:[AuthGuard]},
 	{
 		path: 'create-workout-routine',
 		component: CreateWorkoutRoutineComponent,
