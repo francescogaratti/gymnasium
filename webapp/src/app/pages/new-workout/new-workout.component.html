@@ -81,7 +81,7 @@
                 </tr>
             </table>
         </form>
-        <form>
+        <form *ngIf="edit_mode">
             <table class="example-full-width" cellspacing="0">
                 <tr>
                     <td>
@@ -175,7 +175,10 @@
                     </td>
                 </tr>
             </table>
-        </form>
+        </form>        
+        <button *ngIf="!edit_mode" mat-icon-button (click)="newExercise()">
+            <mat-icon style="cursor: pointer;">add_circle_outline</mat-icon>
+        </button>
     </mat-card-content>
     <mat-card-actions>
         <button mat-raised-button color="accent" (click)="addExercise()">Aggiungi Esercizio</button>

@@ -34,6 +34,7 @@ export class NewWorkoutComponent implements OnInit {
   
 	new_exercise:Exercise;
 	exercises:Exercise[] = [];
+	edit_mode:boolean = false;
 
 	esercizioFormControl:FormControl = new FormControl('',[Validators.required]);
 	setsFormControl:FormControl = new FormControl('',[Validators.required]);
@@ -58,6 +59,8 @@ export class NewWorkoutComponent implements OnInit {
 
 	newExercise(){
 		// todo: create new input row
+		console.info("new exercise");
+		this.edit_mode = true;
 	}
 	addExercise(){
 		this.new_exercise = {
@@ -73,6 +76,7 @@ export class NewWorkoutComponent implements OnInit {
 		}
 		this.exercises.push(this.new_exercise);
 		this.formsControl.forEach((f:FormControl)=>f.setValue(null));
+		this.edit_mode = false;
 	}
 
 	createWorkout(){

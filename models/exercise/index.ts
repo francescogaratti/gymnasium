@@ -20,5 +20,6 @@ export class Exercise implements Exercise{
             minutes:null,
             seconds:null
         };
+        this.notes=null;
     }
 }

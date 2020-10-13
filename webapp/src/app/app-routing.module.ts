@@ -13,13 +13,8 @@ import { NewWorkoutComponent } from '@pages/new-workout/new-workout.component';
 import { NotFoundComponent } from '@pages/not-found/not-found.component';
 import { PersonalAreaComponent } from '@pages/personal-area/personal-area.component';
 
-// export function bookMatch(url: UrlSegment[]) {
-// 	return url.length > 0 && url[0].path.match('book') ? { consumed: url } : null;
-// }
-
 const routes: Routes = [
 	{ path: 'login', component: LoginComponent, canActivate: [LoggedGuard] },
-	// { matcher: bookMatch, component: BookComponent },
 	{ path: 'new-workout', component:NewWorkoutComponent, canActivate:[AuthGuard]},
 	{ path: 'home', component: HomeComponent },
 	{ path: 'admin', component: AdminComponent, canActivate:[AuthGuard] },
