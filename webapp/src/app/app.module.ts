@@ -51,7 +51,6 @@ import { MatSortModule } from '@angular/material/sort';
 import { HomeComponent } from './pages/home/home.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { PersonalAreaComponent } from './pages/personal-area/personal-area.component';
-import { BookComponent } from '@pages/book/book.component';
 import { MenuComponent } from '@components/menu/menu.component';
 import {ProgressBarComponent} from "@components/progress-bar/progress-bar.component";
 import { OrderComponent } from './pages/order/order.component';
@@ -60,6 +59,7 @@ import { CreateWorkoutRoutineComponent } from './pages/create-workout-routine/cr
 import { AdminComponent } from './pages/admin/admin.component';
 import { ClientComponent } from './pages/client/client.component';
 import { ClientsComponent } from './pages/clients/clients.component';
+import { NewWorkoutComponent } from './pages/new-workout/new-workout.component';
 
 @NgModule({
 	declarations: [
@@ -68,7 +68,6 @@ import { ClientsComponent } from './pages/clients/clients.component';
 		HomeComponent,
 		NotFoundComponent,
 		PersonalAreaComponent,
-		BookComponent,
 		MenuComponent,
 		ProgressBarComponent,
 		OrderComponent,
@@ -77,6 +76,7 @@ import { ClientsComponent } from './pages/clients/clients.component';
 		AdminComponent,
 		ClientComponent,
 		ClientsComponent,
+		NewWorkoutComponent,
 	],
 	imports: [
 		BrowserModule,

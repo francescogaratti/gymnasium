@@ -11,12 +11,11 @@ import { UtilsService } from '@services/utils.service';
 })
 export class ClientsComponent implements OnInit {
   displayedColumns: string[] = ['id', 'name','fiscalCode', 'address','remove','detail'];
-	clients:Client[] = [];
+  clients:Client[] = [];
   constructor(private auth: AuthService, private utils:UtilsService,public router:Router) { }
 
   ngOnInit(): void {
 		this.auth.clients$.subscribe((clients:Client[])=>this.clients = clients);
-
   }
 
   showClients() {

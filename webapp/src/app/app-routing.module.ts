@@ -8,6 +8,7 @@ import { ClientsComponent } from '@pages/clients/clients.component';
 import { CreateWorkoutRoutineComponent } from '@pages/create-workout-routine/create-workout-routine.component';
 import { HomeComponent } from '@pages/home/home.component';
 import { LoginComponent } from '@pages/login/login.component';
+import { NewWorkoutComponent } from '@pages/new-workout/new-workout.component';
 import { NotFoundComponent } from '@pages/not-found/not-found.component';
 import { PersonalAreaComponent } from '@pages/personal-area/personal-area.component';
 
@@ -18,11 +19,12 @@ import { PersonalAreaComponent } from '@pages/personal-area/personal-area.compon
 const routes: Routes = [
 	{ path: 'login', component: LoginComponent, canActivate: [LoggedGuard] },
 	// { matcher: bookMatch, component: BookComponent },
+	{ path: 'new-workout', component:NewWorkoutComponent, canActivate:[AuthGuard]},
 	{ path: 'home', component: HomeComponent },
-	{ path: 'admin', component: AdminComponent },
+	{ path: 'admin', component: AdminComponent, canActivate:[AuthGuard] },
 	{ path: 'personal-area', component: PersonalAreaComponent, canActivate: [AuthGuard] },
-	{ path: 'client', component: ClientComponent },
-	{ path: 'clients', component: ClientsComponent },
+	{ path: 'client', component: ClientComponent, canActivate:[AuthGuard] },
+	{ path: 'clients', component: ClientsComponent, canActivate:[AuthGuard] },
 	{
 		path: 'create-workout-routine',
 		component: CreateWorkoutRoutineComponent,

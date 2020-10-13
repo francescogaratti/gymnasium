@@ -35,6 +35,15 @@
 			<button
 				color="accent"
 				mat-raised-button
+				(click)="router.navigateByUrl('new-workout')"
+				class="menu-tab"
+			>
+				New Workout
+				<mat-icon>add_circle_outline</mat-icon>
+			</button>
+			<button
+				color="accent"
+				mat-raised-button
 				(click)="router.navigateByUrl('create-workout-routine')"
 				class="menu-tab"
 			>

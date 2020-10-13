@@ -1,6 +1,9 @@
 
-		<mat-card [class.mat-elevation-z0]="true" style="float: left; margin-top: 30px;" class="example-full-width">
+		<mat-card [class.mat-elevation-z0]="true" align="center" style="float: left; margin-top: 30px;" class="example-full-width">
 			<mat-card-title>Clienti</mat-card-title>
+			<mat-card-actions>
+				<button mat-raised-button color="warn" (click)="showClients()">Mostra Clienti</button>
+			</mat-card-actions>
 			<mat-card-content><table *ngIf="clients && clients.length>0" mat-table [dataSource]="clients" class="mat-elevation-z8 half-width">
 
 				<!--- Note that these columns can be defined in any order.
@@ -51,7 +54,5 @@
 			  </table>
 			  
 			  </mat-card-content>
-			<mat-card-actions>
-				<button mat-raised-button color="warn" (click)="showClients()">Mostra Clienti</button>
-			</mat-card-actions>
+			
 		</mat-card>
