@@ -60,6 +60,7 @@ import { AdminComponent } from './pages/admin/admin.component';
 import { ClientComponent } from './pages/client/client.component';
 import { ClientsComponent } from './pages/clients/clients.component';
 import { NewWorkoutComponent } from './pages/new-workout/new-workout.component';
+import { ExercisesComponent } from './pages/exercises/exercises.component';
 
 @NgModule({
 	declarations: [
@@ -77,6 +78,7 @@ import { NewWorkoutComponent } from './pages/new-workout/new-workout.component';
 		ClientComponent,
 		ClientsComponent,
 		NewWorkoutComponent,
+		ExercisesComponent,
 	],
 	imports: [
 		BrowserModule,
