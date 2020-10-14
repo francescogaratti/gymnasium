@@ -10,7 +10,7 @@ import {
 import { Router } from '@angular/router';
 import { Client } from '@models/client';
 import { EmployeeType } from '@models/employee';
-import { Exercise } from '@models/exercise';
+import { Exercise, mock as exercises } from '@models/exercise';
 import { Trainer } from '@models/trainer';
 import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
@@ -33,8 +33,8 @@ const fiscalCodePattern: string =
 export class NewWorkoutComponent implements OnInit {
   
 	new_exercise:Exercise;
-	exercises:Exercise[] = [];
-	edit_mode:boolean = false;
+	before_changes_exercise:Exercise;
+	exercises:Exercise[] = exercises; // todo: remove mock
 
 	esercizioFormControl:FormControl = new FormControl('',[Validators.required]);
 	setsFormControl:FormControl = new FormControl('',[Validators.required]);
@@ -57,11 +57,6 @@ export class NewWorkoutComponent implements OnInit {
 	ngOnInit(): void {
 	}
 
-	newExercise(){
-		// todo: create new input row
-		console.info("new exercise");
-		this.edit_mode = true;
-	}
 	addExercise(){
 		this.new_exercise = {
 			id:null,
@@ -75,11 +70,40 @@ export class NewWorkoutComponent implements OnInit {
 			notes: this.notesFormControl.value
 		}
 		this.exercises.push(this.new_exercise);
+		this.cleanForm();
+	}
+	
+	cleanForm(){
 		this.formsControl.forEach((f:FormControl)=>f.setValue(null));
-		this.edit_mode = false;
 	}
 
 	createWorkout(){
 		console.info("create workout");
+	}
+
+	resetExercises(){
+		this.exercises = [];
+		this.cleanForm();
+	}
+	
+	removeExercise(exercise:Exercise){
+		this.exercises = this.exercises.filter((e:Exercise)=>e.id!==exercise.id);
+	}
+
+	editExercise(exercise:Exercise){
+		this.before_changes_exercise = JSON.parse(JSON.stringify(exercise));
+		exercise['edit'] = true;
+	}
+
+	saveChanges(exercise:Exercise){
+		this.before_changes_exercise = null;
+		exercise['edit'] = false;
+		console.info("save",exercise);
+	}
+
+	cancelChanges(exercise:Exercise){
+		exercise['edit'] = false;
+		exercise = this.before_changes_exercise;
+		console.info("cancel",exercise);
 	}
 }
