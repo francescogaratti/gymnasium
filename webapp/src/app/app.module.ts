@@ -53,8 +53,6 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { PersonalAreaComponent } from './pages/personal-area/personal-area.component';
 import { MenuComponent } from '@components/menu/menu.component';
 import {ProgressBarComponent} from "@components/progress-bar/progress-bar.component";
-import { OrderComponent } from './pages/order/order.component';
-import { OverviewComponent } from './pages/overview/overview.component';
 import { CreateWorkoutRoutineComponent } from './pages/create-workout-routine/create-workout-routine.component';
 import { AdminComponent } from './pages/admin/admin.component';
 import { ClientComponent } from './pages/client/client.component';
@@ -71,8 +69,6 @@ import { ExercisesComponent } from './pages/exercises/exercises.component';
 		PersonalAreaComponent,
 		MenuComponent,
 		ProgressBarComponent,
-		OrderComponent,
-		OverviewComponent,
 		CreateWorkoutRoutineComponent,
 		AdminComponent,
 		ClientComponent,
