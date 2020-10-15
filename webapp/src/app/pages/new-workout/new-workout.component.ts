@@ -52,7 +52,7 @@ export class NewWorkoutComponent implements OnInit {
 	}
 
 	private _filterClients(client: Client): Client[] {
-		return this.clients.filter((c: Client) => c.id.indexOf(client.id) === 0);
+		return this.clients.filter((c: Client) => c.displayName.indexOf(client.displayName) === 0);
 	}
 
 	changeClient(): void {
