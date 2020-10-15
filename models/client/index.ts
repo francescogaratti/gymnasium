@@ -6,7 +6,7 @@ export interface Client {
 	address2?: string;
 	city: string;
 	postalCode: string;
-	workouts?:any[];
+	workouts?: any[];
 }
 
 export class Client {

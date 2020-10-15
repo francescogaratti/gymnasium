@@ -1,9 +1,8 @@
-import { Client } from '@models/client';
-import {Exercise} from "@models/exercise";
-import { Trainer } from '@models/trainer';
+import { Exercise } from '../exercise';
+import { Trainer } from '../trainer';
 export interface Workout {
 	id: string;
-	exercises:Exercise[];
+	exercises: Exercise[];
 	trainer: Trainer;
 }
 
@@ -16,4 +15,4 @@ export interface WorkoutOld {
 	fileId: string;
 }
 
-export class WorkoutOld implements WorkoutOld{}
+export class WorkoutOld implements WorkoutOld {}
