@@ -39,7 +39,7 @@ export class AuthService {
 	ui: firebaseui.auth.AuthUI = new firebaseui.auth.AuthUI(auth()); // login firebase ui
 	asyncOperation: Subject<boolean> = new Subject<boolean>(); // signal to the progress bar
 
-	clients$:Subject<Client[]> = new Subject<Client[]>();
+	clients$: Subject<Client[]> = new Subject<Client[]>();
 	constructor(
 		private afAuth: AngularFireAuth,
 		private afs: AngularFirestore,
@@ -101,10 +101,10 @@ export class AuthService {
 		this.clients$.next(res); // send to subscribers
 	}
 
-	async readClient(id:string):Promise<Client>{
+	async readClient(id: string): Promise<Client> {
 		console.info('📘 - get client ' + id);
 		this.asyncOperation.next(true);
-		let client:Client = await this.afs
+		let client: Client = await this.afs
 			.collection('clients')
 			.doc(id)
 			.get()
@@ -124,7 +124,7 @@ export class AuthService {
 		let res: boolean = await this.afs
 			.collection('clients')
 			.add(client)
-			.then(async (docRef:DocumentReference) => {
+			.then(async (docRef: DocumentReference) => {
 				client.id = docRef.id;
 				let update_res = await this.updateClient(client);
 				return update_res;
@@ -137,7 +137,7 @@ export class AuthService {
 		return res;
 	}
 
-	async updateClient(client:Client): Promise<boolean>{
+	async updateClient(client: Client): Promise<boolean> {
 		this.asyncOperation.next(true);
 		console.info('📗 - update client');
 		let res: boolean = await this.afs
@@ -168,7 +168,10 @@ export class AuthService {
 				if (!found) return null;
 				else {
 					if (found.docs.length > 1)
-						console.warn('more than one records found with fiscalCode: ', client.fiscalCode);
+						console.warn(
+							'more than one records found with fiscalCode: ',
+							client.fiscalCode
+						);
 					return found.docs[0].id; // me fido
 				}
 			})
@@ -194,17 +197,17 @@ export class AuthService {
 
 	// workouts
 
-	async newWorkoutOld(workout:WorkoutOld):Promise<string>{
+	async newWorkoutOld(workout: WorkoutOld): Promise<string> {
 		this.asyncOperation.next(true);
 		console.info('📗 - write');
-		let res:string = await this.afs
+		let res: string = await this.afs
 			.collection('workouts')
 			.add(workout)
-			.then(async (docRef:DocumentReference) => {
+			.then(async (docRef: DocumentReference) => {
 				workout.id = docRef.id;
 				// todo: add this workout to the client's workout
 				let update_workout_res = await this.updateWorkout(workout);
-				return update_workout_res ? workout.id:null;
+				return update_workout_res ? workout.id : null;
 			})
 			.catch(err => {
 				console.error(err);
@@ -214,7 +217,7 @@ export class AuthService {
 		return res;
 	}
 
-	async updateWorkout(workout:WorkoutOld): Promise<boolean>{
+	async updateWorkout(workout: WorkoutOld): Promise<boolean> {
 		this.asyncOperation.next(true);
 		console.info('📗 - update workout');
 		let res: boolean = await this.afs
@@ -230,7 +233,7 @@ export class AuthService {
 		return res;
 	}
 
-	async newClientWorkout(client:Client, workoutId:string):Promise<boolean>{
+	async newClientWorkout(client: Client, workoutId: string): Promise<boolean> {
 		this.asyncOperation.next(true);
 		let new_workout_ref: DocumentReference = this.afs.collection('workouts').doc(workoutId).ref;
 		if (client.workouts) client.workouts.push(new_workout_ref);
@@ -249,9 +252,9 @@ export class AuthService {
 		return res;
 	}
 
-	public async readClientWorkouts(client:Client): Promise<WorkoutOld[]> {
+	public async readClientWorkouts(client: Client): Promise<WorkoutOld[]> {
 		this.asyncOperation.next(true);
-		let workouts:WorkoutOld[] = await this.afs
+		let workouts: WorkoutOld[] = await this.afs
 			.collection('clients')
 			.doc(client.id)
 			.get()

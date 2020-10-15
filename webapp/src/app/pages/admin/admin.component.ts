@@ -57,7 +57,7 @@ export class AdminComponent implements OnInit {
 		this.provinciaFormControl,
 		this.cittaFormControl,
 	];
-	constructor(private auth: AuthService, private utils:UtilsService, public router:Router) {}
+	constructor(private auth: AuthService, private utils: UtilsService, public router: Router) {}
 
 	ngOnInit(): void {
 		this.resetClient(this.client);
@@ -75,12 +75,18 @@ export class AdminComponent implements OnInit {
 			postalCode: this.codicePostaleFormControl.value,
 		};
 		console.info('Adding new client: ', client);
-		this.auth.newClient(client).then((value:boolean)=>{
-			if(value){
-				this.utils.openSnackBar('Il cliente '+client.displayName+' è stato aggiunto con successo','😉');
+		this.auth.newClient(client).then((value: boolean) => {
+			if (value) {
+				this.utils.openSnackBar(
+					'Il cliente ' + client.displayName + ' è stato aggiunto con successo',
+					'😉'
+				);
 				this.resetClient(client);
-			}
-			else this.utils.openSnackBar('Attenzione, si è verificato un errore nel salvataggio del nuovo utente','Riprovare');
+			} else
+				this.utils.openSnackBar(
+					'Attenzione, si è verificato un errore nel salvataggio del nuovo utente',
+					'Riprovare'
+				);
 		});
 	}
 

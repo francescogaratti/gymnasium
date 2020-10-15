@@ -5,36 +5,38 @@ import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
 
 @Component({
-  selector: 'app-clients',
-  templateUrl: './clients.component.html',
-  styleUrls: ['./clients.component.sass']
+	selector: 'app-clients',
+	templateUrl: './clients.component.html',
+	styleUrls: ['./clients.component.sass'],
 })
 export class ClientsComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'name','fiscalCode', 'address','remove','detail'];
-  clients:Client[] = [];
-  constructor(private auth: AuthService, private utils:UtilsService,public router:Router) { }
+	displayedColumns: string[] = ['id', 'name', 'fiscalCode', 'address', 'remove', 'detail'];
+	clients: Client[] = [];
+	constructor(private auth: AuthService, private utils: UtilsService, public router: Router) {}
 
-  ngOnInit(): void {
-		this.auth.clients$.subscribe((clients:Client[])=>this.clients = clients);
-  }
+	ngOnInit(): void {
+		this.auth.clients$.subscribe((clients: Client[]) => (this.clients = clients));
+	}
 
-  showClients() {
+	showClients() {
 		this.auth.readClients();
-  }
-  
-  remove(client:Client){
-		console.info("remove",client);
-		this.auth.deleteClient(client).then(res=>{
-			if(res) {
-				console.info("removed");
-				this.utils.openSnackBar("Il cliente "+client.displayName+" è stato correttamente rimosso",'👋👋'); 
+	}
+
+	remove(client: Client) {
+		console.info('remove', client);
+		this.auth.deleteClient(client).then(res => {
+			if (res) {
+				console.info('removed');
+				this.utils.openSnackBar(
+					'Il cliente ' + client.displayName + ' è stato correttamente rimosso',
+					'👋👋'
+				);
 				this.auth.readClients();
 			}
 		});
 	}
 
-	detail(client:Client){
-		this.router.navigateByUrl("client?id="+client.id);
+	detail(client: Client) {
+		this.router.navigateByUrl('client?id=' + client.id);
 	}
-
 }
