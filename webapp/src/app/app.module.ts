@@ -47,12 +47,13 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { HomeComponent } from './pages/home/home.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { PersonalAreaComponent } from './pages/personal-area/personal-area.component';
 import { MenuComponent } from '@components/menu/menu.component';
-import {ProgressBarComponent} from "@components/progress-bar/progress-bar.component";
+import { ProgressBarComponent } from '@components/progress-bar/progress-bar.component';
 import { CreateWorkoutRoutineComponent } from './pages/create-workout-routine/create-workout-routine.component';
 import { AdminComponent } from './pages/admin/admin.component';
 import { ClientComponent } from './pages/client/client.component';
@@ -107,6 +108,7 @@ import { ExercisesComponent } from './pages/exercises/exercises.component';
 		MatTableModule,
 		MatPaginatorModule,
 		MatSortModule,
+		MatAutocompleteModule,
 	],
 	providers: [
 		MatDatepickerModule,

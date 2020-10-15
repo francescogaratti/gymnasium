@@ -1,9 +1,13 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Client, mocks as clients } from '@models/client';
 import { Exercise, mock as exercises } from '@models/exercise';
 import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
+
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-new-workout',
@@ -23,6 +27,11 @@ export class NewWorkoutComponent implements OnInit {
 	restSecFormControl: FormControl = new FormControl('', [Validators.required]);
 	notesFormControl: FormControl = new FormControl('', []);
 
+	clients: Client[] = clients;
+	clientCtrl = new FormControl();
+	selected_client: Client = null;
+	filteredClients: Observable<Client[]>;
+
 	formsControl: FormControl[] = [
 		this.esercizioFormControl,
 		this.setsFormControl,
@@ -31,7 +40,25 @@ export class NewWorkoutComponent implements OnInit {
 		this.restSecFormControl,
 		this.notesFormControl,
 	];
-	constructor(private auth: AuthService, private utils: UtilsService, public router: Router) {}
+	constructor(private auth: AuthService, private utils: UtilsService, public router: Router) {
+		this.filteredClients = this.clientCtrl.valueChanges.pipe(
+			startWith(''),
+			map(client => (client ? this._filterClients(client) : this.clients.slice()))
+		);
+		this.clientCtrl.valueChanges.subscribe((client: Client) => {
+			this.selected_client = client;
+			console.info('selected client', this.selected_client);
+		});
+	}
+
+	private _filterClients(client: Client): Client[] {
+		return this.clients.filter((c: Client) => c.id.indexOf(client.id) === 0);
+	}
+
+	changeClient(): void {
+		this.selected_client = null;
+		this.clientCtrl.setValue(null);
+	}
 
 	ngOnInit(): void {}
 

@@ -7,6 +7,42 @@
 	>
 		<mat-card-content>
 			<app-clients></app-clients>
+			<div *ngIf="selected_client" align="center">
+				<img
+					[src]="selected_client?.photoUrl"
+					alt=""
+					style="border-radius: 100%; width: 100px; height: 100px"
+				/>
+				<h3>{{ selected_client.displayName }}</h3>
+				<p class="small">
+					<button mat-icon-button color="accent" (click)="changeClient()">
+						<mat-icon style="cursor: pointer">edit</mat-icon>
+					</button>
+				</p>
+			</div>
+			<form class="example-form">
+				<mat-form-field class="example-full-width" *ngIf="!selected_client">
+					<input
+						matInput
+						placeholder="Client"
+						aria-label="Client"
+						[matAutocomplete]="auto"
+						[formControl]="clientCtrl"
+					/>
+					<mat-autocomplete #auto="matAutocomplete">
+						<mat-option *ngFor="let client of filteredClients | async" [value]="client">
+							<img
+								class="example-option-img"
+								aria-hidden
+								[src]="client.photoUrl"
+								height="25"
+							/>
+							<span>{{ client.displayName }}</span> |
+							<small>CF : {{ client.fiscalCode }}</small>
+						</mat-option>
+					</mat-autocomplete>
+				</mat-form-field>
+			</form>
 		</mat-card-content>
 	</mat-card>
 	<mat-card
