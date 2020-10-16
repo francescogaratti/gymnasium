@@ -5,15 +5,14 @@
 		style="float: left; overflow: hidden; width: 30%; box-sizing: border-box"
 		class="example-full-width"
 	>
+		<mat-card-title>Scegli il Cliente</mat-card-title>
 		<mat-card-content>
-			<app-clients></app-clients>
 			<div *ngIf="selected_client" align="center">
 				<img
 					[src]="selected_client?.photoUrl"
 					alt=""
 					style="border-radius: 100%; width: 100px; height: 100px"
 				/>
-				<h3>{{ selected_client.displayName }}</h3>
 				<p class="small">
 					<button mat-icon-button color="accent" (click)="changeClient()">
 						<mat-icon style="cursor: pointer">edit</mat-icon>
@@ -21,16 +20,21 @@
 				</p>
 			</div>
 			<form class="example-form">
-				<mat-form-field class="example-full-width" *ngIf="!selected_client">
+				<mat-form-field class="example-full-width">
+					<mat-label>Cliente</mat-label>
 					<input
 						matInput
-						placeholder="Client"
+						placeholder="Digita per filtrare..."
 						aria-label="Client"
 						[matAutocomplete]="auto"
 						[formControl]="clientCtrl"
 					/>
 					<mat-autocomplete #auto="matAutocomplete">
-						<mat-option *ngFor="let client of filteredClients | async" [value]="client">
+						<mat-option
+							*ngFor="let client of filteredClients | async"
+							[value]="client.displayName"
+							(onSelectionChange)="selectedValueChange(client)"
+						>
 							<img
 								class="example-option-img"
 								aria-hidden

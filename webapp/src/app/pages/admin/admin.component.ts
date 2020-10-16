@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import {
 	AbstractControl,
+	Form,
 	FormBuilder,
 	FormControl,
 	FormGroup,
@@ -42,6 +43,7 @@ export class AdminComponent implements OnInit {
 		Validators.minLength(16),
 		// Validators.pattern(fiscalCodePattern),
 	]);
+	photoFormControl: FormControl = new FormControl('', []);
 	indirizzoFormControl: FormControl = new FormControl('', [Validators.required]);
 	indirizzo2FormControl: FormControl = new FormControl('', []);
 	provinciaFormControl: FormControl = new FormControl('', [Validators.required]);
@@ -52,6 +54,7 @@ export class AdminComponent implements OnInit {
 		this.cognomeFormControl,
 		this.codicePostaleFormControl,
 		this.codiceFiscaleFormControl,
+		this.photoFormControl,
 		this.indirizzoFormControl,
 		this.indirizzo2FormControl,
 		this.provinciaFormControl,
@@ -69,6 +72,7 @@ export class AdminComponent implements OnInit {
 			id: String(Math.round(Math.random() * 1000000)),
 			displayName: this.nomeFormControl.value + ' ' + this.cognomeFormControl.value,
 			fiscalCode: this.codiceFiscaleFormControl.value,
+			photoUrl: this.photoFormControl.value,
 			address: this.indirizzoFormControl.value,
 			address2: this.indirizzo2FormControl.value,
 			city: this.cittaFormControl.value,

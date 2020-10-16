@@ -1,6 +1,7 @@
 export interface Client {
 	id: string;
 	displayName: string;
+	birthday?: string;
 	photoUrl?: string;
 	fiscalCode: string;
 	address?: string;

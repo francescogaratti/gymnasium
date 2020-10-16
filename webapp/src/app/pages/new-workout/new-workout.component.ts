@@ -27,7 +27,7 @@ export class NewWorkoutComponent implements OnInit {
 	restSecFormControl: FormControl = new FormControl('', [Validators.required]);
 	notesFormControl: FormControl = new FormControl('', []);
 
-	clients: Client[] = clients;
+	clients: Client[] = [];
 	clientCtrl = new FormControl();
 	selected_client: Client = null;
 	filteredClients: Observable<Client[]>;
@@ -43,16 +43,16 @@ export class NewWorkoutComponent implements OnInit {
 	constructor(private auth: AuthService, private utils: UtilsService, public router: Router) {
 		this.filteredClients = this.clientCtrl.valueChanges.pipe(
 			startWith(''),
-			map(client => (client ? this._filterClients(client) : this.clients.slice()))
+			map(name => (name ? this._filterClientsByName(name) : this.clients.slice()))
 		);
-		this.clientCtrl.valueChanges.subscribe((client: Client) => {
-			this.selected_client = client;
-			console.info('selected client', this.selected_client);
-		});
+		this.auth.clients$.subscribe((clients: Client[]) => (this.clients = clients));
 	}
 
-	private _filterClients(client: Client): Client[] {
-		return this.clients.filter((c: Client) => c.displayName.indexOf(client.displayName) === 0);
+	private _filterClientsByName(name: string): Client[] {
+		return this.clients.filter(
+			(c: Client) =>
+				c.displayName.toLocaleLowerCase().indexOf(name.toLocaleLowerCase()) !== -1
+		);
 	}
 
 	changeClient(): void {
@@ -60,7 +60,9 @@ export class NewWorkoutComponent implements OnInit {
 		this.clientCtrl.setValue(null);
 	}
 
-	ngOnInit(): void {}
+	ngOnInit(): void {
+		this.auth.readClients();
+	}
 
 	addExercise() {
 		this.new_exercise = {
@@ -83,7 +85,10 @@ export class NewWorkoutComponent implements OnInit {
 	}
 
 	createWorkout() {
-		console.info('create workout');
+		console.info('Create Workout');
+		console.info('\tClient:', this.selected_client.displayName);
+		console.info('\tExercises');
+		console.table(this.exercises);
 	}
 
 	resetExercises() {
@@ -110,5 +115,9 @@ export class NewWorkoutComponent implements OnInit {
 		exercise['edit'] = false;
 		exercise = this.before_changes_exercise;
 		console.info('cancel', exercise);
+	}
+
+	selectedValueChange(client: Client) {
+		this.selected_client = client;
 	}
 }
