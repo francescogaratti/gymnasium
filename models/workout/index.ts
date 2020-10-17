@@ -1,7 +1,8 @@
 import { Exercise } from '../exercise';
-import { Trainer } from '../trainer';
+// import { Trainer } from '../trainer';
 export interface Workout {
 	id: string;
+	clientId: string;
 	exercises: Exercise[];
 	trainer: string;
 }

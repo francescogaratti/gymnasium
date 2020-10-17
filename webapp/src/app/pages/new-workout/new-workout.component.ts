@@ -93,6 +93,7 @@ export class NewWorkoutComponent implements OnInit {
 		console.table(this.exercises);
 		let workout: Workout = {
 			id: null,
+			clientId: this.selected_client.id,
 			exercises: this.exercises,
 			trainer: this.auth.user.displayName,
 		};
@@ -141,5 +142,9 @@ export class NewWorkoutComponent implements OnInit {
 
 	selectedValueChange(client: Client) {
 		this.selected_client = client;
+	}
+
+	detailClient(client: Client) {
+		this.router.navigateByUrl('client?id=' + client.id);
 	}
 }

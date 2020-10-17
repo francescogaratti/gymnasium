@@ -10,9 +10,10 @@
 			<form class="example-form" align="center">
 				<div *ngIf="selected_client" align="center">
 					<img
+						(click)="detailClient(selected_client)"
 						[src]="selected_client?.photoUrl"
 						alt=""
-						style="border-radius: 100%; width: 100px; height: 100px"
+						style="border-radius: 100%; width: 100px; height: 100px; cursor: pointer"
 					/>
 					<!-- <p class="small">
 						<button mat-icon-button color="accent" (click)="changeClient()">
