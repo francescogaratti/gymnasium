@@ -10,10 +10,12 @@
     "logs": "firebase functions:log"
   },
   "engines": {
-    "node": "10"
+    "node": "8"
   },
-  "main": "lib/index.js",
+  "main": "lib/functions/src/index.js",
   "dependencies": {
+    "excel4node": "^1.7.2",
+    "firebase": "^7.24.0",
     "firebase-admin": "^8.10.0",
     "firebase-functions": "^3.6.1"
   },

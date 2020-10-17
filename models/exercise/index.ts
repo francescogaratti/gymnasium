@@ -1,13 +1,13 @@
 export interface Exercise {
-	id: string;
-	name: string;
-	sets: number;
-	reps: number;
+	id: string | null;
+	name: string | null;
+	sets: number | null;
+	reps: number | null;
 	rest: {
-		minutes: number;
-		seconds: number;
+		minutes: number | null;
+		seconds: number | null;
 	};
-	notes?: string;
+	notes?: string | null;
 }
 
 export class Exercise implements Exercise {

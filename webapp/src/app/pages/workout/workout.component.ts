@@ -48,4 +48,8 @@ export class WorkoutComponent implements OnInit {
 				this.utils.openSnackBar('Ops! Qualcosa è andato storto!', '💀💀💀');
 			});
 	}
+
+	createExcel() {
+		this.auth.createExcel(this.workout);
+	}
 }
