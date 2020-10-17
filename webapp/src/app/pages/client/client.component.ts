@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Client } from '@models/client';
-import { WorkoutOld } from '@models/workout';
+import { Workout, WorkoutOld } from '@models/workout';
 import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
 
@@ -13,14 +13,17 @@ import { UtilsService } from '@services/utils.service';
 export class ClientComponent implements OnInit {
 	id: string;
 	client: Client = null;
-	workouts: WorkoutOld[] = [];
-	displayedColumns: string[] = ['id', 'startingDate', 'endingDate', 'fileId'];
+	workoutsOld: WorkoutOld[] = [];
+	workouts: Workout[] = [];
+	columnsWorkoutsOld: string[] = ['id', 'startingDate', 'endingDate', 'fileId'];
+	columnsWorkouts: string[] = ['id', 'trainer', 'remove', 'detail'];
 	constructor(
-		private router: ActivatedRoute,
+		private activatedRoute: ActivatedRoute,
+		private router: Router,
 		private auth: AuthService,
 		private utils: UtilsService
 	) {
-		this.id = this.router.snapshot.queryParams['id'];
+		this.id = this.activatedRoute.snapshot.queryParams['id'];
 	}
 
 	ngOnInit(): void {
@@ -38,10 +41,43 @@ export class ClientComponent implements OnInit {
 		}
 	}
 
+	getClientWorkoutsOld() {
+		this.auth
+			.readClientWorkoutsOld(this.client)
+			.then((workoutsOld: WorkoutOld[]) => (this.workoutsOld = workoutsOld))
+			.catch(err => console.error(err));
+	}
+
 	getClientWorkouts() {
 		this.auth
 			.readClientWorkouts(this.client)
-			.then((workouts: WorkoutOld[]) => (this.workouts = workouts))
+			.then((workouts: Workout[]) => (this.workouts = workouts))
 			.catch(err => console.error(err));
+	}
+
+	deleteWorkout(workout: Workout) {
+		this.auth
+			.deleteWorkout(workout, this.client)
+			.then((value: boolean) => {
+				if (value) {
+					this.utils.openSnackBar(
+						"L'allenamento è stato eliminato correttamente",
+						'💪😉'
+					);
+					this.getClientWorkouts();
+				} else
+					this.utils.openSnackBar(
+						"Si è verificato un errore durante l'eliminazione dell'allenamento",
+						'Riprovare, per favore 🙏'
+					);
+			})
+			.catch(err => {
+				console.error(err);
+				this.utils.openSnackBar('Ops! Qualcosa è andato storto!', '💀💀💀');
+			});
+	}
+
+	detailWorkout(workout: Workout) {
+		this.router.navigateByUrl('workout?id=' + workout.id);
 	}
 }

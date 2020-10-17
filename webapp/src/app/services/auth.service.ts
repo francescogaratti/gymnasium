@@ -206,7 +206,7 @@ export class AuthService {
 			.then(async (docRef: DocumentReference) => {
 				workout.id = docRef.id;
 				// todo: add this workout to the client's workout
-				let update_workout_res = await this.updateWorkout(workout);
+				let update_workout_res = await this.updateWorkoutOld(workout);
 				return update_workout_res ? workout.id : null;
 			})
 			.catch(err => {
@@ -217,7 +217,23 @@ export class AuthService {
 		return res;
 	}
 
-	async updateWorkout(workout: WorkoutOld): Promise<boolean> {
+	async updateWorkoutOld(workout: WorkoutOld): Promise<boolean> {
+		this.asyncOperation.next(true);
+		console.info('📗 - update workout');
+		let res: boolean = await this.afs
+			.collection('workouts')
+			.doc(workout.id)
+			.set(workout, { merge: true })
+			.then(() => true)
+			.catch(err => {
+				console.error(err);
+				return false;
+			});
+		this.asyncOperation.next(false);
+		return res;
+	}
+
+	async updateWorkout(workout: Workout): Promise<boolean> {
 		this.asyncOperation.next(true);
 		console.info('📗 - update workout');
 		let res: boolean = await this.afs
@@ -252,7 +268,7 @@ export class AuthService {
 		return res;
 	}
 
-	public async readClientWorkouts(client: Client): Promise<WorkoutOld[]> {
+	public async readClientWorkoutsOld(client: Client): Promise<WorkoutOld[]> {
 		this.asyncOperation.next(true);
 		let workouts: WorkoutOld[] = await this.afs
 			.collection('clients')
@@ -274,5 +290,106 @@ export class AuthService {
 			});
 		this.asyncOperation.next(false);
 		return workouts;
+	}
+
+	async newWorkout(workout: Workout, client: Client): Promise<boolean> {
+		this.asyncOperation.next(true);
+		console.info('📗 - write');
+		let workoutId: string = await this.afs
+			.collection('workouts')
+			.add(workout)
+			.then(async (docRef: DocumentReference) => {
+				workout.id = docRef.id;
+				let update_workout_res = await this.updateWorkout(workout);
+				return update_workout_res ? workout.id : null;
+			})
+			.catch(err => {
+				console.error(err);
+				return null;
+			});
+		// ? now I have the workout ID ==> save into the client workouts list
+		let res: boolean = await this.newClientWorkout(client, workoutId);
+		this.asyncOperation.next(false);
+		return res;
+	}
+
+	public async readClientWorkouts(client: Client): Promise<Workout[]> {
+		this.asyncOperation.next(true);
+		let workouts: Workout[] = await this.afs
+			.collection('clients')
+			.doc(client.id)
+			.get()
+			.toPromise()
+			.then(async snapshot => {
+				let refs: DocumentReference[] = snapshot.get('workouts');
+				let promises: Promise<Workout>[] = [];
+				refs.forEach((ref: DocumentReference) =>
+					promises.push(ref.get().then(res => res.data() as Workout))
+				);
+				const workouts = await Promise.all(promises);
+				return workouts;
+			})
+			.catch(err => {
+				console.error(err);
+				return [];
+			});
+		this.asyncOperation.next(false);
+		return workouts;
+	}
+
+	async deleteWorkout(workout: Workout, client: Client): Promise<boolean> {
+		this.asyncOperation.next(true);
+		console.info('📕 - delete');
+		// delete from the workouts list
+		let res: boolean = await this.afs
+			.collection('workouts')
+			.doc(workout.id)
+			.delete()
+			.then(() => true) // unica possibilità di diventare "true"
+			.catch(err => {
+				console.error(err);
+				return false;
+			});
+		// delete from clients list
+		if (res) {
+			console.info('📘 - read');
+			let updated_workouts: DocumentReference[] = await this.afs
+				.collection('clients')
+				.doc(client.id)
+				.get()
+				.toPromise()
+				.then(async snapshot => {
+					let refs: DocumentReference[] = snapshot.get('workouts');
+					console.info({ refs });
+					let new_list: DocumentReference[] = refs.filter(
+						(ref: DocumentReference) => ref.id !== workout.id
+					);
+					return new_list;
+				})
+				.catch(err => {
+					console.error(err);
+					return [];
+				});
+			client.workouts = updated_workouts;
+			res = await this.updateClient(client);
+		}
+		this.asyncOperation.next(false);
+		return res;
+	}
+
+	async getWorkout(id: string): Promise<Workout> {
+		this.asyncOperation.next(true);
+		let res: Workout = await this.afs
+			.collection('workouts')
+			.doc(id)
+			.get()
+			.toPromise()
+			.then(snapshot => snapshot.data() as Workout)
+			.catch(err => {
+				console.error(err);
+				return null;
+			});
+		this.asyncOperation.next(false);
+		return res;
 	}
 }

@@ -3,6 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Client, mocks as clients } from '@models/client';
 import { Exercise, mock as exercises } from '@models/exercise';
+import { Workout } from '@models/workout';
 import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
 
@@ -87,8 +88,29 @@ export class NewWorkoutComponent implements OnInit {
 	createWorkout() {
 		console.info('Create Workout');
 		console.info('\tClient:', this.selected_client.displayName);
+		console.info('\tTrainer:', this.auth.user.displayName);
 		console.info('\tExercises');
 		console.table(this.exercises);
+		let workout: Workout = {
+			id: null,
+			exercises: this.exercises,
+			trainer: this.auth.user.displayName,
+		};
+		this.auth
+			.newWorkout(workout, this.selected_client)
+			.then((value: boolean) => {
+				if (value)
+					this.utils.openSnackBar("L'allenamento è stato salvato correttamente", '💪😉');
+				else
+					this.utils.openSnackBar(
+						"Si è verificato un errore durante il salvataggio dell'allenamento",
+						'Riprovare, per favore 🙏'
+					);
+			})
+			.catch(err => {
+				console.error(err);
+				this.utils.openSnackBar('Ops! Qualcosa è andato storto!', '💀💀💀');
+			});
 	}
 
 	resetExercises() {

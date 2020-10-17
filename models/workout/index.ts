@@ -3,7 +3,7 @@ import { Trainer } from '../trainer';
 export interface Workout {
 	id: string;
 	exercises: Exercise[];
-	trainer: Trainer;
+	trainer: string;
 }
 
 export interface WorkoutOld {

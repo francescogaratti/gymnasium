@@ -12,16 +12,18 @@ import { LoginComponent } from '@pages/login/login.component';
 import { NewWorkoutComponent } from '@pages/new-workout/new-workout.component';
 import { NotFoundComponent } from '@pages/not-found/not-found.component';
 import { PersonalAreaComponent } from '@pages/personal-area/personal-area.component';
+import { WorkoutComponent } from '@pages/workout/workout.component';
 
 const routes: Routes = [
 	{ path: 'login', component: LoginComponent, canActivate: [LoggedGuard] },
-	{ path: 'new-workout', component:NewWorkoutComponent, canActivate:[AuthGuard]},
+	{ path: 'new-workout', component: NewWorkoutComponent, canActivate: [AuthGuard] },
+	{ path: 'workout', component: WorkoutComponent, canActivate: [AuthGuard] },
 	{ path: 'home', component: HomeComponent },
-	{ path: 'admin', component: AdminComponent, canActivate:[AuthGuard] },
+	{ path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
 	{ path: 'personal-area', component: PersonalAreaComponent, canActivate: [AuthGuard] },
-	{ path: 'client', component: ClientComponent, canActivate:[AuthGuard] },
-	{ path: 'clients', component: ClientsComponent, canActivate:[AuthGuard] },
-	{ path: 'exercises',component:ExercisesComponent, canActivate:[AuthGuard]},
+	{ path: 'client', component: ClientComponent, canActivate: [AuthGuard] },
+	{ path: 'clients', component: ClientsComponent, canActivate: [AuthGuard] },
+	{ path: 'exercises', component: ExercisesComponent, canActivate: [AuthGuard] },
 	{
 		path: 'create-workout-routine',
 		component: CreateWorkoutRoutineComponent,

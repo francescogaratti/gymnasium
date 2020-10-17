@@ -7,20 +7,20 @@
 	>
 		<mat-card-title>Scegli il Cliente</mat-card-title>
 		<mat-card-content>
-			<div *ngIf="selected_client" align="center">
-				<img
-					[src]="selected_client?.photoUrl"
-					alt=""
-					style="border-radius: 100%; width: 100px; height: 100px"
-				/>
-				<p class="small">
-					<button mat-icon-button color="accent" (click)="changeClient()">
-						<mat-icon style="cursor: pointer">edit</mat-icon>
-					</button>
-				</p>
-			</div>
-			<form class="example-form">
-				<mat-form-field class="example-full-width">
+			<form class="example-form" align="center">
+				<div *ngIf="selected_client" align="center">
+					<img
+						[src]="selected_client?.photoUrl"
+						alt=""
+						style="border-radius: 100%; width: 100px; height: 100px"
+					/>
+					<!-- <p class="small">
+						<button mat-icon-button color="accent" (click)="changeClient()">
+							<mat-icon style="cursor: pointer">edit</mat-icon>
+						</button>
+					</p> -->
+				</div>
+				<mat-form-field class="example-full-width" align="center">
 					<mat-label>Cliente</mat-label>
 					<input
 						matInput
@@ -29,6 +29,16 @@
 						[matAutocomplete]="auto"
 						[formControl]="clientCtrl"
 					/>
+					<button
+						mat-button
+						*ngIf="selected_client"
+						matSuffix
+						mat-icon-button
+						aria-label="Clear"
+						(click)="changeClient()"
+					>
+						<mat-icon color="accent">close</mat-icon>
+					</button>
 					<mat-autocomplete #auto="matAutocomplete">
 						<mat-option
 							*ngFor="let client of filteredClients | async"
@@ -288,8 +298,13 @@
 			</form>
 		</mat-card-content>
 		<mat-card-actions>
-			<button mat-raised-button color="accent" (click)="resetExercises()">Ripristina</button>
-			<button mat-raised-button color="primary" (click)="createWorkout()">
+			<button mat-raised-button color="accent" (click)="resetExercises()">Reset</button>
+			<button
+				mat-raised-button
+				color="primary"
+				(click)="createWorkout()"
+				[disabled]="!exercises || exercises.length == 0 || !selected_client"
+			>
 				Crea Allenamento
 			</button>
 		</mat-card-actions>
