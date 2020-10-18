@@ -10,7 +10,8 @@
 				<h2>{{ client.displayName }}</h2>
 			</div>
 		</form>
-		<button mat-raised-button color="primary" (click)="createExcel()">Download</button>
+		<button mat-raised-button color="primary" (click)="createExcel()">createExcel</button>
+		<button mat-raised-button color="primary" (click)="getExcel()">getExcel</button>
 	</mat-card-content>
 </mat-card>
 <mat-card *ngIf="workout">

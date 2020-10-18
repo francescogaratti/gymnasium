@@ -23,10 +23,12 @@
 		"@angular/platform-browser": "~9.1.4",
 		"@angular/platform-browser-dynamic": "~9.1.4",
 		"@angular/router": "~9.1.4",
+		"excel4node": "^1.7.2",
 		"firebase": "^7.21.1",
 		"firebaseui": "^4.6.1",
 		"rxjs": "~6.5.4",
 		"tslib": "^1.10.0",
+		"xlsx": "^0.16.8",
 		"zone.js": "~0.10.2"
 	},
 	"devDependencies": {
@@ -34,9 +36,9 @@
 		"@angular/cli": "~9.1.4",
 		"@angular/compiler-cli": "~9.1.4",
 		"@angular/language-service": "~9.1.4",
-		"@types/node": "^12.11.1",
 		"@types/jasmine": "~3.5.0",
 		"@types/jasminewd2": "~2.0.3",
+		"@types/node": "^12.12.68",
 		"codelyzer": "^5.1.2",
 		"jasmine-core": "~3.5.0",
 		"jasmine-spec-reporter": "~4.2.1",

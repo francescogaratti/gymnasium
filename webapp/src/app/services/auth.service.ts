@@ -395,11 +395,25 @@ export class AuthService {
 
 	async createExcel(workout: Workout): Promise<any> {
 		return await this.aff
-			.httpsCallable('mailFunctions-createExcel')({ workout: workout })
+			.httpsCallable('excel-createExcel')({ workout: workout })
 			.toPromise()
 			.then(res => {
 				console.info(res);
 				return res ? res.data : [];
+			})
+			.catch(err => {
+				console.error(err);
+				return [];
+			});
+	}
+
+	async getExcelBuffer(workout: Workout): Promise<any> {
+		return await this.aff
+			.httpsCallable('excel-getExcelBuffer')({ workout: workout })
+			.toPromise()
+			.then(res => {
+				console.info(res);
+				return res ? res : [];
 			})
 			.catch(err => {
 				console.error(err);
