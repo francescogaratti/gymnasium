@@ -21,6 +21,7 @@ import { switchMap } from 'rxjs/operators';
 import { User } from '@models/user';
 import { Client } from '@models/client';
 import { Workout, WorkoutOld } from '@models/workout';
+import { HttpClient } from '@angular/common/http';
 
 // configuration for the ui
 const uiConfig = {
@@ -45,7 +46,8 @@ export class AuthService {
 		private afs: AngularFirestore,
 		private afstr: AngularFireStorage,
 		private aff: AngularFireFunctions,
-		private router: Router
+		private router: Router,
+		private http: HttpClient
 	) {
 		this.getUser();
 	}
@@ -393,31 +395,38 @@ export class AuthService {
 		return res;
 	}
 
-	async createExcel(workout: Workout): Promise<any> {
-		return await this.aff
-			.httpsCallable('excel-createExcel')({ workout: workout })
+	async generateExcel(filename: string, workoutId: string): Promise<boolean> {
+		this.asyncOperation.next(true);
+		// some costants & params
+		const generateExcelURL: string =
+			'https://us-central1-ultra-gymnasium.cloudfunctions.net/excel-generateExcel';
+		const requestOptions: Object = {
+			params: { workoutId: workoutId },
+			responseType: 'arrayBuffer',
+		};
+		// http request
+		let res: boolean = await this.http
+			.get<any>(generateExcelURL, requestOptions)
 			.toPromise()
-			.then(res => {
-				console.info(res);
-				return res ? res.data : [];
-			})
-			.catch(err => {
-				console.error(err);
-				return [];
-			});
-	}
+			.then((res: ArrayBuffer) => {
+				const link = document.createElement('a');
+				link.style.display = 'none';
+				document.body.appendChild(link);
 
-	async getExcelBuffer(workout: Workout): Promise<any> {
-		return await this.aff
-			.httpsCallable('excel-getExcelBuffer')({ workout: workout })
-			.toPromise()
-			.then(res => {
-				console.info(res);
-				return res ? res : [];
+				const blob = new Blob([res]);
+				const objectURL = URL.createObjectURL(blob);
+
+				link.href = objectURL;
+				link.href = URL.createObjectURL(blob);
+				link.download = filename;
+				link.click();
+				return true;
 			})
 			.catch(err => {
 				console.error(err);
-				return [];
+				return false;
 			});
+		this.asyncOperation.next(false);
+		return res;
 	}
 }

@@ -1,12 +1,14 @@
+export interface Rest {
+	minutes: number | null;
+	seconds: number | null;
+}
+
 export interface Exercise {
 	id: string | null;
 	name: string | null;
 	sets: number | null;
 	reps: number | null;
-	rest: {
-		minutes: number | null;
-		seconds: number | null;
-	};
+	rest: Rest;
 	notes?: string | null;
 }
 
