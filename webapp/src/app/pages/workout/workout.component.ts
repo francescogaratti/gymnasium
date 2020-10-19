@@ -1,13 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Client } from '@models/client';
 import { Workout } from '@models/workout';
 import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
-
-// import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
-// import { Observable } from 'rxjs';
-// import { catchError, tap } from 'rxjs/operators';
 @Component({
 	selector: 'app-workout',
 	templateUrl: './workout.component.html',
@@ -15,18 +11,18 @@ import { UtilsService } from '@services/utils.service';
 })
 export class WorkoutComponent implements OnInit {
 	id: string;
-	workout: Workout = null;
-	client: Client = null;
+	@Input() workout: Workout = null;
+	@Input() client: Client = null;
 	constructor(
 		private activatedRoute: ActivatedRoute,
 		private auth: AuthService,
-		private utils: UtilsService // private http: HttpClient
+		private utils: UtilsService
 	) {
 		this.id = this.activatedRoute.snapshot.queryParams['id'];
 	}
 
 	ngOnInit(): void {
-		if (this.id) this.getWorkout(this.id);
+		// if (!this.workout && this.id) this.getWorkout(this.id);
 	}
 
 	getWorkout(id: string) {

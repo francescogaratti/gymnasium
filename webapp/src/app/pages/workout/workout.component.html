@@ -1,21 +1,8 @@
-<mat-card *ngIf="client">
-	<mat-card-content>
-		<form class="example-form" align="center">
-			<div *ngIf="client" align="center">
-				<img
-					[src]="client?.photoUrl"
-					alt=""
-					style="border-radius: 100%; width: 100px; height: 100px"
-				/>
-				<h2>{{ client.displayName }}</h2>
-			</div>
-			<button mat-raised-button color="primary" (click)="generateExcel()">
-				Genera Excel
-			</button>
-		</form>
-	</mat-card-content>
-</mat-card>
-<mat-card *ngIf="workout">
+<mat-card *ngIf="workout" class="mat-elevation-z8">
+	<mat-card-subtitle>Allenamento: {{ workout.id }}</mat-card-subtitle>
+	<mat-card-actions>
+		<button mat-raised-button color="primary" (click)="generateExcel()">Genera Excel</button>
+	</mat-card-actions>
 	<mat-card-content style="display: table; margin: auto">
 		<form *ngFor="let exercise of workout.exercises">
 			<table class="example-full-width" cellspacing="0">

@@ -1,29 +1,44 @@
-<mat-card *ngIf="client">
-	<mat-card-title>Cliente: {{ client.displayName }}</mat-card-title>
-	<mat-card-content>
-		<p>Id: {{ client.id }}</p>
-		<p>Codice Fiscale: {{ client.fiscalCode }}</p>
-		<br />
-		<p>Indirizzo: {{ client.address }}</p>
-		<p>Città: {{ client.city }}</p>
-		<p>Codice Postale: {{ client.postalCode }}</p>
-	</mat-card-content>
-	<mat-card-actions>
-		<button mat-raised-button color="primary" (click)="getClientWorkoutsOld()">
-			Workouts (OLD)
-		</button>
-		<button mat-raised-button color="primary" (click)="getClientWorkouts()">Workouts</button>
-	</mat-card-actions>
+<mat-card *ngIf="client" align="center" class="mat-elevation-z0" style="box-sizing: border-box">
+	<mat-card
+		class="mat-elevation-z8"
+		style="float: left; max-width: 20%; box-sizing: border-box; margin: 5px"
+	>
+		<!-- <mat-card-title>{{ client.displayName }}</mat-card-title> -->
+		<mat-card-content>
+			<div *ngIf="client" align="center">
+				<img
+					[src]="client?.photoUrl"
+					alt=""
+					style="border-radius: 100%; width: 100px; height: 100px"
+				/>
+				<h2>{{ client.displayName }}</h2>
+			</div>
+			<p>Id: {{ client.id }}</p>
+			<p>Codice Fiscale: {{ client.fiscalCode }}</p>
+			<br />
+			<p>Indirizzo: {{ client.address }}</p>
+			<p>Città: {{ client.city }}</p>
+			<p>Codice Postale: {{ client.postalCode }}</p>
+		</mat-card-content>
+		<mat-card-actions>
+			<!-- <button mat-raised-button color="primary" (click)="getClientWorkoutsOld()">
+				Workouts (OLD)
+			</button> -->
+			<button mat-raised-button color="primary" (click)="getClientWorkouts()">
+				Workouts
+			</button>
+		</mat-card-actions>
+	</mat-card>
 	<!-- workouts old -->
 	<mat-card
 		*ngIf="workoutsOld?.length > 0"
 		[class.mat-elevation-z0]="true"
-		style="float: left; margin-top: 30px"
+		style="float: left; margin-top: 30px; overflow: hidden"
 		class="example-full-width"
 	>
 		<mat-card-title>Allenamenti</mat-card-title>
 		<mat-card-content
-			><table mat-table [dataSource]="workoutsOld" class="mat-elevation-z8 half-width">
+			><table mat-table [dataSource]="workoutsOld" class="half-width">
 				<!--- Note that these columns can be defined in any order.
                   The actual rendered columns are set as a property on the row definition" -->
 
@@ -79,13 +94,12 @@
 	<!-- workouts new -->
 	<mat-card
 		*ngIf="workouts?.length > 0"
-		[class.mat-elevation-z0]="true"
-		style="float: left; margin-top: 30px"
-		class="example-full-width"
+		class="mat-elevation-z8"
+		style="float: left; max-width: 20%; box-sizing: border-box; overflow: hidden; margin: 5px"
 	>
 		<mat-card-title>Allenamenti</mat-card-title>
 		<mat-card-content
-			><table mat-table [dataSource]="workouts" class="mat-elevation-z8 half-width">
+			><table mat-table [dataSource]="workouts">
 				<!-- Position Column -->
 				<ng-container matColumnDef="id">
 					<th mat-header-cell *matHeaderCellDef>Id</th>
@@ -135,4 +149,10 @@
 			</table>
 		</mat-card-content>
 	</mat-card>
+	<!-- detail workout -->
+	<app-workout
+		style="float: left; max-width: 60%; box-sizing: border-box; margin: 5px"
+		[client]="client"
+		[workout]="selected_workout"
+	></app-workout>
 </mat-card>

@@ -13,10 +13,11 @@ import { UtilsService } from '@services/utils.service';
 export class ClientComponent implements OnInit {
 	id: string;
 	client: Client = null;
+	selected_workout: Workout = null;
 	workoutsOld: WorkoutOld[] = [];
 	workouts: Workout[] = [];
-	columnsWorkoutsOld: string[] = ['id', 'startingDate', 'endingDate', 'fileId'];
-	columnsWorkouts: string[] = ['id', 'trainer', 'remove', 'detail'];
+	columnsWorkoutsOld: string[] = ['startingDate', 'endingDate', 'fileId'];
+	columnsWorkouts: string[] = ['trainer', 'remove', 'detail'];
 	constructor(
 		private activatedRoute: ActivatedRoute,
 		private router: Router,
@@ -78,6 +79,7 @@ export class ClientComponent implements OnInit {
 	}
 
 	detailWorkout(workout: Workout) {
-		this.router.navigateByUrl('workout?id=' + workout.id);
+		this.selected_workout = workout;
+		// this.router.navigateByUrl('workout?id=' + workout.id);
 	}
 }
