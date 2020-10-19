@@ -16,8 +16,19 @@
 			rel="stylesheet"
 			href="https://www.gstatic.com/firebasejs/ui/4.5.0/firebase-ui-auth.css"
 		/>
+		<link rel="manifest" href="manifest.json" />
 	</head>
 	<body class="mat-typography">
 		<app-root></app-root>
+		<script>
+			if ('serviceWorker' in navigator) {
+				navigator.serviceWorker
+					. register('/service-worker.js')
+					.then(registration => {
+						console.info('SW registered');
+					})
+					.catch(err => console.error(err));
+			}
+		</script>
 	</body>
 </html>
