@@ -31,7 +31,8 @@
 				class="menu-tab"
 			>
 				New Workout
-				<mat-icon>add_circle_outline</mat-icon>
+				<!-- <i class="material-icons-two-tone">add_circle_outline</i> -->
+				<i class="material-icons-two-tone">fitness_center</i>
 			</button>
 			<!-- <button
 				color="accent"
@@ -45,11 +46,11 @@
 			<button
 				color="accent"
 				mat-raised-button
-				(click)="router.navigateByUrl('clients')"
+				(click)="router.navigateByUrl('new-client')"
 				class="menu-tab"
 			>
-				Clients
-				<mat-icon>group</mat-icon>
+				New Client
+				<i class="material-icons-two-tone">person_add</i>
 			</button>
 			<!-- <button
 				color="primary"
@@ -77,10 +78,10 @@
 				Personal Area
 				<mat-icon>person</mat-icon>
 			</button> -->
-			<button color="accent" mat-raised-button (click)="router.navigateByUrl('admin')">
+			<!-- <button color="accent" mat-raised-button (click)="router.navigateByUrl('admin')">
 				Admin
 				<mat-icon>admin_panel_settings</mat-icon>
-			</button>
+			</button> -->
 			<button color="accent" mat-raised-button (click)="auth.signOut()" class="menu-tab">
 				<!-- Sign out -->
 				<mat-icon>exit_to_app</mat-icon>
