@@ -2,6 +2,8 @@
 	"short_name": "Ultra Gymnasium",
 	"name": "Ultra Gymnasium",
 	"start_url": "/",
+	"display": "minimal-ui",
+	"theme_color": "#317EFb",
 	"icons": [
 		{
 			"src": "/assets/icons/android-chrome-192x192.png",
