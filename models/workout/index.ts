@@ -2,6 +2,7 @@ import { Exercise } from '../exercise';
 // import { Trainer } from '../trainer';
 export interface Workout {
 	id: string;
+	name: string;
 	clientId: string;
 	exercises: Exercise[];
 	trainer: string;

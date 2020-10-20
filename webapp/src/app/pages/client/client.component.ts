@@ -17,7 +17,7 @@ export class ClientComponent implements OnInit {
 	workoutsOld: WorkoutOld[] = [];
 	workouts: Workout[] = [];
 	columnsWorkoutsOld: string[] = ['startingDate', 'endingDate', 'fileId'];
-	columnsWorkouts: string[] = ['trainer', 'remove', 'detail'];
+	columnsWorkouts: string[] = ['name', 'trainer', 'remove', 'detail'];
 	constructor(
 		private activatedRoute: ActivatedRoute,
 		private router: Router,

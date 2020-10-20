@@ -21,6 +21,7 @@ export class NewWorkoutComponent implements OnInit {
 	before_changes_exercise: Exercise;
 	exercises: Exercise[] = exercises; // todo: remove mock
 
+	nameFormControl: FormControl = new FormControl('', [Validators.required]);
 	esercizioFormControl: FormControl = new FormControl('', [Validators.required]);
 	setsFormControl: FormControl = new FormControl('', [Validators.required]);
 	repsFormControl: FormControl = new FormControl('', [Validators.required]);
@@ -34,6 +35,7 @@ export class NewWorkoutComponent implements OnInit {
 	filteredClients: Observable<Client[]>;
 
 	formsControl: FormControl[] = [
+		this.nameFormControl,
 		this.esercizioFormControl,
 		this.setsFormControl,
 		this.repsFormControl,
@@ -89,10 +91,12 @@ export class NewWorkoutComponent implements OnInit {
 		console.info('Create Workout');
 		console.info('\tClient:', this.selected_client.displayName);
 		console.info('\tTrainer:', this.auth.user.displayName);
+		console.info('\tWorkout Name:', this.nameFormControl.value);
 		console.info('\tExercises');
 		console.table(this.exercises);
 		let workout: Workout = {
 			id: null,
+			name: this.nameFormControl.value,
 			clientId: this.selected_client.id,
 			exercises: this.exercises,
 			trainer: this.auth.user.displayName,
