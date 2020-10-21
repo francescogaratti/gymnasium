@@ -15,7 +15,7 @@
 			<table class="example-full-width" cellspacing="0">
 				<tr>
 					<td>
-						<mat-form-field class="example-full-width">
+						<mat-form-field class="example-full-width" color="accent">
 							<mat-label>Nome</mat-label>
 							<input
 								#nome
@@ -37,7 +37,7 @@
 						</mat-form-field>
 					</td>
 					<td>
-						<mat-form-field class="example-full-width">
+						<mat-form-field class="example-full-width" color="accent">
 							<mat-label>Cognome</mat-label>
 							<input
 								#cognome
@@ -62,7 +62,7 @@
 			</table>
 
 			<p>
-				<mat-form-field class="example-full-width">
+				<mat-form-field class="example-full-width" color="accent">
 					<mat-label>Codice Fiscale</mat-label>
 					<input
 						matInput
@@ -99,14 +99,44 @@
 			</p>
 
 			<p>
-				<mat-form-field class="example-full-width">
-					<mat-label>Foto profilo</mat-label>
-					<input matInput type="text" [formControl]="photoFormControl" />
+				<img
+					id="photo-profile"
+					*ngIf="photoFormControl.value"
+					[src]="photoFormControl.value"
+					alt=""
+					style="border-radius: 100%; width: 100px; height: 100px"
+				/>
+				<mat-form-field class="example-full-width" color="accent">
+					<mat-label>Foto profilo URL</mat-label>
+					<input matInput type="text" [formControl]="photoFormControl" required />
+					<mat-error *ngIf="photoFormControl.hasError('required')">
+						Foto profilo <strong>obbligatoria</strong>
+					</mat-error>
+					<div matSuffix>
+						<button
+							mat-button
+							*ngIf="photoFormControl.value"
+							mat-icon-button
+							aria-label="Clear"
+							(click)="photoFormControl.setValue(null)"
+						>
+							<mat-icon>close</mat-icon>
+						</button>
+						<button
+							mat-button
+							*ngIf="!photoFormControl.value"
+							mat-icon-button
+							aria-label="Upload"
+							(click)="uploadPhoto()"
+						>
+							<mat-icon>add_a_photo</mat-icon>
+						</button>
+					</div>
 				</mat-form-field>
 			</p>
 
 			<p>
-				<mat-form-field class="example-full-width">
+				<mat-form-field class="example-full-width" color="accent">
 					<mat-label>Indirizzo</mat-label>
 					<textarea
 						#indirizzo
@@ -126,7 +156,7 @@
 						<mat-icon>close</mat-icon>
 					</button>
 				</mat-form-field>
-				<mat-form-field class="example-full-width">
+				<mat-form-field class="example-full-width" color="accent">
 					<mat-label>Secondo Indirizzo</mat-label>
 					<textarea #indirizzo2 matInput [formControl]="indirizzo2FormControl"></textarea>
 					<button
@@ -145,13 +175,13 @@
 			<table class="example-full-width" cellspacing="0">
 				<tr>
 					<td>
-						<mat-form-field class="example-full-width">
+						<mat-form-field class="example-full-width" color="accent">
 							<mat-label>Stato</mat-label>
 							<input matInput value="Italia" disabled />
 						</mat-form-field>
 					</td>
 					<td>
-						<mat-form-field class="example-full-width">
+						<mat-form-field class="example-full-width" color="accent">
 							<mat-label>Città</mat-label>
 							<input
 								matInput
@@ -162,7 +192,7 @@
 						</mat-form-field>
 					</td>
 					<td>
-						<mat-form-field class="example-full-width">
+						<mat-form-field class="example-full-width" color="accent">
 							<mat-label>Codice Postale</mat-label>
 							<input
 								matInput
@@ -196,7 +226,8 @@
 				cognomeFormControl.invalid ||
 				codiceFiscaleFormControl.invalid ||
 				codicePostaleFormControl.invalid ||
-				indirizzoFormControl.invalid
+				indirizzoFormControl.invalid ||
+				photoFormControl.invalid
 			"
 		>
 			Aggiungi Istruttore

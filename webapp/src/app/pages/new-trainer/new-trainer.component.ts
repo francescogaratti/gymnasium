@@ -43,7 +43,7 @@ export class NewTrainerComponent implements OnInit {
 		Validators.minLength(16),
 		// Validators.pattern(fiscalCodePattern),
 	]);
-	photoFormControl: FormControl = new FormControl('', []);
+	photoFormControl: FormControl = new FormControl('', [Validators.required]);
 	indirizzoFormControl: FormControl = new FormControl('', [Validators.required]);
 	indirizzo2FormControl: FormControl = new FormControl('', []);
 	provinciaFormControl: FormControl = new FormControl('', [Validators.required]);
@@ -60,9 +60,12 @@ export class NewTrainerComponent implements OnInit {
 		this.provinciaFormControl,
 		this.cittaFormControl,
 	];
+	my_input: HTMLInputElement = null;
 	constructor(private auth: AuthService, private utils: UtilsService, public router: Router) {}
 
 	ngOnInit(): void {
+		this.my_input = document.createElement('input');
+		this.my_input.onchange = () => this.getFiles();
 		this.resetClient(this.client);
 		this.resetTrainer(this.trainer);
 	}
@@ -111,5 +114,18 @@ export class NewTrainerComponent implements OnInit {
 			shifts: [],
 			trainees: [],
 		};
+	}
+
+	uploadPhoto() {
+		console.info('uploadPhoto');
+		this.my_input.setAttribute('type', 'file');
+		this.my_input.click();
+	}
+
+	getFiles() {
+		console.table(this.my_input.files);
+		const file = this.my_input.files[0];
+		const url = window.URL.createObjectURL(file);
+		this.photoFormControl.setValue(url);
 	}
 }
