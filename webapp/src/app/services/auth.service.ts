@@ -429,4 +429,12 @@ export class AuthService {
 		this.asyncOperation.next(false);
 		return res;
 	}
+
+	async uploadImage(image: File) {
+		let ref = this.afstr.ref('');
+		let fileRef = ref.child(image.name);
+		fileRef.put(image).then(function (snapshot) {
+			console.log('Uploaded a blob or file!', snapshot);
+		});
+	}
 }

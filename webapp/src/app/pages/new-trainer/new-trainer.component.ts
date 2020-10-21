@@ -95,6 +95,7 @@ export class NewTrainerComponent implements OnInit {
 					'Riprovare'
 				);
 		});
+		this.auth.uploadImage(this.my_input.files[0]);
 	}
 
 	resetClient(client: Client): void {
