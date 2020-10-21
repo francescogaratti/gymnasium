@@ -125,7 +125,20 @@ export class NewTrainerComponent implements OnInit {
 	getFiles() {
 		console.table(this.my_input.files);
 		const file = this.my_input.files[0];
-		const url = window.URL.createObjectURL(file);
-		this.photoFormControl.setValue(url);
+		const url = URL.createObjectURL(file);
+		this.photoFormControl.setValue(String(url));
+		let photoProfile: HTMLImageElement = document.getElementById(
+			'photo-profile'
+		) as HTMLImageElement;
+		photoProfile.src = url;
+		photoProfile.hidden = false;
+	}
+
+	removePhoto() {
+		let photoProfile: HTMLImageElement = document.getElementById(
+			'photo-profile'
+		) as HTMLImageElement;
+		photoProfile.hidden = true;
+		photoProfile.src = '';
 	}
 }

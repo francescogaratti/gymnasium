@@ -101,10 +101,9 @@
 			<p>
 				<img
 					id="photo-profile"
-					*ngIf="photoFormControl.value"
-					[src]="photoFormControl.value"
 					alt=""
 					style="border-radius: 100%; width: 100px; height: 100px"
+					hidden="true"
 				/>
 				<mat-form-field class="example-full-width" color="accent">
 					<mat-label>Foto profilo URL</mat-label>
@@ -118,7 +117,7 @@
 							*ngIf="photoFormControl.value"
 							mat-icon-button
 							aria-label="Clear"
-							(click)="photoFormControl.setValue(null)"
+							(click)="photoFormControl.setValue(null);removePhoto()"
 						>
 							<mat-icon>close</mat-icon>
 						</button>
