@@ -7,7 +7,8 @@
 		<mat-card-content>
 			<div *ngIf="client" align="center">
 				<img
-					[src]="client?.photoUrl"
+					*ngIf="URL"
+					[src]="URL"
 					alt=""
 					style="border-radius: 100%; width: 100px; height: 100px"
 				/>

@@ -13,6 +13,7 @@ import { UtilsService } from '@services/utils.service';
 export class ClientComponent implements OnInit {
 	id: string;
 	client: Client = null;
+	URL: string = null;
 	selected_workout: Workout = null;
 	workoutsOld: WorkoutOld[] = [];
 	workouts: Workout[] = [];
@@ -31,7 +32,10 @@ export class ClientComponent implements OnInit {
 		if (this.id) {
 			this.auth
 				.readClient(this.id)
-				.then((client: Client) => (this.client = client))
+				.then((client: Client) => {
+					this.client = client;
+					this.getImage(this.client.photoUrl);
+				})
 				.catch(err => {
 					this.utils.openSnackBar(
 						'Si è verificato un errore con il caricamento dei dati del cliente',
@@ -81,5 +85,12 @@ export class ClientComponent implements OnInit {
 	detailWorkout(workout: Workout) {
 		this.selected_workout = workout;
 		// this.router.navigateByUrl('workout?id=' + workout.id);
+	}
+
+	async getImage(path: string) {
+		this.auth
+			.getFile(path)
+			.then(url => (url ? (this.URL = url) : ''))
+			.catch(() => null);
 	}
 }

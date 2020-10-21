@@ -79,8 +79,8 @@ export class NewClientComponent implements OnInit {
 			postalCode: this.codicePostaleFormControl.value,
 		};
 		console.info('Adding new client: ', client);
-		this.auth.newClient(client).then((value: boolean) => {
-			if (value) {
+		this.auth.newClient(client).then((id: string) => {
+			if (id) {
 				this.utils.openSnackBar(
 					'Il cliente ' + client.displayName + ' è stato aggiunto con successo',
 					'😉'

@@ -72,30 +72,53 @@ export class NewTrainerComponent implements OnInit {
 
 	addClient(client: Client): void {
 		client = {
-			id: String(Math.round(Math.random() * 1000000)),
+			id: null,
 			displayName: this.nomeFormControl.value + ' ' + this.cognomeFormControl.value,
 			fiscalCode: this.codiceFiscaleFormControl.value,
-			photoUrl: this.photoFormControl.value,
+			photoUrl: null,
 			address: this.indirizzoFormControl.value,
 			address2: this.indirizzo2FormControl.value,
 			city: this.cittaFormControl.value,
 			postalCode: this.codicePostaleFormControl.value,
 		};
 		console.info('Adding new client: ', client);
-		this.auth.newClient(client).then((value: boolean) => {
-			if (value) {
-				this.utils.openSnackBar(
-					'Il cliente ' + client.displayName + ' è stato aggiunto con successo',
-					'😉'
-				);
-				this.resetClient(client);
-			} else
-				this.utils.openSnackBar(
-					'Attenzione, si è verificato un errore nel salvataggio del nuovo utente',
-					'Riprovare'
-				);
-		});
-		this.auth.uploadImage(this.my_input.files[0]);
+		this.auth
+			.newClient(client)
+			.then((id: string) => {
+				if (id) {
+					client.id = id;
+					this.auth
+						.uploadImageToClient(this.my_input.files[0], id)
+						.then(path => {
+							console.info(path);
+							client.photoUrl = path;
+							this.auth
+								.updateClient(client)
+								.then((value: boolean) => {
+									if (value) {
+										this.utils.openSnackBar(
+											'Il cliente ' +
+												client.displayName +
+												' è stato aggiunto con successo',
+											'😉'
+										);
+										this.resetClient(client);
+									} else
+										this.utils.openSnackBar(
+											'Attenzione, si è verificato un errore nel salvataggio del nuovo utente',
+											'Riprovare'
+										);
+								})
+								.catch(err => console.error('updateClient', err));
+						})
+						.catch(err => console.error('uploadImageToClient', err));
+				} else
+					this.utils.openSnackBar(
+						'Attenzione, si è verificato un errore nel salvataggio del nuovo utente',
+						'Riprovare'
+					);
+			})
+			.catch(err => console.error('newClient', err));
 	}
 
 	resetClient(client: Client): void {

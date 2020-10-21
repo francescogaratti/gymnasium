@@ -11,7 +11,7 @@ import {
 
 import * as firebaseui from 'firebaseui';
 
-import { AngularFireStorage } from '@angular/fire/storage';
+import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { Router } from '@angular/router';
 
@@ -120,20 +120,16 @@ export class AuthService {
 		return client;
 	}
 
-	async newClient(client: Client): Promise<boolean> {
+	async newClient(client: Client): Promise<string> {
 		this.asyncOperation.next(true);
 		console.info('📗 - write');
-		let res: boolean = await this.afs
+		let res: string = await this.afs
 			.collection('clients')
 			.add(client)
-			.then(async (docRef: DocumentReference) => {
-				client.id = docRef.id;
-				let update_res = await this.updateClient(client);
-				return update_res;
-			})
+			.then(async (docRef: DocumentReference) => docRef.id)
 			.catch(err => {
 				console.error(err);
-				return false;
+				return null;
 			});
 		this.asyncOperation.next(false);
 		return res;
@@ -430,11 +426,23 @@ export class AuthService {
 		return res;
 	}
 
-	async uploadImage(image: File) {
+	async uploadImageToClient(image: File, clientId: string): Promise<string> {
+		console.info('📗 - upload file');
 		let ref = this.afstr.ref('');
-		let fileRef = ref.child(image.name);
-		fileRef.put(image).then(function (snapshot) {
-			console.log('Uploaded a blob or file!', snapshot);
+		let fileRef = ref.child(clientId + '/' + image.name);
+		return await fileRef.put(image).then((snapshot: any) => {
+			console.log('Uploaded', snapshot);
+			return snapshot.ref.location.path_;
 		});
+	}
+
+	async getFile(path: string): Promise<string> {
+		console.info('📘 - read file');
+		return await this.afstr
+			.ref(path)
+			.getDownloadURL()
+			.toPromise()
+			.then(url => (url ? url : null))
+			.catch(() => null);
 	}
 }
