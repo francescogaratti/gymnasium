@@ -84,7 +84,6 @@ export class ClientComponent implements OnInit {
 
 	detailWorkout(workout: Workout) {
 		this.selected_workout = workout;
-		// this.router.navigateByUrl('workout?id=' + workout.id);
 	}
 
 	async getImage(path: string) {
