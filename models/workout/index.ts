@@ -1,11 +1,24 @@
 import { Exercise } from '../exercise';
-// import { Trainer } from '../trainer';
 export interface Workout {
 	id: string;
 	name: string;
+
 	clientId: string;
+	clientName: string;
+
+	trainerId: string;
+	trainerName: string;
+
+	startingDate: string;
+	endingDate: string;
+
+	session: WorkoutSession[];
+}
+
+export interface WorkoutSession {
+	name: string;
 	exercises: Exercise[];
-	trainer: string;
+	notes: string;
 }
 
 export interface WorkoutOld {
