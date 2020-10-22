@@ -3,7 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Client, mocks as clients } from '@models/client';
 import { Exercise, mock as exercises } from '@models/exercise';
-import { Workout } from '@models/workout';
+import { DigitalWorkout, Workout } from '@models/workout';
 import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
 
@@ -94,12 +94,17 @@ export class NewWorkoutComponent implements OnInit {
 		console.info('\tWorkout Name:', this.nameFormControl.value);
 		console.info('\tExercises');
 		console.table(this.exercises);
-		let workout: Workout = {
+		let workout: DigitalWorkout = {
 			id: null,
 			name: this.nameFormControl.value,
 			clientId: this.selected_client.id,
-			exercises: this.exercises,
-			trainer: this.auth.user.displayName,
+			clientName: '',
+			trainerId: this.auth.user.displayName,
+			trainerName: this.auth.user.displayName,
+			startingDate: null,
+			endingDate: null,
+			sessions: [],
+			exercises: [],
 		};
 		this.auth
 			.newWorkout(workout, this.selected_client)

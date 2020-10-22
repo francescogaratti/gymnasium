@@ -11,8 +11,15 @@ export interface Workout {
 
 	startingDate: string;
 	endingDate: string;
+	exercises: Exercise[];
+}
 
-	session: WorkoutSession[];
+export interface DigitalWorkout extends Workout {
+	sessions: WorkoutSession[];
+}
+
+export interface StandardWorkout extends Workout {
+	filePath: string;
 }
 
 export interface WorkoutSession {
