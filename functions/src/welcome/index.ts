@@ -1,4 +1,4 @@
-import * as firebase from 'firebase/app';
+import firebase = require('firebase');
 import 'firebase/firestore';
 import * as functions from 'firebase-functions';
 import * as nodemailer from 'nodemailer';
@@ -9,7 +9,7 @@ const transporter = nodemailer.createTransport({
 	service: 'gmail',
 	auth: {
 		user: myEmail,
-		pass: 'totheisland97$',
+		pass: 'Totheisland97!',
 	},
 });
 
