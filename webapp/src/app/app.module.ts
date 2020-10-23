@@ -56,7 +56,6 @@ import { PersonalAreaComponent } from './pages/personal-area/personal-area.compo
 import { MenuComponent } from '@components/menu/menu.component';
 import { ProgressBarComponent } from '@components/progress-bar/progress-bar.component';
 import { CreateWorkoutRoutineComponent } from './pages/create-workout-routine/create-workout-routine.component';
-import { AdminComponent } from './pages/admin/admin.component';
 import { ClientComponent } from './pages/client/client.component';
 import { ClientsComponent } from './pages/clients/clients.component';
 import { NewWorkoutComponent } from './pages/new-workout/new-workout.component';
@@ -65,6 +64,7 @@ import { WorkoutComponent } from './pages/workout/workout.component';
 import { HttpClientModule } from '@angular/common/http';
 import { NewClientComponent } from './pages/new-client/new-client.component';
 import { NewTrainerComponent } from './pages/new-trainer/new-trainer.component';
+import { NewExerciseComponent } from './pages/new-exercise/new-exercise.component';
 
 @NgModule({
 	declarations: [
@@ -76,7 +76,6 @@ import { NewTrainerComponent } from './pages/new-trainer/new-trainer.component';
 		MenuComponent,
 		ProgressBarComponent,
 		CreateWorkoutRoutineComponent,
-		AdminComponent,
 		ClientComponent,
 		ClientsComponent,
 		NewWorkoutComponent,
@@ -84,6 +83,7 @@ import { NewTrainerComponent } from './pages/new-trainer/new-trainer.component';
 		WorkoutComponent,
 		NewClientComponent,
 		NewTrainerComponent,
+		NewExerciseComponent,
 	],
 	imports: [
 		HttpClientModule,

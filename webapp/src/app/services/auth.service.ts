@@ -429,7 +429,7 @@ export class AuthService {
 	async uploadImageToClient(image: File, clientId: string): Promise<string> {
 		console.info('📗 - upload file');
 		let ref = this.afstr.ref('');
-		let fileRef = ref.child(clientId + '/' + image.name);
+		let fileRef = ref.child('profile-images/' + clientId + '/' + image.name);
 		return await fileRef.put(image).then((snapshot: any) => {
 			console.log('Uploaded', snapshot);
 			return snapshot.ref.location.path_;
