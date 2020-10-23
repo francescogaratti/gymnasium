@@ -5,7 +5,6 @@ export interface Client {
 	photoUrl?: string;
 	fiscalCode: string;
 	address?: string;
-	address2?: string;
 	city: string;
 	postalCode: string;
 	workouts?: any[];
@@ -17,7 +16,6 @@ export class Client {
 		this.displayName = null;
 		this.fiscalCode = null;
 		this.address = null;
-		this.address2 = null;
 		this.city = null;
 		this.postalCode = null;
 	}

@@ -1,13 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import {
-	AbstractControl,
-	Form,
-	FormBuilder,
-	FormControl,
-	FormGroup,
-	ValidatorFn,
-	Validators,
-} from '@angular/forms';
+import { AbstractControl, FormControl, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Client } from '@models/client';
 import { EmployeeType } from '@models/employee';
@@ -45,7 +37,6 @@ export class NewTrainerComponent implements OnInit {
 	]);
 	photoFormControl: FormControl = new FormControl('', [Validators.required]);
 	indirizzoFormControl: FormControl = new FormControl('', [Validators.required]);
-	indirizzo2FormControl: FormControl = new FormControl('', []);
 	provinciaFormControl: FormControl = new FormControl('', [Validators.required]);
 	cittaFormControl: FormControl = new FormControl('', [Validators.required]);
 
@@ -56,7 +47,6 @@ export class NewTrainerComponent implements OnInit {
 		this.codiceFiscaleFormControl,
 		this.photoFormControl,
 		this.indirizzoFormControl,
-		this.indirizzo2FormControl,
 		this.provinciaFormControl,
 		this.cittaFormControl,
 	];
@@ -77,7 +67,6 @@ export class NewTrainerComponent implements OnInit {
 			fiscalCode: this.codiceFiscaleFormControl.value,
 			photoUrl: null,
 			address: this.indirizzoFormControl.value,
-			address2: this.indirizzo2FormControl.value,
 			city: this.cittaFormControl.value,
 			postalCode: this.codicePostaleFormControl.value,
 		};

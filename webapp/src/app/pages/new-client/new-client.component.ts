@@ -1,10 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import {
 	AbstractControl,
-	Form,
-	FormBuilder,
 	FormControl,
-	FormGroup,
 	ValidatorFn,
 	Validators,
 } from '@angular/forms';
@@ -45,7 +42,6 @@ export class NewClientComponent implements OnInit {
 	]);
 	photoFormControl: FormControl = new FormControl('', []);
 	indirizzoFormControl: FormControl = new FormControl('', [Validators.required]);
-	indirizzo2FormControl: FormControl = new FormControl('', []);
 	provinciaFormControl: FormControl = new FormControl('', [Validators.required]);
 	cittaFormControl: FormControl = new FormControl('', [Validators.required]);
 
@@ -56,7 +52,6 @@ export class NewClientComponent implements OnInit {
 		this.codiceFiscaleFormControl,
 		this.photoFormControl,
 		this.indirizzoFormControl,
-		this.indirizzo2FormControl,
 		this.provinciaFormControl,
 		this.cittaFormControl,
 	];
@@ -74,7 +69,6 @@ export class NewClientComponent implements OnInit {
 			fiscalCode: this.codiceFiscaleFormControl.value,
 			photoUrl: this.photoFormControl.value,
 			address: this.indirizzoFormControl.value,
-			address2: this.indirizzo2FormControl.value,
 			city: this.cittaFormControl.value,
 			postalCode: this.codicePostaleFormControl.value,
 		};
