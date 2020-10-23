@@ -49,10 +49,7 @@ export class WorkoutComponent implements OnInit {
 	}
 
 	generateExcel() {
-		const filename: string =
-			'allenamento_' +
-			this.client.displayName.replace(' ', '_').toLocaleLowerCase() +
-			'.xlsx';
+		const filename: string = this.workout.name + '.xlsx';
 		this.auth
 			.generateExcel(filename, this.workout.id)
 			.then((value: boolean) => {

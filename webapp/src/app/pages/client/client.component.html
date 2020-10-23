@@ -1,7 +1,7 @@
 <mat-card *ngIf="client" align="center" class="mat-elevation-z0" style="box-sizing: border-box">
 	<mat-card
 		class="mat-elevation-z8"
-		style="float: left; max-width: 20%; box-sizing: border-box; margin: 5px"
+		style="float: left; max-width: 35%; min-width: 600px; box-sizing: border-box; margin: 5px"
 	>
 		<mat-card-content>
 			<div *ngIf="client" align="center">
@@ -19,61 +19,63 @@
 				Workouts
 			</button>
 		</mat-card-actions>
-	</mat-card>
-	<!-- workouts new -->
-	<mat-card
-		*ngIf="workouts?.length > 0"
-		class="mat-elevation-z8"
-		style="float: left; max-width: 400px; box-sizing: border-box; overflow: hidden; margin: 5px"
-	>
-		<mat-card-title>Allenamenti</mat-card-title>
-		<mat-card-content
-			><table mat-table [dataSource]="workouts">
-				<!-- workout name -->
-				<ng-container matColumnDef="name">
-					<th mat-header-cell *matHeaderCellDef>Nome</th>
-					<td mat-cell *matCellDef="let w">{{ w.name }}</td>
-				</ng-container>
-				<!-- starting date -->
-				<ng-container matColumnDef="startingDate">
-					<th mat-header-cell *matHeaderCellDef>Inizio</th>
-					<td mat-cell *matCellDef="let w">
-						{{ w.startingDate ? (w.startingDate | date: 'dd/MM/yyyy') : '' }}
-					</td>
-				</ng-container>
-				<!-- ending date -->
-				<ng-container matColumnDef="endingDate">
-					<th mat-header-cell *matHeaderCellDef>Fine</th>
-					<td mat-cell *matCellDef="let w">
-						{{ w.endingDate ? (w.endingDate | date: 'dd/MM/yyyy') : '' }}
-					</td>
-				</ng-container>
-				<!-- trainer name -->
-				<ng-container matColumnDef="trainer">
-					<th mat-header-cell *matHeaderCellDef>Trainer</th>
-					<td mat-cell *matCellDef="let w">{{ w.trainer }}</td>
-				</ng-container>
-				<!-- delete Column -->
-				<ng-container matColumnDef="delete">
-					<th mat-header-cell *matHeaderCellDef>Elimina</th>
-					<td mat-cell *matCellDef="let w">
-						<mat-icon (click)="deleteWorkout(w)" style="cursor: pointer"
-							>delete</mat-icon
-						>
-					</td>
-				</ng-container>
-				<!-- detail -->
-				<ng-container matColumnDef="detail">
-					<th mat-header-cell *matHeaderCellDef>Dettaglio</th>
-					<td mat-cell *matCellDef="let c">
-						<mat-icon (click)="detailWorkout(c)" style="cursor: pointer">info</mat-icon>
-					</td>
-				</ng-container>
+		<!-- workouts new -->
+		<mat-card
+			*ngIf="workouts?.length > 0"
+			class="mat-elevation-z8"
+			style="display: grid; box-sizing: border-box; overflow: hidden; margin: 5px"
+		>
+			<mat-card-title>Allenamenti</mat-card-title>
+			<mat-card-content style="display: contents"
+				><table mat-table [dataSource]="workouts">
+					<!-- workout name -->
+					<ng-container matColumnDef="name">
+						<th mat-header-cell *matHeaderCellDef>Nome</th>
+						<td mat-cell *matCellDef="let w">{{ w.name }}</td>
+					</ng-container>
+					<!-- starting date -->
+					<ng-container matColumnDef="startingDate">
+						<th mat-header-cell *matHeaderCellDef>Inizio</th>
+						<td mat-cell *matCellDef="let w">
+							{{ w.startingDate ? (w.startingDate | date: 'dd/MM/yyyy') : '' }}
+						</td>
+					</ng-container>
+					<!-- ending date -->
+					<ng-container matColumnDef="endingDate">
+						<th mat-header-cell *matHeaderCellDef>Fine</th>
+						<td mat-cell *matCellDef="let w">
+							{{ w.endingDate ? (w.endingDate | date: 'dd/MM/yyyy') : '' }}
+						</td>
+					</ng-container>
+					<!-- trainer name -->
+					<ng-container matColumnDef="trainer">
+						<th mat-header-cell *matHeaderCellDef>Trainer</th>
+						<td mat-cell *matCellDef="let w">{{ w.trainerName }}</td>
+					</ng-container>
+					<!-- delete Column -->
+					<ng-container matColumnDef="delete">
+						<th mat-header-cell *matHeaderCellDef>Elimina</th>
+						<td mat-cell *matCellDef="let w">
+							<mat-icon (click)="deleteWorkout(w)" style="cursor: pointer"
+								>delete</mat-icon
+							>
+						</td>
+					</ng-container>
+					<!-- detail -->
+					<ng-container matColumnDef="detail">
+						<th mat-header-cell *matHeaderCellDef>Dettaglio</th>
+						<td mat-cell *matCellDef="let c">
+							<mat-icon (click)="detailWorkout(c)" style="cursor: pointer"
+								>info</mat-icon
+							>
+						</td>
+					</ng-container>
 
-				<tr mat-header-row *matHeaderRowDef="columnsWorkouts"></tr>
-				<tr mat-row *matRowDef="let row; columns: columnsWorkouts"></tr>
-			</table>
-		</mat-card-content>
+					<tr mat-header-row *matHeaderRowDef="columnsWorkouts"></tr>
+					<tr mat-row *matRowDef="let row; columns: columnsWorkouts"></tr>
+				</table>
+			</mat-card-content>
+		</mat-card>
 	</mat-card>
 	<!-- detail workout -->
 	<app-workout

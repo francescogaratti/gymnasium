@@ -8,10 +8,10 @@
 		<mat-card-title>Scegli il Cliente</mat-card-title>
 		<mat-card-content>
 			<form class="example-form" align="center">
-				<div *ngIf="selected_client" align="center">
+				<div *ngIf="selected_client && URL" align="center">
 					<img
 						(click)="detailClient(selected_client)"
-						[src]="selected_client?.photoUrl"
+						[src]="URL"
 						alt=""
 						style="border-radius: 100%; width: 100px; height: 100px; cursor: pointer"
 					/>
@@ -46,13 +46,13 @@
 							[value]="client.displayName"
 							(onSelectionChange)="selectedValueChange(client)"
 						>
-							<img
+							<!-- <img
 								class="example-option-img"
 								aria-hidden
 								[src]="client.photoUrl"
 								height="25"
 								style="border-radius: 100%"
-							/>
+							/> -->
 							<span>{{ client.displayName }}</span> |
 							<small>CF : {{ client.fiscalCode }}</small>
 						</mat-option>

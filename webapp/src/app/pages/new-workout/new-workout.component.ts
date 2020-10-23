@@ -37,6 +37,7 @@ export class NewWorkoutComponent implements OnInit {
 	clients: Client[] = [];
 	clientCtrl = new FormControl();
 	selected_client: Client = null;
+	URL: string = null;
 	filteredClients: Observable<Client[]>;
 
 	formsControl: FormControl[] = [
@@ -170,6 +171,11 @@ export class NewWorkoutComponent implements OnInit {
 
 	selectedValueChange(client: Client) {
 		this.selected_client = client;
+		this.URL = null;
+		this.auth
+			.getFile(client.photoUrl)
+			.then(url => (url ? (this.URL = url) : ''))
+			.catch(() => null);
 	}
 
 	detailClient(client: Client) {
