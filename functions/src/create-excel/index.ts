@@ -28,7 +28,7 @@ export const generateExcel = functions.https.onRequest(
 		// now I have the workout to work with
 		const xl = require('excel4node');
 		const wb = new xl.Workbook();
-		const ws = wb.addWorksheet('Allenamento ' + workout.name);
+		const ws = wb.addWorksheet('Scheda di Allenamento');
 		const exerciseColumnNames = ['Esercizio', 'Sets', 'Reps', 'Rest', 'Note'];
 		// workout name
 		ws.cell(1, 1)
