@@ -73,6 +73,7 @@
 						[formControl]="codiceFiscaleFormControl"
 					/>
 					<mat-hint align="end">{{ codiceFiscale.value.length }} / 16</mat-hint>
+					<br />
 					<mat-error *ngIf="codiceFiscaleFormControl.hasError('required')">
 						Codice fiscale <strong>obbligatorio</strong>
 					</mat-error>
@@ -98,40 +99,43 @@
 				</mat-form-field>
 			</p>
 
-			<p>
+			<p
+				style="
+					display: flex;
+					text-align: center;
+					align-items: center;
+					width: fit-content;
+					margin: 20px auto;
+				"
+			>
 				<img
 					id="photo-profile"
 					alt=""
-					style="border-radius: 100%; width: 100px; height: 100px"
+					style="
+						border-radius: 100%;
+						width: 100px;
+						height: 100px;
+						border: solid 2px white;
+					"
 					hidden="true"
 				/>
-				<mat-form-field class="example-full-width" color="accent">
-					<mat-label>Foto profilo URL</mat-label>
-					<input matInput type="text" [formControl]="photoFormControl" required />
-					<mat-error *ngIf="photoFormControl.hasError('required')">
-						Foto profilo <strong>obbligatoria</strong>
-					</mat-error>
-					<div matSuffix>
-						<button
-							mat-button
-							*ngIf="photoFormControl.value"
-							mat-icon-button
-							aria-label="Clear"
-							(click)="photoFormControl.setValue(null);removePhoto()"
-						>
-							<mat-icon>close</mat-icon>
-						</button>
-						<button
-							mat-button
-							*ngIf="!photoFormControl.value"
-							mat-icon-button
-							aria-label="Upload"
-							(click)="uploadPhoto()"
-						>
-							<mat-icon>add_a_photo</mat-icon>
-						</button>
-					</div>
-				</mat-form-field>
+				<button
+					mat-raised-button
+					*ngIf="!photoFormControl.value"
+					aria-label="Upload"
+					(click)="uploadPhoto()"
+				>
+					Foto profilo
+					<i class="material-icons-two-tone">add_a_photo</i>
+				</button>
+				<button
+					*ngIf="photoFormControl.value"
+					mat-icon-button
+					aria-label="Clear"
+					(click)="photoFormControl.setValue(null); removePhoto()"
+				>
+					<mat-icon>clear</mat-icon>
+				</button>
 			</p>
 
 			<p>
@@ -144,6 +148,9 @@
 						required
 						[formControl]="indirizzoFormControl"
 					></textarea>
+					<mat-error *ngIf="indirizzoFormControl.hasError('required')">
+						L'indirizzo è <strong>obbligatorio</strong>
+					</mat-error>
 					<button
 						mat-button
 						*ngIf="indirizzoFormControl.value"
@@ -174,6 +181,9 @@
 								[formControl]="cittaFormControl"
 								required
 							/>
+							<mat-error *ngIf="cittaFormControl.hasError('required')">
+								La città è <strong>obbligatoria</strong>
+							</mat-error>
 						</mat-form-field>
 					</td>
 					<td>

@@ -86,7 +86,7 @@ export class NewTrainerComponent implements OnInit {
 								.then((value: boolean) => {
 									if (value) {
 										this.utils.openSnackBar(
-											'Il cliente ' +
+											"L'istruttore " +
 												client.displayName +
 												' è stato aggiunto con successo',
 											'😉'
@@ -113,6 +113,7 @@ export class NewTrainerComponent implements OnInit {
 	resetClient(client: Client): void {
 		client = new Client();
 		this.formsControl.forEach((form: FormControl) => form.setValue(null));
+		this.removePhoto();
 	}
 
 	addTrainer(trainer: Trainer): void {
@@ -136,7 +137,6 @@ export class NewTrainerComponent implements OnInit {
 	}
 
 	getFiles() {
-		console.table(this.my_input.files);
 		const file = this.my_input.files[0];
 		const url = URL.createObjectURL(file);
 		this.photoFormControl.setValue(String(url));
@@ -153,5 +153,8 @@ export class NewTrainerComponent implements OnInit {
 		) as HTMLImageElement;
 		photoProfile.hidden = true;
 		photoProfile.src = '';
+		this.my_input.remove();
+		this.my_input = document.createElement('input');
+		this.my_input.onchange = () => this.getFiles();
 	}
 }
