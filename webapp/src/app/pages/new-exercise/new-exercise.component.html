@@ -1,1 +1,54 @@
-<p>new-exercise works!</p>
+<mat-card
+	[class.mat-elevation-z0]="true"
+	style="float: left; overflow: hidden"
+	class="example-full-width"
+	align="center"
+>
+	<mat-card-title style="margin-bottom: 20px">Aggiungi un nuovo esercizio</mat-card-title>
+	<mat-card-content>
+		<form class="example-form">
+			<mat-form-field class="example-full-width">
+				<mat-label>Sede</mat-label>
+				<input matInput disabled value="Gymnasium #1" />
+			</mat-form-field>
+
+			<table class="example-full-width" cellspacing="0">
+				<tr>
+					<td>
+						<mat-form-field class="example-full-width">
+							<mat-label>Nome</mat-label>
+							<input
+								#nome
+								matInput
+								required
+								placeholder="Mario"
+								[formControl]="nomeFormControl"
+							/>
+							<button
+								mat-button
+								*ngIf="nomeFormControl.value"
+								matSuffix
+								mat-icon-button
+								aria-label="Clear"
+								(click)="nomeFormControl.setValue(null)"
+							>
+								<mat-icon>close</mat-icon>
+							</button>
+						</mat-form-field>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</mat-card-content>
+	<mat-card-actions>
+		<button mat-raised-button color="warn" (click)="resetExercise(exerciseEntry)">Reset</button>
+		<button
+			mat-raised-button
+			color="primary"
+			(click)="addExercise(exerciseEntry)"
+			[disabled]="nomeFormControl.invalid"
+		>
+			Aggiungi Esercizio
+		</button>
+	</mat-card-actions>
+</mat-card>

@@ -61,3 +61,14 @@ export const mock: Exercise[] = [
 		notes: 'Concentrati sulla parte negativa del movimento',
 	},
 ];
+
+export enum ExerciseCategory {
+	petto = 'Petto',
+	schiena = 'Schiena',
+	cardio = 'Cardio',
+}
+
+export interface ExerciseEntry {
+	name: string;
+	category: string;
+}

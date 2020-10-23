@@ -22,6 +22,7 @@ import { User } from '@models/user';
 import { Client } from '@models/client';
 import { DigitalWorkout, StandardWorkout, Workout } from '@models/workout';
 import { HttpClient } from '@angular/common/http';
+import { ExerciseEntry } from '@models/exercise';
 
 // configuration for the ui
 const uiConfig = {
@@ -444,5 +445,21 @@ export class AuthService {
 			.toPromise()
 			.then(url => (url ? url : null))
 			.catch(() => null);
+	}
+
+	/** Exercises */
+	async newExercise(ee: ExerciseEntry): Promise<string> {
+		this.asyncOperation.next(true);
+		console.info('📗 - write');
+		let res: string = await this.afs
+			.collection('exercises')
+			.add(ee)
+			.then(async (docRef: DocumentReference) => docRef.id)
+			.catch(err => {
+				console.error(err);
+				return null;
+			});
+		this.asyncOperation.next(false);
+		return res;
 	}
 }
