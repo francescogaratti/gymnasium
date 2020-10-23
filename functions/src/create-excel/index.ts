@@ -2,7 +2,7 @@ import * as functions from 'firebase-functions';
 import firebase = require('firebase');
 
 import 'excel4node';
-import { Workout } from '../../../models/workout';
+import { DigitalWorkout } from '../../../models/workout';
 import { Rest } from '../../../models/exercise';
 
 export const generateExcel = functions.https.onRequest(
@@ -10,12 +10,12 @@ export const generateExcel = functions.https.onRequest(
 		const id: string = String(req.query['workoutId']);
 		if (!id) res.send(undefined);
 
-		const workout: Workout | null = await firebase
+		const workout: DigitalWorkout | null = await firebase
 			.firestore()
 			.collection('workouts')
 			.doc(id)
 			.get()
-			.then(snapshot => snapshot.data() as Workout)
+			.then(snapshot => snapshot.data() as DigitalWorkout)
 			.catch(err => {
 				console.error(err);
 				return null;
@@ -28,30 +28,64 @@ export const generateExcel = functions.https.onRequest(
 		// now I have the workout to work with
 		const xl = require('excel4node');
 		const wb = new xl.Workbook();
-		const ws = wb.addWorksheet('Allenamento');
-		const headingColumnNames = ['Esercizio', 'Sets', 'Reps', 'Rest', 'Note'];
-		// Write trainer name
-		ws.cell(1, 1).string('Trainer');
-		ws.cell(1, 2).string(workout.trainer);
-		// Write date
-		ws.cell(2, 1).string('Data');
-		ws.cell(2, 2).date(new Date()).style({ numberFormat: 'dd/mm/yyyy' });
-		//Write Column Title in Excel file
-		let headingColumnIndex = 1;
-		headingColumnNames.forEach(heading => {
-			ws.cell(3, headingColumnIndex++)
-				.string(heading)
+		const ws = wb.addWorksheet('Allenamento ' + workout.name);
+		const exerciseColumnNames = ['Esercizio', 'Sets', 'Reps', 'Rest', 'Note'];
+		// workout name
+		ws.cell(1, 1)
+			.string('Allenamento')
+			.style({ font: { bold: true } });
+		ws.cell(1, 2).string(workout.name);
+		// client name
+		ws.cell(2, 1)
+			.string('Cliente')
+			.style({ font: { bold: true } });
+		ws.cell(2, 2).string(workout.clientName);
+		// trainer name
+		ws.cell(3, 1)
+			.string('Istruttore')
+			.style({ font: { bold: true } });
+		ws.cell(3, 2).string(workout.trainerName);
+		// Write date start + end
+		ws.cell(1, 6)
+			.string('Data Inizio')
+			.style({ font: { bold: true } });
+		ws.cell(1, 7).date(new Date(workout.startingDate)).style({ numberFormat: 'dd/mm/yyyy' });
+		ws.cell(2, 6)
+			.string('Data Fine')
+			.style({ font: { bold: true } });
+		ws.cell(2, 7).date(new Date(workout.endingDate)).style({ numberFormat: 'dd/mm/yyyy' });
+
+		let rowIndex = 5;
+		workout.sessions.forEach(session => {
+			// write session info
+			ws.cell(rowIndex, 1)
+				.string(session.name)
 				.style({ font: { bold: true } });
-		});
-		let rowIndex = 4;
-		workout.exercises.forEach(exercise => {
-			ws.cell(rowIndex, 1).string(exercise.name);
-			ws.cell(rowIndex, 2).number(exercise.sets);
-			ws.cell(rowIndex, 3).number(exercise.reps);
-			// rest
-			ws.cell(rowIndex, 4).string(restToString(exercise.rest));
-			ws.cell(rowIndex, 5).string(exercise.notes);
+			ws.cell(rowIndex, 2).string(session.notes);
+			// next row
 			rowIndex++;
+			// write exercises columns
+			let headingColumnIndex = 1;
+			exerciseColumnNames.forEach(heading => {
+				ws.cell(rowIndex, headingColumnIndex++)
+					.string(heading)
+					.style({ font: { bold: true } });
+			});
+			// next row
+			rowIndex++;
+			// write list of exercises
+			session.exercises.forEach(exercise => {
+				ws.cell(rowIndex, 1).string(exercise.name);
+				ws.cell(rowIndex, 2).number(exercise.sets);
+				ws.cell(rowIndex, 3).number(exercise.reps);
+				ws.cell(rowIndex, 4).string(restToString(exercise.rest));
+				ws.cell(rowIndex, 5)
+					.string(exercise.notes)
+					.style({ font: { italics: true } });
+				rowIndex++;
+			});
+			// hop 2 lines to better spaced view
+			rowIndex += 2;
 		});
 
 		const filename = 'workout.xlsx';

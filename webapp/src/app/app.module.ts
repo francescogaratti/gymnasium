@@ -29,7 +29,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInput, MatInputModule } from '@angular/material/input';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -48,6 +48,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 import { HomeComponent } from './pages/home/home.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
@@ -117,12 +118,14 @@ import { NewTrainerComponent } from './pages/new-trainer/new-trainer.component';
 		MatPaginatorModule,
 		MatSortModule,
 		MatAutocompleteModule,
+		MatExpansionModule,
 	],
 	providers: [
 		MatDatepickerModule,
 		MatInputModule,
 		FormsModule,
 		{ provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } },
+		{ provide: MAT_DATE_LOCALE, useValue: 'it-IT' },
 	],
 	bootstrap: [AppComponent],
 })

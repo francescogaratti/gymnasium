@@ -20,7 +20,7 @@ import { switchMap } from 'rxjs/operators';
 
 import { User } from '@models/user';
 import { Client } from '@models/client';
-import { Workout, WorkoutOld } from '@models/workout';
+import { DigitalWorkout, StandardWorkout, Workout } from '@models/workout';
 import { HttpClient } from '@angular/common/http';
 
 // configuration for the ui
@@ -195,7 +195,7 @@ export class AuthService {
 
 	// workouts
 
-	async newWorkoutOld(workout: WorkoutOld): Promise<string> {
+	async newWorkoutOld(workout: StandardWorkout): Promise<string> {
 		this.asyncOperation.next(true);
 		console.info('📗 - write');
 		let res: string = await this.afs
@@ -215,7 +215,7 @@ export class AuthService {
 		return res;
 	}
 
-	async updateWorkoutOld(workout: WorkoutOld): Promise<boolean> {
+	async updateWorkoutOld(workout: StandardWorkout): Promise<boolean> {
 		this.asyncOperation.next(true);
 		console.info('📗 - update workout');
 		let res: boolean = await this.afs
@@ -231,7 +231,7 @@ export class AuthService {
 		return res;
 	}
 
-	async updateWorkout(workout: Workout): Promise<boolean> {
+	async updateWorkout(workout: DigitalWorkout): Promise<boolean> {
 		this.asyncOperation.next(true);
 		console.info('📗 - update workout');
 		let res: boolean = await this.afs
@@ -266,18 +266,18 @@ export class AuthService {
 		return res;
 	}
 
-	public async readClientWorkoutsOld(client: Client): Promise<WorkoutOld[]> {
+	public async readClientWorkoutsOld(client: Client): Promise<StandardWorkout[]> {
 		this.asyncOperation.next(true);
-		let workouts: WorkoutOld[] = await this.afs
+		let workouts: StandardWorkout[] = await this.afs
 			.collection('clients')
 			.doc(client.id)
 			.get()
 			.toPromise()
 			.then(async snapshot => {
 				let refs: DocumentReference[] = snapshot.get('workouts');
-				let promises: Promise<WorkoutOld>[] = [];
+				let promises: Promise<StandardWorkout>[] = [];
 				refs.forEach((ref: DocumentReference) =>
-					promises.push(ref.get().then(res => res.data() as WorkoutOld))
+					promises.push(ref.get().then(res => res.data() as StandardWorkout))
 				);
 				const shirts = await Promise.all(promises);
 				return shirts;
@@ -290,7 +290,7 @@ export class AuthService {
 		return workouts;
 	}
 
-	async newWorkout(workout: Workout, client: Client): Promise<boolean> {
+	async newWorkout(workout: DigitalWorkout, client: Client): Promise<boolean> {
 		this.asyncOperation.next(true);
 		console.info('📗 - write');
 		let workoutId: string = await this.afs
@@ -311,18 +311,18 @@ export class AuthService {
 		return res;
 	}
 
-	public async readClientWorkouts(client: Client): Promise<Workout[]> {
+	public async readClientWorkouts(client: Client): Promise<DigitalWorkout[]> {
 		this.asyncOperation.next(true);
-		let workouts: Workout[] = await this.afs
+		let workouts: DigitalWorkout[] = await this.afs
 			.collection('clients')
 			.doc(client.id)
 			.get()
 			.toPromise()
 			.then(async snapshot => {
 				let refs: DocumentReference[] = snapshot.get('workouts');
-				let promises: Promise<Workout>[] = [];
+				let promises: Promise<DigitalWorkout>[] = [];
 				refs.forEach((ref: DocumentReference) =>
-					promises.push(ref.get().then(res => res.data() as Workout))
+					promises.push(ref.get().then(res => res.data() as DigitalWorkout))
 				);
 				const workouts = await Promise.all(promises);
 				return workouts;
@@ -375,14 +375,14 @@ export class AuthService {
 		return res;
 	}
 
-	async getWorkout(id: string): Promise<Workout> {
+	async getWorkout(id: string): Promise<DigitalWorkout> {
 		this.asyncOperation.next(true);
-		let res: Workout = await this.afs
+		let res: DigitalWorkout = await this.afs
 			.collection('workouts')
 			.doc(id)
 			.get()
 			.toPromise()
-			.then(snapshot => snapshot.data() as Workout)
+			.then(snapshot => snapshot.data() as DigitalWorkout)
 			.catch(err => {
 				console.error(err);
 				return null;

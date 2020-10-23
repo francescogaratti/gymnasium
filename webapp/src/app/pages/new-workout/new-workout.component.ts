@@ -1,14 +1,16 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Client, mocks as clients } from '@models/client';
 import { Exercise, mock as exercises } from '@models/exercise';
-import { DigitalWorkout, Workout } from '@models/workout';
+import { DigitalWorkout, WorkoutSession, mock as digital_workout } from '@models/workout';
 import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
 
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+
+import { MatAccordion } from '@angular/material/expansion';
 
 @Component({
 	selector: 'app-new-workout',
@@ -17,11 +19,14 @@ import { map, startWith } from 'rxjs/operators';
 	encapsulation: ViewEncapsulation.None,
 })
 export class NewWorkoutComponent implements OnInit {
-	new_exercise: Exercise;
 	before_changes_exercise: Exercise;
-	exercises: Exercise[] = exercises; // todo: remove mock
+	// new_exercises: Exercise[] = [];
+	workout_sessions: WorkoutSession[] = digital_workout.sessions;
 
+	sessionFormControl: FormControl = new FormControl('', [Validators.required]);
 	nameFormControl: FormControl = new FormControl('', [Validators.required]);
+	startingDateFormControl: FormControl = new FormControl('', [Validators.required]);
+	endingDateFormControl: FormControl = new FormControl('', [Validators.required]);
 	esercizioFormControl: FormControl = new FormControl('', [Validators.required]);
 	setsFormControl: FormControl = new FormControl('', [Validators.required]);
 	repsFormControl: FormControl = new FormControl('', [Validators.required]);
@@ -35,7 +40,6 @@ export class NewWorkoutComponent implements OnInit {
 	filteredClients: Observable<Client[]>;
 
 	formsControl: FormControl[] = [
-		this.nameFormControl,
 		this.esercizioFormControl,
 		this.setsFormControl,
 		this.repsFormControl,
@@ -43,6 +47,9 @@ export class NewWorkoutComponent implements OnInit {
 		this.restSecFormControl,
 		this.notesFormControl,
 	];
+
+	@ViewChild(MatAccordion) accordion: MatAccordion;
+
 	constructor(private auth: AuthService, private utils: UtilsService, public router: Router) {
 		this.filteredClients = this.clientCtrl.valueChanges.pipe(
 			startWith(''),
@@ -67,8 +74,8 @@ export class NewWorkoutComponent implements OnInit {
 		this.auth.readClients();
 	}
 
-	addExercise() {
-		this.new_exercise = {
+	addExercise(ws: WorkoutSession) {
+		let new_exercise: Exercise = {
 			id: null,
 			name: this.esercizioFormControl.value,
 			reps: this.repsFormControl.value,
@@ -79,8 +86,19 @@ export class NewWorkoutComponent implements OnInit {
 			},
 			notes: this.notesFormControl.value,
 		};
-		this.exercises.push(this.new_exercise);
+		ws.exercises.push(new_exercise);
 		this.cleanForm();
+	}
+
+	addWorkoutSession() {
+		let new_workout_session: WorkoutSession = {
+			name: this.sessionFormControl.value,
+			exercises: [],
+			notes: null,
+		};
+		this.workout_sessions.push(new_workout_session);
+		this.cleanForm();
+		this.sessionFormControl.setValue('');
 	}
 
 	cleanForm() {
@@ -92,20 +110,21 @@ export class NewWorkoutComponent implements OnInit {
 		console.info('\tClient:', this.selected_client.displayName);
 		console.info('\tTrainer:', this.auth.user.displayName);
 		console.info('\tWorkout Name:', this.nameFormControl.value);
-		console.info('\tExercises');
-		console.table(this.exercises);
+		console.info('\tSessions');
+		console.table(this.workout_sessions);
 		let workout: DigitalWorkout = {
 			id: null,
 			name: this.nameFormControl.value,
 			clientId: this.selected_client.id,
-			clientName: '',
-			trainerId: this.auth.user.displayName,
+			clientName: this.selected_client.displayName,
+			trainerId: this.auth.user.uid,
 			trainerName: this.auth.user.displayName,
-			startingDate: null,
-			endingDate: null,
-			sessions: [],
-			exercises: [],
+			startingDate: new Date(this.startingDateFormControl.value).toUTCString(),
+			endingDate: new Date(this.endingDateFormControl.value).toUTCString(),
+			sessions: this.workout_sessions,
 		};
+		console.info({ workout });
+
 		this.auth
 			.newWorkout(workout, this.selected_client)
 			.then((value: boolean) => {
@@ -124,12 +143,12 @@ export class NewWorkoutComponent implements OnInit {
 	}
 
 	resetExercises() {
-		this.exercises = [];
+		this.workout_sessions = [];
 		this.cleanForm();
 	}
 
-	removeExercise(exercise: Exercise) {
-		this.exercises = this.exercises.filter((e: Exercise) => e.id !== exercise.id);
+	removeExercise(exercise: Exercise, ws: WorkoutSession) {
+		ws.exercises = ws.exercises.filter((e: Exercise) => e.id !== exercise.id);
 	}
 
 	editExercise(exercise: Exercise) {

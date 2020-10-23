@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Client } from '@models/client';
-import { Workout } from '@models/workout';
+import { DigitalWorkout, Workout } from '@models/workout';
 import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
 @Component({
@@ -11,7 +11,7 @@ import { UtilsService } from '@services/utils.service';
 })
 export class WorkoutComponent implements OnInit {
 	id: string;
-	@Input() workout: Workout = null;
+	@Input() workout: DigitalWorkout = null;
 	@Input() client: Client = null;
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -28,7 +28,7 @@ export class WorkoutComponent implements OnInit {
 	getWorkout(id: string) {
 		this.auth
 			.getWorkout(id)
-			.then((workout: Workout) => {
+			.then((workout: DigitalWorkout) => {
 				this.workout = workout;
 				this.getClient(this.workout.clientId);
 			})

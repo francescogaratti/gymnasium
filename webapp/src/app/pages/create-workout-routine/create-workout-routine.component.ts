@@ -10,7 +10,7 @@ import {
 // import { MatCalendarCellCssClasses } from '@angular/material/datepicker';
 import { MatHorizontalStepper } from '@angular/material/stepper';
 import { AuthService } from '@services/auth.service';
-import { Workout, WorkoutOld } from '@models/workout';
+import { Workout, StandardWorkout } from '@models/workout';
 import { Client, mocks as clients } from '@models/client';
 import { UtilsService } from '@services/utils.service';
 // import { UtilsService } from '@services/utils.service';
@@ -43,12 +43,12 @@ export class CreateWorkoutRoutineComponent implements OnInit {
 	percentage: number;
 	private selectedFile: File;
 	@ViewChild('stepper') stepper: MatHorizontalStepper;
-	constructor(private fb: FormBuilder, public auth: AuthService, private utils:UtilsService) {
+	constructor(private fb: FormBuilder, public auth: AuthService, private utils: UtilsService) {
 		this.maxDate = new Date();
 		this.minDate = new Date();
-		this.auth.clients$.subscribe((clients:Client[])=>this.clients = clients);
+		this.auth.clients$.subscribe((clients: Client[]) => (this.clients = clients));
 	}
-	
+
 	ngOnInit(): void {
 		this.auth.readClients();
 		this.workoutFormGroup = this.fb.group({
@@ -76,35 +76,55 @@ export class CreateWorkoutRoutineComponent implements OnInit {
 	}
 
 	newWorkout() {
-		let workout: WorkoutOld = {
-			id:null,
-			clientId:this.client.value,
-			trainerId:null,
-			startingDate:new Date(this.startingDate.value).toUTCString(),
+		let workout: StandardWorkout = {
+			id: null,
+			name: null,
+			clientId: this.client.value,
+			clientName: this.client.value,
+			trainerId: null,
+			trainerName: null,
+			startingDate: new Date(this.startingDate.value).toUTCString(),
 			endingDate: new Date(this.endingDate.value).toUTCString(),
-			fileId:this.attachedFile.value.name
+			filePath: this.attachedFile.value.name,
 		};
 		console.info({ workout });
-		this.auth.newWorkoutOld(workout).then((id:string)=>{
-			if(id){
-				let client:Client = this.clients.find((client:Client)=>workout.clientId == client.id);
-				this.auth.newClientWorkout(client,workout.id).then((value:boolean)=>{
-					if(value){
-						this.utils.openSnackBar("L'allenamento è stato salvato correttamente",'💪😉');
-						this.workoutFormGroup.reset();
-						this.stepper.reset();
-					}
-					else this.utils.openSnackBar("Si è verificato un errore durante il salvataggio dell'allenamento","Riprovare, per favore 🙏");
-				}).catch(err=>{
-					console.error(err);
-					this.utils.openSnackBar("Ops! Qualcosa è andato storto!","💀💀💀");
-				});
-			}
-			else this.utils.openSnackBar("Si è verificato un errore durante il salvataggio dell'allenamento","Riprovare, per favore 🙏");
-		}).catch(err=>{
-			console.error(err);
-			this.utils.openSnackBar("Ops! Qualcosa è andato storto!","💀💀💀");
-		});
+		this.auth
+			.newWorkoutOld(workout)
+			.then((id: string) => {
+				if (id) {
+					let client: Client = this.clients.find(
+						(client: Client) => workout.clientId == client.id
+					);
+					this.auth
+						.newClientWorkout(client, workout.id)
+						.then((value: boolean) => {
+							if (value) {
+								this.utils.openSnackBar(
+									"L'allenamento è stato salvato correttamente",
+									'💪😉'
+								);
+								this.workoutFormGroup.reset();
+								this.stepper.reset();
+							} else
+								this.utils.openSnackBar(
+									"Si è verificato un errore durante il salvataggio dell'allenamento",
+									'Riprovare, per favore 🙏'
+								);
+						})
+						.catch(err => {
+							console.error(err);
+							this.utils.openSnackBar('Ops! Qualcosa è andato storto!', '💀💀💀');
+						});
+				} else
+					this.utils.openSnackBar(
+						"Si è verificato un errore durante il salvataggio dell'allenamento",
+						'Riprovare, per favore 🙏'
+					);
+			})
+			.catch(err => {
+				console.error(err);
+				this.utils.openSnackBar('Ops! Qualcosa è andato storto!', '💀💀💀');
+			});
 	}
 
 	addMonths(date: Date, months: number): Date {

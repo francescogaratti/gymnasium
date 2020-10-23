@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Client } from '@models/client';
-import { Workout, WorkoutOld } from '@models/workout';
+import { DigitalWorkout, StandardWorkout, Workout } from '@models/workout';
 import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
 
@@ -14,15 +14,15 @@ export class ClientComponent implements OnInit {
 	id: string;
 	client: Client = null;
 	URL: string = null;
-	selected_workout: Workout = null;
-	workoutsOld: WorkoutOld[] = [];
-	workouts: Workout[] = [];
+	selected_workout: DigitalWorkout = null;
+	workoutsOld: StandardWorkout[] = [];
+	workouts: DigitalWorkout[] = [];
 	columnsWorkouts: string[] = [
 		'name',
 		'trainer',
 		'startingDate',
 		'endingDate',
-		'remove',
+		'delete',
 		'detail',
 	];
 	constructor(
@@ -55,18 +55,18 @@ export class ClientComponent implements OnInit {
 	getClientWorkoutsOld() {
 		this.auth
 			.readClientWorkoutsOld(this.client)
-			.then((workoutsOld: WorkoutOld[]) => (this.workoutsOld = workoutsOld))
+			.then((workoutsOld: StandardWorkout[]) => (this.workoutsOld = workoutsOld))
 			.catch(err => console.error(err));
 	}
 
 	getClientWorkouts() {
 		this.auth
 			.readClientWorkouts(this.client)
-			.then((workouts: Workout[]) => (this.workouts = workouts))
+			.then((workouts: DigitalWorkout[]) => (this.workouts = workouts))
 			.catch(err => console.error(err));
 	}
 
-	deleteWorkout(workout: Workout) {
+	deleteWorkout(workout: DigitalWorkout) {
 		this.auth
 			.deleteWorkout(workout, this.client)
 			.then((value: boolean) => {
@@ -88,7 +88,7 @@ export class ClientComponent implements OnInit {
 			});
 	}
 
-	detailWorkout(workout: Workout) {
+	detailWorkout(workout: DigitalWorkout) {
 		this.selected_workout = workout;
 	}
 

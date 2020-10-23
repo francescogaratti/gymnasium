@@ -3,78 +3,89 @@
 	<mat-card-actions>
 		<button mat-raised-button color="primary" (click)="generateExcel()">Genera Excel</button>
 	</mat-card-actions>
-	<mat-card-content style="display: table; margin: auto">
-		<form *ngFor="let exercise of workout.exercises">
-			<table class="example-full-width" cellspacing="0">
-				<tr>
-					<td>
-						<mat-form-field class="example-full-width">
-							<mat-label>Esercizio</mat-label>
-							<input
-								matInput
-								[value]="exercise.name"
-								color="accent"
-								[disabled]="!exercise['edit']"
-							/>
-						</mat-form-field>
-					</td>
-					<td>
-						<mat-form-field class="number" color="accent">
-							<mat-label>Sets</mat-label>
-							<input
-								matInput
-								type="number"
-								[value]="exercise.sets"
-								[disabled]="!exercise['edit']"
-							/>
-						</mat-form-field>
-					</td>
-					<td>
-						<mat-form-field class="number" color="accent">
-							<mat-label>Reps</mat-label>
-							<input
-								matInput
-								type="number"
-								[value]="exercise.reps"
-								[disabled]="!exercise['edit']"
-							/>
-						</mat-form-field>
-					</td>
-					<td>
-						<mat-form-field class="number" color="accent">
-							<mat-label>Min</mat-label>
-							<input
-								matInput
-								type="number"
-								[value]="exercise.rest.minutes"
-								[disabled]="!exercise['edit']"
-							/>
-						</mat-form-field>
-					</td>
-					<td>
-						<mat-form-field class="number" color="accent">
-							<mat-label>Sec</mat-label>
-							<input
-								matInput
-								type="number"
-								[value]="exercise.rest.seconds"
-								[disabled]="!exercise['edit']"
-							/>
-						</mat-form-field>
-					</td>
-					<td *ngIf="exercise.notes || exercise['edit']">
-						<mat-form-field class="example-full-width" color="accent">
-							<mat-label>Note</mat-label>
-							<input
-								matInput
-								[value]="exercise.notes"
-								color="accent"
-								[disabled]="!exercise['edit']"
-							/>
-						</mat-form-field>
-					</td>
-				</tr>
-			</table>
-		</form>
-	</mat-card-content>
+	<!-- list of workout sessions -->
+	<mat-accordion class="example-headers-align" multi>
+		<mat-expansion-panel *ngFor="let workout_session of workout.sessions">
+			<mat-expansion-panel-header>
+				<mat-panel-title>
+					{{ workout_session.name }}
+				</mat-panel-title>
+				<mat-panel-description>
+					{{ workout_session.notes ? workout_session.notes : '' }}
+				</mat-panel-description>
+			</mat-expansion-panel-header>
+			<form *ngFor="let exercise of workout_session.exercises">
+				<table class="example-full-width" cellspacing="0">
+					<tr>
+						<td>
+							<mat-form-field class="example-full-width">
+								<mat-label>Esercizio</mat-label>
+								<input
+									matInput
+									[value]="exercise.name"
+									color="accent"
+									[disabled]="!exercise['edit']"
+								/>
+							</mat-form-field>
+						</td>
+						<td>
+							<mat-form-field class="number" color="accent">
+								<mat-label>Sets</mat-label>
+								<input
+									matInput
+									type="number"
+									[value]="exercise.sets"
+									[disabled]="!exercise['edit']"
+								/>
+							</mat-form-field>
+						</td>
+						<td>
+							<mat-form-field class="number" color="accent">
+								<mat-label>Reps</mat-label>
+								<input
+									matInput
+									type="number"
+									[value]="exercise.reps"
+									[disabled]="!exercise['edit']"
+								/>
+							</mat-form-field>
+						</td>
+						<td>
+							<mat-form-field class="number" color="accent">
+								<mat-label>Min</mat-label>
+								<input
+									matInput
+									type="number"
+									[value]="exercise.rest.minutes"
+									[disabled]="!exercise['edit']"
+								/>
+							</mat-form-field>
+						</td>
+						<td>
+							<mat-form-field class="number" color="accent">
+								<mat-label>Sec</mat-label>
+								<input
+									matInput
+									type="number"
+									[value]="exercise.rest.seconds"
+									[disabled]="!exercise['edit']"
+								/>
+							</mat-form-field>
+						</td>
+						<td *ngIf="exercise.notes || exercise['edit']">
+							<mat-form-field class="example-full-width" color="accent">
+								<mat-label>Note</mat-label>
+								<input
+									matInput
+									[value]="exercise.notes"
+									color="accent"
+									[disabled]="!exercise['edit']"
+								/>
+							</mat-form-field>
+						</td>
+					</tr>
+				</table>
+			</form>
+		</mat-expansion-panel>
+	</mat-accordion>
 </mat-card>
