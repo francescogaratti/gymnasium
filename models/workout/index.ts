@@ -28,14 +28,14 @@ export interface WorkoutSession {
 }
 
 export const mock: DigitalWorkout = {
-	id: null,
+	id: '',
 	name: 'Primo Allenamento Test',
-	clientId: null,
-	clientName: null,
-	trainerId: null,
-	trainerName: null,
-	startingDate: null,
-	endingDate: null,
+	clientId: '',
+	clientName: '',
+	trainerId: '',
+	trainerName: '',
+	startingDate: '',
+	endingDate: '',
 	sessions: [
 		{
 			name: 'Allenamento A',
