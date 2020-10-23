@@ -88,7 +88,7 @@ export const generateExcel = functions.https.onRequest(
 			rowIndex += 2;
 		});
 
-		const filename = 'workout.xlsx';
+		const filename = workout.name + '.xlsx';
 		res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
 		res.setHeader('Access-Control-Allow-Origin', '*');
 		wb.write(filename, res, function (err: any, stats: any) {
