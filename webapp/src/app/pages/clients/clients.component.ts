@@ -10,7 +10,7 @@ import { UtilsService } from '@services/utils.service';
 	styleUrls: ['./clients.component.sass'],
 })
 export class ClientsComponent implements OnInit {
-	displayedColumns: string[] = ['name', 'fiscalCode', 'remove', 'detail'];
+	displayedColumns: string[] = ['name', 'fiscalCode', 'delete', 'detail'];
 	clients: Client[] = [];
 	constructor(private auth: AuthService, private utils: UtilsService, public router: Router) {}
 

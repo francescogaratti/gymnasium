@@ -48,21 +48,21 @@ export class WorkoutComponent implements OnInit {
 			});
 	}
 
-	generateExcel() {
-		const filename: string = this.workout.name + '.xlsx';
-		this.auth
-			.generateExcel(filename, this.workout.id)
-			.then((value: boolean) => {
-				if (value) this.utils.openSnackBar('Conversione in file Excel riuscita!', '📝📝');
-				else
-					this.utils.openSnackBar(
-						"Si è verificato un errore durante la conversione dell'allenamento",
-						'Riprovare, per favore 🙏'
-					);
-			})
-			.catch(err => {
-				console.error(err);
-				this.utils.openSnackBar('Ops! Qualcosa è andato storto!', '💀💀💀');
-			});
-	}
+	// generateExcel() {
+	// 	const filename: string = this.workout.name + '.xlsx';
+	// 	this.auth
+	// 		.generateExcel(filename, this.workout.id)
+	// 		.then((value: boolean) => {
+	// 			if (value) this.utils.openSnackBar('Conversione in file Excel riuscita!', '📝📝');
+	// 			else
+	// 				this.utils.openSnackBar(
+	// 					"Si è verificato un errore durante la conversione dell'allenamento",
+	// 					'Riprovare, per favore 🙏'
+	// 				);
+	// 		})
+	// 		.catch(err => {
+	// 			console.error(err);
+	// 			this.utils.openSnackBar('Ops! Qualcosa è andato storto!', '💀💀💀');
+	// 		});
+	// }
 }

@@ -24,6 +24,7 @@ export class ClientComponent implements OnInit {
 		'endingDate',
 		'delete',
 		'detail',
+		'export',
 	];
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -97,5 +98,23 @@ export class ClientComponent implements OnInit {
 			.getFile(path)
 			.then(url => (url ? (this.URL = url) : ''))
 			.catch(() => null);
+	}
+
+	exportExcel(workout: DigitalWorkout) {
+		const filename: string = workout.name + '.xlsx';
+		this.auth
+			.generateExcel(filename, workout.id)
+			.then((value: boolean) => {
+				if (value) this.utils.openSnackBar('Conversione in file Excel riuscita!', '📝📝');
+				else
+					this.utils.openSnackBar(
+						"Si è verificato un errore durante la conversione dell'allenamento",
+						'Riprovare, per favore 🙏'
+					);
+			})
+			.catch(err => {
+				console.error(err);
+				this.utils.openSnackBar('Ops! Qualcosa è andato storto!', '💀💀💀');
+			});
 	}
 }
