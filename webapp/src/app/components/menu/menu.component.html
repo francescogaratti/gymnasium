@@ -27,6 +27,15 @@
 			<button
 				color="accent"
 				mat-raised-button
+				(click)="router.navigateByUrl('book')"
+				class="menu-tab"
+			>
+				Book
+				<i class="material-icons-two-tone">today</i>
+			</button>
+			<button
+				color="accent"
+				mat-raised-button
 				(click)="router.navigateByUrl('new-workout')"
 				class="menu-tab"
 			>
