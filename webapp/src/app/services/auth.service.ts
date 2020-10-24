@@ -23,6 +23,7 @@ import { Client } from '@models/client';
 import { DigitalWorkout, StandardWorkout, Workout } from '@models/workout';
 import { HttpClient } from '@angular/common/http';
 import { ExerciseEntry } from '@models/exercise';
+import * as firebase from 'firebase';
 
 // configuration for the ui
 const uiConfig = {
@@ -67,6 +68,10 @@ export class AuthService {
 				}
 			})
 		);
+	}
+
+	messaging() {
+		return firebase.messaging();
 	}
 
 	startUi() {
