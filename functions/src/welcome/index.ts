@@ -1,7 +1,9 @@
-import firebase = require('firebase');
-import 'firebase/firestore';
+/** firebase */
 import * as functions from 'firebase-functions';
+import firebase = require('firebase');
+/** extra dependencies */
 import * as nodemailer from 'nodemailer';
+/** models */
 import { User } from '../../../models/user';
 
 const myEmail = 'life4weeks@gmail.com';
@@ -13,7 +15,7 @@ const transporter = nodemailer.createTransport({
 	},
 });
 
-export const welcomeMail = functions.auth.user().onCreate((u: functions.auth.UserRecord) => {
+export const welcomeMail = functions.auth.user().onCreate(async (u: functions.auth.UserRecord) => {
 	const user: User = {
 		uid: u.uid,
 		email: u.email ? u.email : '',
@@ -27,17 +29,17 @@ export const welcomeMail = functions.auth.user().onCreate((u: functions.auth.Use
 		subject: 'Registrazione Ultra Gymnasium',
 		html:
 			`
-            <body>
-                <h3>
-                    Benvenuto ` +
+			<body>
+				<h3>
+					Benvenuto ` +
 			user.displayName +
 			` 😄
-                </h3>
-                <p style="display: block;">
-                    Questa è un'email di conferma che ti sei registrato con successo al sito "Ultra Gymnasium"!
-                </p>
-                <a style="display: block;" href="https://ultra-gymnasium.web.app">Go to website<a />
-            </body>
+				</h3>
+				<p style="display: block;">
+					Questa è un'email di conferma che ti sei registrato con successo al sito <strong>Ultra Gymnasium</strong>.
+				</p>
+				<a style="display: block;" href="https://ultra-gymnasium.web.app">Go to website<a />
+			</body>	
 		`,
 	};
 
@@ -52,11 +54,12 @@ export const welcomeMail = functions.auth.user().onCreate((u: functions.auth.Use
 	});
 
 	// write new user to database
-	firebase
+	await firebase
 		.firestore()
 		.collection('users')
 		.doc(user.uid)
 		.set(user)
 		.then(() => console.info('Inserted new user'))
 		.catch(err => console.info(err));
+	return;
 });

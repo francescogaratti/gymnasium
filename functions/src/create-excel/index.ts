@@ -1,7 +1,9 @@
+/** firebase */
 import * as functions from 'firebase-functions';
 import firebase = require('firebase');
-
+/** extra dependencies */
 import 'excel4node';
+/** models */
 import { DigitalWorkout } from '../../../models/workout';
 import { Rest } from '../../../models/exercise';
 

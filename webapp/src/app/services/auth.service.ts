@@ -86,8 +86,6 @@ export class AuthService {
 		this.asyncOperation.next(true);
 		let res = await this.afs
 			.collection('clients')
-			// .doc(this.user.uid)
-			// .collection('records')
 			.get()
 			.toPromise()
 			.then(snapshot => {
