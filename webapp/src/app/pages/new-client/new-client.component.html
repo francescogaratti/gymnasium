@@ -15,7 +15,7 @@
 			<table class="example-full-width" cellspacing="0">
 				<tr>
 					<td>
-						<mat-form-field class="example-full-width">
+						<mat-form-field class="example-full-width" color="accent">
 							<mat-label>Nome</mat-label>
 							<input
 								#nome
@@ -37,7 +37,7 @@
 						</mat-form-field>
 					</td>
 					<td>
-						<mat-form-field class="example-full-width">
+						<mat-form-field class="example-full-width" color="accent">
 							<mat-label>Cognome</mat-label>
 							<input
 								#cognome
@@ -62,7 +62,25 @@
 			</table>
 
 			<p>
-				<mat-form-field class="example-full-width">
+				<mat-form-field style="margin: 10px">
+					<mat-label>Data di Nascita</mat-label>
+					<input
+						matInput
+						[matDatepicker]="pickerInizio"
+						(focus)="pickerInizio.open()"
+						[formControl]="birthdayFormControl"
+						readonly
+						required
+					/>
+					<mat-error *ngIf="birthdayFormControl.hasError('required')">
+						Data di nascita <strong>obbligatoria</strong>
+					</mat-error>
+				</mat-form-field>
+				<mat-datepicker #pickerInizio></mat-datepicker>
+			</p>
+
+			<p>
+				<mat-form-field class="example-full-width" color="accent">
 					<mat-label>Codice Fiscale</mat-label>
 					<input
 						matInput
@@ -73,6 +91,7 @@
 						[formControl]="codiceFiscaleFormControl"
 					/>
 					<mat-hint align="end">{{ codiceFiscale.value.length }} / 16</mat-hint>
+					<br />
 					<mat-error *ngIf="codiceFiscaleFormControl.hasError('required')">
 						Codice fiscale <strong>obbligatorio</strong>
 					</mat-error>
@@ -98,15 +117,47 @@
 				</mat-form-field>
 			</p>
 
-			<p>
-				<mat-form-field class="example-full-width">
-					<mat-label>Foto profilo</mat-label>
-					<input matInput type="text" [formControl]="photoFormControl" />
-				</mat-form-field>
+			<p
+				style="
+					display: flex;
+					text-align: center;
+					align-items: center;
+					width: fit-content;
+					margin: 20px auto;
+				"
+			>
+				<img
+					id="photo-profile"
+					alt=""
+					style="
+						border-radius: 100%;
+						width: 100px;
+						height: 100px;
+						border: solid 2px white;
+					"
+					hidden="true"
+				/>
+				<button
+					mat-raised-button
+					*ngIf="!photoFormControl.value"
+					aria-label="Upload"
+					(click)="uploadPhoto()"
+				>
+					Foto profilo
+					<i class="material-icons-two-tone">add_a_photo</i>
+				</button>
+				<button
+					*ngIf="photoFormControl.value"
+					mat-icon-button
+					aria-label="Clear"
+					(click)="photoFormControl.setValue(null); removePhoto()"
+				>
+					<mat-icon>clear</mat-icon>
+				</button>
 			</p>
 
 			<p>
-				<mat-form-field class="example-full-width">
+				<mat-form-field class="example-full-width" color="accent">
 					<mat-label>Indirizzo</mat-label>
 					<textarea
 						#indirizzo
@@ -115,6 +166,9 @@
 						required
 						[formControl]="indirizzoFormControl"
 					></textarea>
+					<mat-error *ngIf="indirizzoFormControl.hasError('required')">
+						L'indirizzo è <strong>obbligatorio</strong>
+					</mat-error>
 					<button
 						mat-button
 						*ngIf="indirizzoFormControl.value"
@@ -131,13 +185,13 @@
 			<table class="example-full-width" cellspacing="0">
 				<tr>
 					<td>
-						<mat-form-field class="example-full-width">
+						<mat-form-field class="example-full-width" color="accent">
 							<mat-label>Stato</mat-label>
 							<input matInput value="Italia" disabled />
 						</mat-form-field>
 					</td>
 					<td>
-						<mat-form-field class="example-full-width">
+						<mat-form-field class="example-full-width" color="accent">
 							<mat-label>Città</mat-label>
 							<input
 								matInput
@@ -145,10 +199,13 @@
 								[formControl]="cittaFormControl"
 								required
 							/>
+							<mat-error *ngIf="cittaFormControl.hasError('required')">
+								La città è <strong>obbligatoria</strong>
+							</mat-error>
 						</mat-form-field>
 					</td>
 					<td>
-						<mat-form-field class="example-full-width">
+						<mat-form-field class="example-full-width" color="accent">
 							<mat-label>Codice Postale</mat-label>
 							<input
 								matInput
@@ -180,9 +237,11 @@
 			[disabled]="
 				nomeFormControl.invalid ||
 				cognomeFormControl.invalid ||
+				birthdayFormControl.invalid ||
 				codiceFiscaleFormControl.invalid ||
 				codicePostaleFormControl.invalid ||
-				indirizzoFormControl.invalid
+				indirizzoFormControl.invalid ||
+				photoFormControl.invalid
 			"
 		>
 			Aggiungi Cliente

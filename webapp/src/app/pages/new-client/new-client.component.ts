@@ -1,14 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import {
-	AbstractControl,
-	FormControl,
-	ValidatorFn,
-	Validators,
-} from '@angular/forms';
+import { AbstractControl, FormControl, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Client } from '@models/client';
-import { EmployeeType } from '@models/employee';
-import { Trainer } from '@models/trainer';
 import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
 
@@ -29,10 +22,10 @@ const fiscalCodePattern: string =
 })
 export class NewClientComponent implements OnInit {
 	client: Client = null;
-	trainer: Trainer = null;
 
 	nomeFormControl: FormControl = new FormControl('', [Validators.required]);
 	cognomeFormControl: FormControl = new FormControl('', [Validators.required]);
+	birthdayFormControl: FormControl = new FormControl('', [Validators.required]);
 	codicePostaleFormControl: FormControl = new FormControl('', [Validators.required]);
 	codiceFiscaleFormControl: FormControl = new FormControl('', [
 		Validators.required,
@@ -40,7 +33,7 @@ export class NewClientComponent implements OnInit {
 		Validators.minLength(16),
 		// Validators.pattern(fiscalCodePattern),
 	]);
-	photoFormControl: FormControl = new FormControl('', []);
+	photoFormControl: FormControl = new FormControl('', [Validators.required]);
 	indirizzoFormControl: FormControl = new FormControl('', [Validators.required]);
 	provinciaFormControl: FormControl = new FormControl('', [Validators.required]);
 	cittaFormControl: FormControl = new FormControl('', [Validators.required]);
@@ -48,6 +41,7 @@ export class NewClientComponent implements OnInit {
 	formsControl: FormControl[] = [
 		this.nomeFormControl,
 		this.cognomeFormControl,
+		this.birthdayFormControl,
 		this.codicePostaleFormControl,
 		this.codiceFiscaleFormControl,
 		this.photoFormControl,
@@ -55,55 +49,97 @@ export class NewClientComponent implements OnInit {
 		this.provinciaFormControl,
 		this.cittaFormControl,
 	];
+	my_input: HTMLInputElement = null;
 	constructor(private auth: AuthService, private utils: UtilsService, public router: Router) {}
 
 	ngOnInit(): void {
+		this.my_input = document.createElement('input');
+		this.my_input.onchange = () => this.getFiles();
 		this.resetClient(this.client);
-		this.resetTrainer(this.trainer);
 	}
 
 	addClient(client: Client): void {
 		client = {
-			id: String(Math.round(Math.random() * 1000000)),
+			id: null,
 			displayName: this.nomeFormControl.value + ' ' + this.cognomeFormControl.value,
+			birthday: new Date(this.birthdayFormControl.value).toUTCString(),
 			fiscalCode: this.codiceFiscaleFormControl.value,
-			photoUrl: this.photoFormControl.value,
+			photoUrl: null,
 			address: this.indirizzoFormControl.value,
 			city: this.cittaFormControl.value,
 			postalCode: this.codicePostaleFormControl.value,
 		};
 		console.info('Adding new client: ', client);
-		this.auth.newClient(client).then((id: string) => {
-			if (id) {
-				this.utils.openSnackBar(
-					'Il cliente ' + client.displayName + ' è stato aggiunto con successo',
-					'😉'
-				);
-				this.resetClient(client);
-			} else
-				this.utils.openSnackBar(
-					'Attenzione, si è verificato un errore nel salvataggio del nuovo utente',
-					'Riprovare'
-				);
-		});
+		this.auth
+			.newClient(client)
+			.then((id: string) => {
+				if (id) {
+					client.id = id;
+					this.auth
+						.uploadImageToClient(this.my_input.files[0], id)
+						.then(path => {
+							console.info(path);
+							client.photoUrl = path;
+							this.auth
+								.updateClient(client)
+								.then((value: boolean) => {
+									if (value) {
+										this.utils.openSnackBar(
+											'Il cliente ' +
+												client.displayName +
+												' è stato aggiunto con successo',
+											'😉'
+										);
+										this.resetClient(client);
+									} else
+										this.utils.openSnackBar(
+											'Attenzione, si è verificato un errore nel salvataggio del nuovo cliente',
+											'Riprovare'
+										);
+								})
+								.catch(err => console.error('updateClient', err));
+						})
+						.catch(err => console.error('uploadImageToClient', err));
+				} else
+					this.utils.openSnackBar(
+						'Attenzione, si è verificato un errore nel salvataggio del nuovo cliente',
+						'Riprovare'
+					);
+			})
+			.catch(err => console.error('newClient', err));
 	}
 
 	resetClient(client: Client): void {
 		client = new Client();
 		this.formsControl.forEach((form: FormControl) => form.setValue(null));
+		this.removePhoto();
 	}
 
-	addTrainer(trainer: Trainer): void {
-		console.info('Adding new trainer: ', trainer);
+	uploadPhoto() {
+		console.info('uploadPhoto');
+		this.my_input.setAttribute('type', 'file');
+		this.my_input.click();
 	}
 
-	resetTrainer(trainer: Trainer): void {
-		trainer = {
-			id: null,
-			displayName: null,
-			type: EmployeeType.Trainer,
-			shifts: [],
-			trainees: [],
-		};
+	getFiles() {
+		const file = this.my_input.files[0];
+		const url = URL.createObjectURL(file);
+		this.photoFormControl.setValue(String(url));
+		let photoProfile: HTMLImageElement = document.getElementById(
+			'photo-profile'
+		) as HTMLImageElement;
+		photoProfile.src = url;
+		photoProfile.hidden = false;
+	}
+
+	removePhoto() {
+		let photoProfile: HTMLImageElement = document.getElementById(
+			'photo-profile'
+		) as HTMLImageElement;
+		photoProfile.hidden = true;
+		photoProfile.src = '';
+		this.my_input.remove();
+		this.my_input = document.createElement('input');
+		this.my_input.onchange = () => this.getFiles();
 	}
 }
