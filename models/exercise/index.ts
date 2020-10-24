@@ -62,7 +62,7 @@ export const mock: Exercise[] = [
 	},
 ];
 
-export enum ExerciseCategory {
+export enum ExerciseCategories {
 	petto = 'Petto',
 	schiena = 'Schiena',
 	cardio = 'Cardio',
