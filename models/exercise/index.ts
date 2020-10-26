@@ -63,9 +63,14 @@ export const mock: Exercise[] = [
 ];
 
 export enum ExerciseCategories {
+	addominali = 'Addominali',
+	bicipiti = 'Bicipiti',
+	cardio = 'Cardio',
+	gambe = 'Gambe',
 	petto = 'Petto',
 	schiena = 'Schiena',
-	cardio = 'Cardio',
+	spalle = 'Spalle',
+	tricipiti = 'Tricipiti',
 }
 
 export interface ExerciseEntry {

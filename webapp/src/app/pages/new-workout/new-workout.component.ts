@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Client, mocks as clients } from '@models/client';
-import { Exercise, mock as exercises } from '@models/exercise';
+import { Client } from '@models/client';
+import { Exercise } from '@models/exercise';
 import { DigitalWorkout, WorkoutSession, mock as digital_workout } from '@models/workout';
 import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
@@ -20,7 +20,6 @@ import { MatAccordion } from '@angular/material/expansion';
 })
 export class NewWorkoutComponent implements OnInit {
 	before_changes_exercise: Exercise;
-	// new_exercises: Exercise[] = [];
 	workout_sessions: WorkoutSession[] = digital_workout.sessions;
 
 	sessionFormControl: FormControl = new FormControl('', [Validators.required]);
@@ -34,10 +33,15 @@ export class NewWorkoutComponent implements OnInit {
 	restSecFormControl: FormControl = new FormControl('', [Validators.required]);
 	notesFormControl: FormControl = new FormControl('', []);
 
+	excelFormControl: FormControl = new FormControl('', [Validators.required]);
+
 	clients: Client[] = [];
 	clientCtrl = new FormControl();
 	selected_client: Client = null;
 	URL: string = null;
+
+	my_input: HTMLInputElement = null;
+
 	filteredClients: Observable<Client[]>;
 
 	formsControl: FormControl[] = [
@@ -72,6 +76,7 @@ export class NewWorkoutComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		this.refreshInput();
 		this.auth.readClients();
 	}
 
@@ -160,13 +165,11 @@ export class NewWorkoutComponent implements OnInit {
 	saveChanges(exercise: Exercise) {
 		this.before_changes_exercise = null;
 		exercise['edit'] = false;
-		console.info('save', exercise);
 	}
 
 	cancelChanges(exercise: Exercise) {
 		exercise['edit'] = false;
 		exercise = this.before_changes_exercise;
-		console.info('cancel', exercise);
 	}
 
 	selectedValueChange(client: Client) {
@@ -180,5 +183,21 @@ export class NewWorkoutComponent implements OnInit {
 
 	detailClient(client: Client) {
 		this.router.navigateByUrl('client?id=' + client.id);
+	}
+
+	uploadWorkout() {
+		this.my_input.click();
+	}
+
+	getFiles() {
+		if (this.my_input.files[0])
+			this.excelFormControl.setValue(String(this.my_input.files[0].name));
+	}
+
+	refreshInput() {
+		if (this.my_input) this.my_input.remove();
+		this.my_input = document.createElement('input');
+		this.my_input.setAttribute('type', 'file');
+		this.my_input.onchange = () => this.getFiles();
 	}
 }

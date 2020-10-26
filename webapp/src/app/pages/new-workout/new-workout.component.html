@@ -417,4 +417,33 @@
 			</button>
 		</mat-card-actions>
 	</mat-card>
+	<mat-card
+		[class.mat-elevation-z0]="true"
+		align="center"
+		style="box-sizing: border-box"
+		class="example-full-width"
+	>
+		<mat-card-title>Carica un file excel</mat-card-title>
+		<mat-card-content>
+			<form>
+				<button
+					mat-raised-button
+					*ngIf="!excelFormControl.value"
+					aria-label="Upload"
+					(click)="uploadWorkout()"
+				>
+					Allega un file
+					<i class="material-icons-two-tone">add_a_photo</i>
+				</button>
+				<button
+					*ngIf="excelFormControl.value"
+					mat-icon-button
+					aria-label="Clear"
+					(click)="excelFormControl.setValue(null); refreshInput()"
+				>
+					<mat-icon>clear</mat-icon>
+				</button>
+			</form>
+		</mat-card-content>
+	</mat-card>
 </div>
