@@ -37,6 +37,14 @@
 					})
 					.catch(err => console.error(err));
 			}
+			// Handle incoming messages. Called when:
+			// - a message is received while the app has focus
+			// - the user clicks on an app notification created by a service worker
+			//   `messaging.setBackgroundMessageHandler` handler.
+			// messaging.onMessage(payload => {
+			// 	console.log('Message received. ', payload);
+			// 	// ...
+			// });
 		</script>
 		<noscript>
 			<h3>Sembra che tu non abbia abilitato JavaScript</h3>
