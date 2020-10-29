@@ -27,6 +27,7 @@ export interface User {
 	displayName: string;
 	photoURL: string;
 	metadata: Metadata;
+	tokenId?: string;
 }
 
 export interface Client extends User {
