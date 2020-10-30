@@ -18,8 +18,8 @@ import { Router } from '@angular/router';
 import { Observable, of, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
-import { User } from '@models/user';
-import { Client } from '@models/client';
+import { User, Client } from '@models/user';
+// import { Client } from '@models/client';
 import { DigitalWorkout, StandardWorkout, Workout } from '@models/workout';
 import { HttpClient } from '@angular/common/http';
 import { ExerciseEntry } from '@models/exercise';
@@ -43,6 +43,8 @@ export class AuthService {
 	asyncOperation: Subject<boolean> = new Subject<boolean>(); // signal to the progress bar
 
 	clients$: Subject<Client[]> = new Subject<Client[]>();
+	users$: Subject<User[]> = new Subject<User[]>();
+
 	constructor(
 		private afAuth: AngularFireAuth,
 		private afs: AngularFirestore,
@@ -52,6 +54,9 @@ export class AuthService {
 		private http: HttpClient
 	) {
 		this.getUser();
+		this.user$.subscribe(firebase_user => {
+			this.readUser(firebase_user.uid).then((user: User) => this.startMessaging(user));
+		});
 	}
 
 	async getUser() {
@@ -107,6 +112,44 @@ export class AuthService {
 		this.clients$.next(res); // send to subscribers
 	}
 
+	async readUser(id: string): Promise<User> {
+		console.info('📘 - get user ' + id);
+		this.asyncOperation.next(true);
+		let user: User = await this.afs
+			.collection('users')
+			.doc(id)
+			.get()
+			.toPromise()
+			.then(snapshot => snapshot.data() as User)
+			.catch(err => {
+				console.error(err);
+				return null;
+			});
+		this.asyncOperation.next(false);
+		return user;
+	}
+
+	public async readUsers() {
+		console.info('📘 - read');
+		this.asyncOperation.next(true);
+		let res = await this.afs
+			.collection('users')
+			.get()
+			.toPromise()
+			.then(snapshot => {
+				let values: User[] = [];
+				snapshot.forEach(doc => values.push(doc.data() as User));
+				return values;
+			})
+			.catch(err => {
+				console.error(err);
+				return [];
+			});
+		this.asyncOperation.next(false);
+		console.info(res);
+		this.users$.next(res); // send to subscribers
+	}
+
 	async readClient(id: string): Promise<Client> {
 		console.info('📘 - get client ' + id);
 		this.asyncOperation.next(true);
@@ -144,8 +187,24 @@ export class AuthService {
 		console.info('📗 - update client');
 		let res: boolean = await this.afs
 			.collection('clients')
-			.doc(client.id)
-			.set(client, { merge: true })
+			.doc(client.uid)
+			.set(JSON.parse(JSON.stringify(client)), { merge: true })
+			.then(() => true)
+			.catch(err => {
+				console.error(err);
+				return false;
+			});
+		this.asyncOperation.next(false);
+		return res;
+	}
+
+	async updateUser(user: User): Promise<boolean> {
+		this.asyncOperation.next(true);
+		console.info('📗 - update user');
+		let res: boolean = await this.afs
+			.collection('users')
+			.doc(user.uid)
+			.set(user)
 			.then(() => true)
 			.catch(err => {
 				console.error(err);
@@ -259,7 +318,7 @@ export class AuthService {
 		console.info('📗 - append workout');
 		let res: boolean = await this.afs
 			.collection('clients')
-			.doc(client.id)
+			.doc(client.uid)
 			.set({ workouts: client.workouts }, { merge: true })
 			.then(() => true)
 			.catch(err => {
@@ -274,7 +333,7 @@ export class AuthService {
 		this.asyncOperation.next(true);
 		let workouts: StandardWorkout[] = await this.afs
 			.collection('clients')
-			.doc(client.id)
+			.doc(client.uid)
 			.get()
 			.toPromise()
 			.then(async snapshot => {
@@ -319,7 +378,7 @@ export class AuthService {
 		this.asyncOperation.next(true);
 		let workouts: DigitalWorkout[] = await this.afs
 			.collection('clients')
-			.doc(client.id)
+			.doc(client.uid)
 			.get()
 			.toPromise()
 			.then(async snapshot => {
@@ -357,7 +416,7 @@ export class AuthService {
 			console.info('📘 - read');
 			let updated_workouts: DocumentReference[] = await this.afs
 				.collection('clients')
-				.doc(client.id)
+				.doc(client.uid)
 				.get()
 				.toPromise()
 				.then(async snapshot => {
@@ -464,5 +523,36 @@ export class AuthService {
 			});
 		this.asyncOperation.next(false);
 		return res;
+	}
+
+	/** messaging */
+	async startMessaging(user: User) {
+		// Get registration token. Initially this makes a network call, once retrieved
+		// subsequent calls to getToken will return from cache.
+		firebase
+			.messaging()
+			.getToken({
+				vapidKey:
+					'BMqcZLLGiA35N58DuYCuSM5LzTu7omcbopC8VPEoeq0xJ7bgeVd_vT-I8S8hgligQcHnJ8e6uKorDIXQdQmEAOg',
+			})
+			.then(async (currentToken: string) => {
+				if (currentToken) {
+					// console.info(currentToken);
+					if (!user.tokenId) {
+						console.info('save token to ', user.uid);
+						user.tokenId = currentToken;
+						this.updateUser(user);
+					}
+				} else {
+					user.tokenId = null;
+					this.updateUser(user);
+					console.warn(
+						'No registration token available. Request permission to generate one.'
+					);
+				}
+			})
+			.catch(err => {
+				console.error('An error occurred while retrieving token. ', err);
+			});
 	}
 }

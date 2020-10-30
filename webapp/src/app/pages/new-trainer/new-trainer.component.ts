@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, FormControl, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Client } from '@models/client';
+// import { Client } from '@models/client';
 import { EmployeeType } from '@models/employee';
 import { Trainer } from '@models/trainer';
+import { Client, User } from '@models/user';
 import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
 
@@ -60,38 +61,34 @@ export class NewTrainerComponent implements OnInit {
 		this.resetTrainer(this.trainer);
 	}
 
-	addClient(client: Client): void {
-		client = {
-			id: null,
-			displayName: this.nomeFormControl.value + ' ' + this.cognomeFormControl.value,
-			fiscalCode: this.codiceFiscaleFormControl.value,
-			photoUrl: null,
-			address: this.indirizzoFormControl.value,
-			city: this.cittaFormControl.value,
-			postalCode: this.codicePostaleFormControl.value,
-		};
-		console.info('Adding new client: ', client);
+	addClient(user: User): void {
+		this.client = new Client(user ? user : this.auth.user);
+		this.client.fiscalCode = this.codiceFiscaleFormControl.value;
+		this.client.address = this.indirizzoFormControl.value;
+		this.client.city = this.cittaFormControl.value;
+		this.client.postalCode = this.codicePostaleFormControl.value;
+		console.info('Adding new client: ', this.client);
 		this.auth
-			.newClient(client)
+			.newClient(this.client)
 			.then((id: string) => {
 				if (id) {
-					client.id = id;
+					this.client.uid = id;
 					this.auth
 						.uploadImageToClient(this.my_input.files[0], id)
 						.then(path => {
 							console.info(path);
-							client.photoUrl = path;
+							this.client.photoURL = path;
 							this.auth
-								.updateClient(client)
+								.updateClient(this.client)
 								.then((value: boolean) => {
 									if (value) {
 										this.utils.openSnackBar(
 											"L'istruttore " +
-												client.displayName +
+												this.client.displayName +
 												' è stato aggiunto con successo',
 											'😉'
 										);
-										this.resetClient(client);
+										this.resetClient(this.client);
 									} else
 										this.utils.openSnackBar(
 											'Attenzione, si è verificato un errore nel salvataggio del nuovo utente',

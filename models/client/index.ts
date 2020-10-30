@@ -7,6 +7,7 @@ export interface Client {
 	address?: string;
 	city: string;
 	postalCode: string;
+	tokenId?: string;
 	workouts?: any[];
 }
 

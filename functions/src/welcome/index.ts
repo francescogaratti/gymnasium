@@ -58,7 +58,7 @@ export const welcomeMail = functions.auth.user().onCreate(async (u: functions.au
 		.firestore()
 		.collection('users')
 		.doc(user.uid)
-		.set(user)
+		.set(JSON.parse(JSON.stringify(user)))
 		.then(() => console.info('Inserted new user'))
 		.catch(err => console.info(err));
 	return;

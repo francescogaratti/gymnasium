@@ -39,6 +39,19 @@ export interface Client extends User {
 	workouts: any[];
 }
 
+export class Client implements Client {
+	constructor(user?: User) {
+		if (user) {
+			this.uid = user.uid;
+			this.email = user.email;
+			this.displayName = user.displayName;
+			this.photoURL = user.photoURL;
+			this.metadata = user.metadata;
+			this.tokenId = user.tokenId;
+		}
+	}
+}
+
 export interface Employee extends User {
 	birthday: string;
 	fiscalCode: string;

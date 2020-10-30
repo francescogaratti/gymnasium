@@ -11,8 +11,9 @@ import {
 import { MatHorizontalStepper } from '@angular/material/stepper';
 import { AuthService } from '@services/auth.service';
 import { Workout, StandardWorkout } from '@models/workout';
-import { Client, mocks as clients } from '@models/client';
+// import { Client, mocks as clients } from '@models/client';
 import { UtilsService } from '@services/utils.service';
+import { Client } from '@models/user';
 // import { UtilsService } from '@services/utils.service';
 // import { Settings } from '@models/settings';
 
@@ -93,7 +94,7 @@ export class CreateWorkoutRoutineComponent implements OnInit {
 			.then((id: string) => {
 				if (id) {
 					let client: Client = this.clients.find(
-						(client: Client) => workout.clientId == client.id
+						(client: Client) => workout.clientId == client.uid
 					);
 					this.auth
 						.newClientWorkout(client, workout.id)

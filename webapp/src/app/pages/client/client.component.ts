@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Client } from '@models/client';
+import { Client } from '@models/user';
+// import { Client } from '@models/client';
 import { DigitalWorkout, StandardWorkout, Workout } from '@models/workout';
 import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
@@ -41,7 +42,7 @@ export class ClientComponent implements OnInit {
 				.readClient(this.id)
 				.then((client: Client) => {
 					this.client = client;
-					this.getImage(this.client.photoUrl);
+					this.getImage(this.client.photoURL);
 				})
 				.catch(err => {
 					this.utils.openSnackBar(
@@ -97,7 +98,7 @@ export class ClientComponent implements OnInit {
 		this.auth
 			.getFile(path)
 			.then(url => (url ? (this.URL = url) : ''))
-			.catch(() => null);
+			.catch(() => (this.URL = this.client.photoURL));
 	}
 
 	exportExcel(workout: DigitalWorkout) {

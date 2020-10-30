@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Client } from '@models/client';
+import { Client } from '@models/user';
+// import { Client } from '@models/client';
 import { DigitalWorkout, Workout } from '@models/workout';
 import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';

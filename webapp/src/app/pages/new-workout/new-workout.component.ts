@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Client } from '@models/client';
+// import { Client } from '@models/client';
 import { Exercise } from '@models/exercise';
 import { DigitalWorkout, WorkoutSession, mock as digital_workout } from '@models/workout';
 import { AuthService } from '@services/auth.service';
@@ -11,6 +11,7 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 import { MatAccordion } from '@angular/material/expansion';
+import { Client } from '@models/user';
 
 @Component({
 	selector: 'app-new-workout',
@@ -121,7 +122,7 @@ export class NewWorkoutComponent implements OnInit {
 		let workout: DigitalWorkout = {
 			id: null,
 			name: this.nameFormControl.value,
-			clientId: this.selected_client.id,
+			clientId: this.selected_client.uid,
 			clientName: this.selected_client.displayName,
 			trainerId: this.auth.user.uid,
 			trainerName: this.auth.user.displayName,
@@ -176,13 +177,13 @@ export class NewWorkoutComponent implements OnInit {
 		this.selected_client = client;
 		this.URL = null;
 		this.auth
-			.getFile(client.photoUrl)
+			.getFile(client.photoURL)
 			.then(url => (url ? (this.URL = url) : ''))
-			.catch(() => null);
+			.catch(() => (this.URL = this.selected_client.photoURL));
 	}
 
 	detailClient(client: Client) {
-		this.router.navigateByUrl('client?id=' + client.id);
+		this.router.navigateByUrl('client?id=' + client.uid);
 	}
 
 	uploadWorkout() {

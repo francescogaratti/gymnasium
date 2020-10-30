@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Client } from '@models/client';
+import { Client } from '@models/user';
+// import { Client } from '@models/client';
 import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
 
@@ -37,6 +38,6 @@ export class ClientsComponent implements OnInit {
 	}
 
 	detail(client: Client) {
-		this.router.navigateByUrl('client?id=' + client.id);
+		this.router.navigateByUrl('client?id=' + client.uid);
 	}
 }

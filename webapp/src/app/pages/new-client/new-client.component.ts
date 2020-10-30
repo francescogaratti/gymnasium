@@ -1,9 +1,12 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, FormControl, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Client } from '@models/client';
+import { Client, User } from '@models/user';
+// import { Client } from '@models/client';
 import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
+import { Observable } from 'rxjs/internal/Observable';
+import { map, startWith } from 'rxjs/operators';
 
 export function checkFiscalCode(nameRe: RegExp): ValidatorFn {
 	return (control: AbstractControl): { [key: string]: any } | null => {
@@ -22,7 +25,14 @@ const fiscalCodePattern: string =
 })
 export class NewClientComponent implements OnInit {
 	client: Client = null;
+	selected_user: User = null;
+	// all clients & users
+	clients: Client[] = [];
+	users: User[] = [];
 
+	filteredUsers: Observable<User[]>;
+
+	userFormControl: FormControl = new FormControl('', [Validators.required]);
 	nomeFormControl: FormControl = new FormControl('', [Validators.required]);
 	cognomeFormControl: FormControl = new FormControl('', [Validators.required]);
 	birthdayFormControl: FormControl = new FormControl('', [Validators.required]);
@@ -39,6 +49,7 @@ export class NewClientComponent implements OnInit {
 	cittaFormControl: FormControl = new FormControl('', [Validators.required]);
 
 	formsControl: FormControl[] = [
+		this.userFormControl,
 		this.nomeFormControl,
 		this.cognomeFormControl,
 		this.birthdayFormControl,
@@ -50,67 +61,90 @@ export class NewClientComponent implements OnInit {
 		this.cittaFormControl,
 	];
 	my_input: HTMLInputElement = null;
-	constructor(private auth: AuthService, private utils: UtilsService, public router: Router) {}
+	constructor(private auth: AuthService, private utils: UtilsService, public router: Router) {
+		this.auth.clients$.subscribe((clients: Client[]) => (this.clients = clients));
+		this.auth.users$.subscribe((users: User[]) => (this.users = users));
+	}
 
 	ngOnInit(): void {
 		this.my_input = document.createElement('input');
 		this.my_input.onchange = () => this.getFiles();
-		this.resetClient(this.client);
+		this.resetClient();
+		this.filteredUsers = this.userFormControl.valueChanges.pipe(
+			startWith(''),
+			map(name => (name ? this._filterUsersByName(name) : this.users.slice()))
+		);
+		this.auth.readUsers();
+		// this.auth.readClients();
 	}
 
-	addClient(client: Client): void {
-		client = {
-			id: null,
-			displayName: this.nomeFormControl.value + ' ' + this.cognomeFormControl.value,
-			birthday: new Date(this.birthdayFormControl.value).toUTCString(),
-			fiscalCode: this.codiceFiscaleFormControl.value,
-			photoUrl: null,
-			address: this.indirizzoFormControl.value,
-			city: this.cittaFormControl.value,
-			postalCode: this.codicePostaleFormControl.value,
-		};
-		console.info('Adding new client: ', client);
-		this.auth
-			.newClient(client)
-			.then((id: string) => {
-				if (id) {
-					client.id = id;
-					this.auth
-						.uploadImageToClient(this.my_input.files[0], id)
-						.then(path => {
-							console.info(path);
-							client.photoUrl = path;
-							this.auth
-								.updateClient(client)
-								.then((value: boolean) => {
-									if (value) {
-										this.utils.openSnackBar(
-											'Il cliente ' +
-												client.displayName +
-												' è stato aggiunto con successo',
-											'😉'
-										);
-										this.resetClient(client);
-									} else
-										this.utils.openSnackBar(
-											'Attenzione, si è verificato un errore nel salvataggio del nuovo cliente',
-											'Riprovare'
-										);
-								})
-								.catch(err => console.error('updateClient', err));
-						})
-						.catch(err => console.error('uploadImageToClient', err));
+	private _filterUsersByName(name: string): User[] {
+		return this.users.filter(
+			(u: User) => u.displayName.toLocaleLowerCase().indexOf(name.toLocaleLowerCase()) !== -1
+		);
+	}
+
+	changeUser(): void {
+		this.selected_user = null;
+		this.userFormControl.setValue(null);
+		this.removePhoto();
+	}
+
+	selectedValueChange(user: User) {
+		this.selected_user = user;
+		this.nomeFormControl.setValue(this.selected_user.displayName.split(' ')[0]);
+		this.cognomeFormControl.setValue(this.selected_user.displayName.split(' ')[1]);
+		this.photoFormControl.setValue(this.selected_user.photoURL);
+		let photoProfile: HTMLImageElement = document.getElementById(
+			'photo-profile'
+		) as HTMLImageElement;
+		photoProfile.src = this.selected_user.photoURL;
+		photoProfile.hidden = false;
+	}
+
+	addClient(): void {
+		this.client = new Client(this.selected_user);
+
+		this.client.birthday = new Date(this.birthdayFormControl.value).toUTCString();
+		this.client.fiscalCode = this.codiceFiscaleFormControl.value;
+		this.client.address = this.indirizzoFormControl.value;
+		this.client.city = this.cittaFormControl.value;
+		this.client.postalCode = this.codicePostaleFormControl.value;
+
+		console.info('Adding new client: ', this.client);
+		if (this.my_input.files)
+			this.auth
+				.uploadImageToClient(this.my_input.files[0], this.client.uid)
+				.then(path => {
+					console.info(path);
+					this.client.photoURL = path; // link to new photoURL
+					this.updateClient(this.client);
+				})
+				.catch(err => console.error('uploadImageToClient', err));
+		else this.updateClient(this.client);
+	}
+
+	async updateClient(client: Client): Promise<void> {
+		return this.auth
+			.updateClient(client)
+			.then((value: boolean) => {
+				if (value) {
+					this.utils.openSnackBar(
+						'Il cliente ' + client.displayName + ' è stato aggiunto con successo',
+						'😉'
+					);
+					this.resetClient();
 				} else
 					this.utils.openSnackBar(
 						'Attenzione, si è verificato un errore nel salvataggio del nuovo cliente',
 						'Riprovare'
 					);
 			})
-			.catch(err => console.error('newClient', err));
+			.catch(err => console.error('updateClient', err));
 	}
 
-	resetClient(client: Client): void {
-		client = new Client();
+	resetClient(): void {
+		this.client = new Client();
 		this.formsControl.forEach((form: FormControl) => form.setValue(null));
 		this.removePhoto();
 	}
