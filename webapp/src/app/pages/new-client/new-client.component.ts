@@ -36,6 +36,7 @@ export class NewClientComponent implements OnInit {
 	nomeFormControl: FormControl = new FormControl('', [Validators.required]);
 	cognomeFormControl: FormControl = new FormControl('', [Validators.required]);
 	birthdayFormControl: FormControl = new FormControl('', [Validators.required]);
+	sexFormControl: FormControl = new FormControl('', [Validators.required]);
 	codicePostaleFormControl: FormControl = new FormControl('', [Validators.required]);
 	codiceFiscaleFormControl: FormControl = new FormControl('', [
 		Validators.required,
@@ -53,6 +54,7 @@ export class NewClientComponent implements OnInit {
 		this.nomeFormControl,
 		this.cognomeFormControl,
 		this.birthdayFormControl,
+		this.sexFormControl,
 		this.codicePostaleFormControl,
 		this.codiceFiscaleFormControl,
 		this.photoFormControl,
@@ -104,8 +106,11 @@ export class NewClientComponent implements OnInit {
 
 	addClient(): void {
 		this.client = new Client(this.selected_user);
+		// if the user modify the name, I better catch it here
+		this.client.displayName = this.nomeFormControl.value + ' ' + this.cognomeFormControl.value;
 
 		this.client.birthday = new Date(this.birthdayFormControl.value).toUTCString();
+		this.client.sex = this.sexFormControl.value == 'man' ? true : false;
 		this.client.fiscalCode = this.codiceFiscaleFormControl.value;
 		this.client.address = this.indirizzoFormControl.value;
 		this.client.city = this.cittaFormControl.value;

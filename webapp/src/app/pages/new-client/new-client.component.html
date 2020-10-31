@@ -106,23 +106,60 @@
 				</tr>
 			</table>
 
-			<p>
-				<mat-form-field style="margin: 10px">
-					<mat-label>Data di Nascita</mat-label>
-					<input
-						matInput
-						[matDatepicker]="pickerInizio"
-						(focus)="pickerInizio.open()"
-						[formControl]="birthdayFormControl"
-						readonly
-						required
-					/>
-					<mat-error *ngIf="birthdayFormControl.hasError('required')">
-						Data di nascita <strong>obbligatoria</strong>
-					</mat-error>
-				</mat-form-field>
-				<mat-datepicker #pickerInizio></mat-datepicker>
-			</p>
+			<table class="example-full-width" cellspacing="0">
+				<tr>
+					<td>
+						<mat-form-field style="margin: 10px">
+							<mat-label>Data di Nascita</mat-label>
+							<input
+								matInput
+								[matDatepicker]="pickerInizio"
+								(focus)="pickerInizio.open()"
+								[formControl]="birthdayFormControl"
+								readonly
+								required
+							/>
+							<mat-error *ngIf="birthdayFormControl.hasError('required')">
+								Data di nascita <strong>obbligatoria</strong>
+							</mat-error>
+							<button
+								mat-button
+								*ngIf="birthdayFormControl.value"
+								matSuffix
+								mat-icon-button
+								aria-label="Clear"
+								(click)="birthdayFormControl.setValue(null)"
+							>
+								<mat-icon>close</mat-icon>
+							</button>
+						</mat-form-field>
+						<mat-datepicker #pickerInizio></mat-datepicker>
+					</td>
+					<td>
+						<mat-form-field style="margin: 10px" color="accent">
+							<mat-label>Sesso</mat-label>
+							<mat-select [formControl]="sexFormControl">
+								<mat-option value="man">Uomo</mat-option>
+								<mat-option value="woman">Donna</mat-option>
+							</mat-select>
+							<mat-error *ngIf="sexFormControl.hasError('required')">
+								Sesso <strong>obbligatorio</strong>
+							</mat-error>
+							<button
+								mat-button
+								*ngIf="sexFormControl.value"
+								matSuffix
+								mat-icon-button
+								aria-label="Clear"
+								(click)="sexFormControl.setValue(null)"
+							>
+								<mat-icon>close</mat-icon>
+							</button>
+						</mat-form-field>
+						<mat-datepicker #pickerInizio></mat-datepicker>
+					</td>
+				</tr>
+			</table>
 
 			<p>
 				<mat-form-field class="example-full-width" color="accent">
@@ -285,6 +322,7 @@
 				photoFormControl.invalid ||
 				cognomeFormControl.invalid ||
 				birthdayFormControl.invalid ||
+				sexFormControl.invalid ||
 				codiceFiscaleFormControl.invalid ||
 				codicePostaleFormControl.invalid ||
 				indirizzoFormControl.invalid ||

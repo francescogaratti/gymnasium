@@ -31,6 +31,7 @@ export interface User {
 }
 
 export interface Client extends User {
+	sex: boolean;
 	birthday: string;
 	fiscalCode: string;
 	address: string;
