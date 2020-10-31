@@ -41,9 +41,13 @@ export const SendNotificationNewWorkout = functions.firestore
 
 		if (client) {
 			// web notification
-			sendNotification(client);
+			sendNotification(client)
+				.then(() => console.log('Notification sent'))
+				.catch((err: any) => console.error('Notification error', err));
 			// email with attachment
-			sendMail(client, workout);
+			sendMail(client, workout)
+				.then(() => console.log('Email sent'))
+				.catch((err: any) => console.error('Email error', err));
 		}
 	});
 
@@ -52,7 +56,7 @@ async function sendNotification(client: Client) {
 	const registrationToken: string = client.tokenId ? client.tokenId : '';
 
 	// if something went wrong == > exit
-	if (!registrationToken || registrationToken.length == 0) {
+	if (!registrationToken || registrationToken.length === 0) {
 		return;
 	}
 
@@ -86,19 +90,21 @@ async function sendNotification(client: Client) {
 async function sendMail(client: Client, workout: DigitalWorkout) {
 	const wb = createWorkbook(workout);
 	const filename = workout.name + '.xlsx';
-	wb.write(filename);
-	// let excel_buffer: any = await wb.writeToBuffer().then((buffer: any) => buffer);
+	// wb.write(process.cwd() + '\\' + filename);
+	let excel_buffer: any = await wb.writeToBuffer().then((buffer: any) => buffer);
 
 	const mailOptions = {
 		from: 'Ultra Gymnasium ' + myEmail,
 		to: client.email,
-		subject: 'Registrazione Ultra Gymnasium',
+		subject: 'Nuova Scheda 📝🔥',
 		html:
 			`
 			<body>
 				<h3>
-					La tua nuova <strong>Scheda di Allenamento</strong> è pronta 📝🔥
-				</h3>
+					La tua nuova scheda di allenamento <em>` +
+			workout.name +
+			`<em> è pronta.
+				</h3>				
 				<p style="display: block;">
 					` +
 			client.displayName +
@@ -110,14 +116,14 @@ async function sendMail(client: Client, workout: DigitalWorkout) {
 					La puoi trovare insieme a tutte le altre schede scadute o passate nella tua <a href="https://ultra-gymnasium.web.app/area-personale/">area personale</a> del sito.
 				</p>
 				<p style="display: block;">
-					Mostrami la mia <a href="https://ultra-gymnasium.web.app/area-personale?last=true"> nuova scheda<a />
+					Ecco la tua <a href="https://ultra-gymnasium.web.app/area-personale?last=true"> nuova scheda<a />
 				</p>
 			</body>
 			`,
 		attachments: [
 			{
 				filename: filename,
-				path: filename,
+				content: excel_buffer,
 			},
 		],
 	};
@@ -132,3 +138,5 @@ async function sendMail(client: Client, workout: DigitalWorkout) {
 		}
 	});
 }
+
+// sendMail(new Client(), mock);

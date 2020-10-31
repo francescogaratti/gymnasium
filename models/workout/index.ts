@@ -34,8 +34,8 @@ export const mock: DigitalWorkout = {
 	clientName: '',
 	trainerId: '',
 	trainerName: '',
-	startingDate: '',
-	endingDate: '',
+	startingDate: '01-01-2000',
+	endingDate: '01-01-2000',
 	sessions: [
 		{
 			name: 'Allenamento A',

@@ -2,7 +2,7 @@
 import * as functions from 'firebase-functions';
 import firebase = require('firebase');
 /** extra dependencies */
-import 'excel4node';
+// import 'excel4node';
 /** models */
 import { DigitalWorkout } from '../../../models/workout';
 import { Rest } from '../../../models/exercise';
@@ -100,7 +100,7 @@ export function createWorkbook(workout: DigitalWorkout) {
 			ws.cell(rowIndex, 3).number(exercise.reps);
 			ws.cell(rowIndex, 4).string(restToString(exercise.rest));
 			ws.cell(rowIndex, 5)
-				.string(exercise.notes)
+				.string(exercise.notes ? exercise.notes : '')
 				.style({ font: { italics: true } });
 			rowIndex++;
 		});
