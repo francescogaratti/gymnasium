@@ -64,7 +64,14 @@ export class ClientComponent implements OnInit {
 	getClientWorkouts() {
 		this.auth
 			.readClientWorkouts(this.client)
-			.then((workouts: DigitalWorkout[]) => (this.workouts = workouts))
+			.then((workouts: DigitalWorkout[]) => {
+				this.workouts = workouts;
+				if (!this.workouts || this.workouts.length == 0)
+					this.utils.openSnackBar(
+						'Non sono presenti schede di allenamento per te 😓',
+						'Contatta un istruttore 👆'
+					);
+			})
 			.catch(err => console.error(err));
 	}
 

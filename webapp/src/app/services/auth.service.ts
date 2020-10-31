@@ -375,6 +375,7 @@ export class AuthService {
 	}
 
 	public async readClientWorkouts(client: Client): Promise<DigitalWorkout[]> {
+		console.info('📘 - read');
 		this.asyncOperation.next(true);
 		let workouts: DigitalWorkout[] = await this.afs
 			.collection('clients')
@@ -384,6 +385,7 @@ export class AuthService {
 			.then(async snapshot => {
 				let refs: DocumentReference[] = snapshot.get('workouts');
 				let promises: Promise<DigitalWorkout>[] = [];
+				if (!refs) return [];
 				refs.forEach((ref: DocumentReference) =>
 					promises.push(ref.get().then(res => res.data() as DigitalWorkout))
 				);
