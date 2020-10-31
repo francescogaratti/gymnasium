@@ -27,7 +27,7 @@ export interface User {
 	displayName: string;
 	photoURL: string;
 	metadata: Metadata;
-	tokenId?: string;
+	tokenIds?: string[];
 }
 
 export interface Client extends User {
@@ -48,7 +48,7 @@ export class Client implements Client {
 			this.displayName = user.displayName;
 			this.photoURL = user.photoURL;
 			this.metadata = user.metadata;
-			this.tokenId = user.tokenId;
+			this.tokenIds = user.tokenIds;
 		}
 	}
 }

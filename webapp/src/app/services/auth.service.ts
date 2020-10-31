@@ -539,14 +539,20 @@ export class AuthService {
 			})
 			.then(async (currentToken: string) => {
 				if (currentToken) {
-					// console.info(currentToken);
-					if (!user.tokenId) {
+					// no token saved
+					if (!user.tokenIds || user.tokenIds.length == 0) {
 						console.info('save token to ', user.uid);
-						user.tokenId = currentToken;
+						user.tokenIds = [currentToken];
+						this.updateUser(user);
+					}
+					// if not present in the list
+					else if (!user.tokenIds.find(t => currentToken == t)) {
+						console.info('append token to ', user.uid);
+						user.tokenIds.push(currentToken);
 						this.updateUser(user);
 					}
 				} else {
-					user.tokenId = null;
+					user.tokenIds = [];
 					this.updateUser(user);
 					console.warn(
 						'No registration token available. Request permission to generate one.'

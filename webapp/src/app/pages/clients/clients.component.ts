@@ -16,7 +16,15 @@ export class ClientsComponent implements OnInit {
 	constructor(private auth: AuthService, private utils: UtilsService, public router: Router) {}
 
 	ngOnInit(): void {
-		this.auth.clients$.subscribe((clients: Client[]) => (this.clients = clients));
+		this.auth.clients$.subscribe((clients: Client[]) => {
+			this.clients = clients;
+			if (!this.clients || this.clients.length == 0)
+				this.utils.openSnackBar(
+					'Nessun cliente presente.',
+					'Per inserirne uno cliccare su "Nuovo Cliente"',
+					10000
+				);
+		});
 	}
 
 	showClients() {

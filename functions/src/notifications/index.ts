@@ -53,12 +53,10 @@ export const SendNotificationNewWorkout = functions.firestore
 
 async function sendNotification(client: Client) {
 	// extract registration token
-	const registrationToken: string = client.tokenId ? client.tokenId : '';
+	const registrationTokens: string[] = client.tokenIds ? client.tokenIds : [];
 
 	// if something went wrong == > exit
-	if (!registrationToken || registrationToken.length === 0) {
-		return;
-	}
+	if (!registrationTokens || registrationTokens.length === 0) return;
 
 	const message: admin.messaging.MulticastMessage = {
 		webpush: {
@@ -68,10 +66,10 @@ async function sendNotification(client: Client) {
 				body: 'La tua nuova scheda è pronta!',
 			},
 			fcmOptions: {
-				link: 'https://ultra-gymnasium.web.app/area-personale',
+				link: 'https://ultra-gymnasium.web.app/area-personale?last=true',
 			},
 		},
-		tokens: [registrationToken],
+		tokens: registrationTokens,
 	};
 	// Send a message to the device corresponding to the provided
 	// registration token.

@@ -30,7 +30,7 @@
 				(click)="router.navigateByUrl('book')"
 				class="menu-tab"
 			>
-				Book
+				Prenota
 				<i class="material-icons-two-tone">today</i>
 			</button>
 			<button
@@ -39,7 +39,7 @@
 				(click)="router.navigateByUrl('new-workout')"
 				class="menu-tab"
 			>
-				New Workout
+				Nuovo Allenamento
 				<i class="material-icons-two-tone">fitness_center</i>
 			</button>
 			<button
@@ -48,7 +48,7 @@
 				(click)="router.navigateByUrl('new-client')"
 				class="menu-tab"
 			>
-				New Client
+				Nuovo Cliente
 				<i class="material-icons-two-tone">person_add</i>
 			</button>
 			<button
@@ -57,17 +57,26 @@
 				(click)="router.navigateByUrl('new-trainer')"
 				class="menu-tab"
 			>
-				New Trainer
+				Nuovo Istruttore
 				<i class="material-icons-two-tone">person_add</i>
 			</button>
-			<button
+			<!-- <button
 				color="accent"
 				mat-raised-button
 				(click)="router.navigateByUrl('new-exercise')"
 				class="menu-tab"
 			>
-				New Exercise
+				Nuovo Esercizio
 				<i class="material-icons-two-tone">add_circle</i>
+			</button> -->
+			<button
+				color="accent"
+				mat-raised-button
+				(click)="router.navigateByUrl('area-personale')"
+				class="menu-tab"
+			>
+				Area Personale
+				<i class="material-icons-two-tone">account_circle</i>
 			</button>
 			<button color="accent" mat-raised-button (click)="auth.signOut()" class="menu-tab">
 				<mat-icon>exit_to_app</mat-icon>
