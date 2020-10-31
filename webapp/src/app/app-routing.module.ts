@@ -11,6 +11,7 @@ import { NewExerciseComponent } from '@pages/new-exercise/new-exercise.component
 import { NewTrainerComponent } from '@pages/new-trainer/new-trainer.component';
 import { NewWorkoutComponent } from '@pages/new-workout/new-workout.component';
 import { NotFoundComponent } from '@pages/not-found/not-found.component';
+import { PersonalAreaComponent } from '@pages/personal-area/personal-area.component';
 import { WorkoutComponent } from '@pages/workout/workout.component';
 
 const routes: Routes = [
@@ -23,6 +24,7 @@ const routes: Routes = [
 	{ path: 'new-client', component: NewClientComponent, canActivate: [AuthGuard] },
 	{ path: 'new-trainer', component: NewTrainerComponent, canActivate: [AuthGuard] },
 	{ path: 'new-exercise', component: NewExerciseComponent, canActivate: [AuthGuard] },
+	{ path: 'area-personale', component: PersonalAreaComponent, canActivate: [AuthGuard] },
 	{ path: '', redirectTo: 'home', pathMatch: 'full' },
 	{ path: '**', component: NotFoundComponent },
 ];
