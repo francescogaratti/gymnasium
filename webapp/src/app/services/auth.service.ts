@@ -25,6 +25,8 @@ import { HttpClient } from '@angular/common/http';
 import { ExerciseEntry } from '@models/exercise';
 import * as firebase from 'firebase';
 import { ClientService } from './client.service';
+import { TrainerService } from './trainer.service';
+import { AdminService } from './admin.service';
 
 // configuration for the ui
 const uiConfig = {
@@ -60,7 +62,9 @@ export class AuthService {
 		private afs: AngularFirestore,
 		private afstr: AngularFireStorage,
 		private http: HttpClient,
-		private clientService: ClientService
+		private clientService: ClientService,
+		private trainerService: TrainerService,
+		private adminService: AdminService
 	) {
 		// get credentials
 		this.getUser();
@@ -76,6 +80,10 @@ export class AuthService {
 							this.clientService.readClient(this.user.uid);
 							break;
 						case UserTypes.trainer:
+							this.trainerService.readTrainer(this.user.uid);
+							break;
+						case UserTypes.admin:
+							this.adminService.readAdmin(this.user.uid);
 							break;
 						default:
 							break;

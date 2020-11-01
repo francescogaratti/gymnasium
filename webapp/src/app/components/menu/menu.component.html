@@ -5,17 +5,6 @@
 	<span class="fill-remaining-space"></span>
 	<span>
 		<!-- <div *ngIf="(auth.user$ | async)?.uid === auth.getAdminUid(); then admin"></div> -->
-		<ng-template #admin>
-			<button
-				color="primary"
-				mat-raised-button
-				(click)="router.navigateByUrl('admin')"
-				class="menu-tab"
-			>
-				Admin
-				<mat-icon>admin_panel_settings</mat-icon>
-			</button>
-		</ng-template>
 		<div *ngIf="auth.user$ | async; then authenticated; else guest"></div>
 		<ng-template #guest>
 			<button color="accent" mat-raised-button (click)="router.navigateByUrl('login')">
@@ -24,60 +13,63 @@
 			</button>
 		</ng-template>
 		<ng-template #authenticated>
-			<button
-				color="accent"
-				mat-raised-button
-				(click)="router.navigateByUrl('book')"
-				class="menu-tab"
-			>
-				Prenota
-				<i class="material-icons-two-tone">today</i>
-			</button>
-			<button
-				color="accent"
-				mat-raised-button
-				(click)="router.navigateByUrl('new-workout')"
-				class="menu-tab"
-			>
-				Nuovo Allenamento
-				<i class="material-icons-two-tone">fitness_center</i>
-			</button>
-			<button
-				color="accent"
-				mat-raised-button
-				(click)="router.navigateByUrl('new-client')"
-				class="menu-tab"
-			>
-				Nuovo Cliente
-				<i class="material-icons-two-tone">person_add</i>
-			</button>
-			<button
-				color="accent"
-				mat-raised-button
-				(click)="router.navigateByUrl('new-trainer')"
-				class="menu-tab"
-			>
-				Nuovo Istruttore
-				<i class="material-icons-two-tone">person_add</i>
-			</button>
-			<!-- <button
-				color="accent"
-				mat-raised-button
-				(click)="router.navigateByUrl('new-exercise')"
-				class="menu-tab"
-			>
-				Nuovo Esercizio
-				<i class="material-icons-two-tone">add_circle</i>
-			</button> -->
-			<button
-				color="accent"
-				mat-raised-button
-				(click)="router.navigateByUrl('area-personale')"
-				class="menu-tab"
-			>
-				Area Personale
-				<i class="material-icons-two-tone">account_circle</i>
-			</button>
+			<!-- admin => new trainer + new client -->
+			<div *ngIf="adminService.admin$ | async; then admin"></div>
+			<ng-template #admin>
+				<button
+					color="accent"
+					mat-raised-button
+					(click)="router.navigateByUrl('new-client')"
+					class="menu-tab"
+				>
+					Nuovo Cliente
+					<i class="material-icons-two-tone">person_add</i>
+				</button>
+				<button
+					color="accent"
+					mat-raised-button
+					(click)="router.navigateByUrl('new-trainer')"
+					class="menu-tab"
+				>
+					Nuovo Istruttore
+					<i class="material-icons-two-tone">person_add</i>
+				</button>
+			</ng-template>
+			<!--  trainer => new workout -->
+			<div *ngIf="trainerService.trainer$ | async; then trainer"></div>
+			<ng-template #trainer>
+				<button
+					color="accent"
+					mat-raised-button
+					(click)="router.navigateByUrl('new-workout')"
+					class="menu-tab"
+				>
+					Nuovo Allenamento
+					<i class="material-icons-two-tone">fitness_center</i>
+				</button>
+			</ng-template>
+			<!-- client => personal area + book -->
+			<div *ngIf="clientService.client$ | async; then client"></div>
+			<ng-template #client>
+				<button
+					color="accent"
+					mat-raised-button
+					(click)="router.navigateByUrl('book')"
+					class="menu-tab"
+				>
+					Prenota
+					<i class="material-icons-two-tone">today</i>
+				</button>
+				<button
+					color="accent"
+					mat-raised-button
+					(click)="router.navigateByUrl('area-personale')"
+					class="menu-tab"
+				>
+					Area Personale
+					<i class="material-icons-two-tone">account_circle</i>
+				</button>
+			</ng-template>
 			<button color="accent" mat-raised-button (click)="auth.signOut()" class="menu-tab">
 				<mat-icon>exit_to_app</mat-icon>
 			</button>

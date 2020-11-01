@@ -78,3 +78,5 @@ export interface Trainer extends Employee {
 }
 
 export interface Receptionist extends Employee {}
+
+export interface Admin extends User {}

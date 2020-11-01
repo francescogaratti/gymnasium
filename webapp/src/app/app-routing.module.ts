@@ -1,7 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AdminGuard } from '@guards/admin.guard';
 import { AuthGuard } from '@guards/auth.guard';
+import { ClientGuard } from '@guards/client.guard';
 import { LoggedGuard } from '@guards/logged.guard';
+import { TrainerGuard } from '@guards/trainer.guard';
 import { BookComponent } from '@pages/book/book.component';
 import { ClientComponent } from '@pages/client/client.component';
 import { HomeComponent } from '@pages/home/home.component';
@@ -18,12 +21,20 @@ const routes: Routes = [
 	{ path: 'home', component: HomeComponent },
 	{ path: 'login', component: LoginComponent, canActivate: [LoggedGuard] },
 	{ path: 'book', component: BookComponent, canActivate: [AuthGuard] },
-	{ path: 'workout', component: WorkoutComponent, canActivate: [AuthGuard] },
-	{ path: 'client', component: ClientComponent, canActivate: [AuthGuard] },
-	{ path: 'new-workout', component: NewWorkoutComponent, canActivate: [AuthGuard] },
-	{ path: 'new-client', component: NewClientComponent, canActivate: [AuthGuard] },
-	{ path: 'new-trainer', component: NewTrainerComponent, canActivate: [AuthGuard] },
-	{ path: 'new-exercise', component: NewExerciseComponent, canActivate: [AuthGuard] },
+	{ path: 'workout', component: WorkoutComponent, canActivate: [TrainerGuard, AdminGuard] },
+	{ path: 'client', component: ClientComponent, canActivate: [TrainerGuard, AdminGuard] },
+	{
+		path: 'new-workout',
+		component: NewWorkoutComponent,
+		canActivate: [TrainerGuard, AdminGuard],
+	},
+	{ path: 'new-client', component: NewClientComponent, canActivate: [AdminGuard] },
+	{ path: 'new-trainer', component: NewTrainerComponent, canActivate: [AdminGuard] },
+	{
+		path: 'new-exercise',
+		component: NewExerciseComponent,
+		canActivate: [TrainerGuard, AdminGuard],
+	},
 	{ path: 'area-personale', component: PersonalAreaComponent, canActivate: [AuthGuard] },
 	{ path: '', redirectTo: 'home', pathMatch: 'full' },
 	{ path: '**', component: NotFoundComponent },
