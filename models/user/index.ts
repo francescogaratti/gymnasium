@@ -11,6 +11,15 @@ interface Metadata {
 	lastSignInTime: string;
 }
 
+export enum UserTypes {
+	user = 'User',
+	client = 'Client',
+	trainer = 'Trainer',
+	manager = 'Manager',
+	admin = 'Admin',
+	receptionist = 'Receptionist',
+}
+
 /**
  * @interface User
  * @description interface for the user data returned by `firebase auth`
@@ -28,6 +37,7 @@ export interface User {
 	photoURL: string;
 	metadata: Metadata;
 	tokenIds?: string[];
+	type?: string;
 }
 
 export interface Client extends User {
@@ -49,6 +59,7 @@ export class Client implements Client {
 			this.photoURL = user.photoURL;
 			this.metadata = user.metadata;
 			this.tokenIds = user.tokenIds;
+			this.type = user.type;
 		}
 	}
 }

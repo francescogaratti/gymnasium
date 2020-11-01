@@ -4,6 +4,7 @@ import { Client } from '@models/user';
 // import { Client } from '@models/client';
 import { DigitalWorkout, StandardWorkout, Workout } from '@models/workout';
 import { AuthService } from '@services/auth.service';
+import { ClientService } from '@services/client.service';
 import { UtilsService } from '@services/utils.service';
 
 @Component({
@@ -29,29 +30,19 @@ export class ClientComponent implements OnInit {
 	];
 	constructor(
 		private activatedRoute: ActivatedRoute,
-		private router: Router,
 		private auth: AuthService,
-		private utils: UtilsService
+		private utils: UtilsService,
+		private clientService: ClientService
 	) {
 		this.id = this.activatedRoute.snapshot.queryParams['id'];
+		this.clientService.client$.subscribe((client: Client) => {
+			this.client = client;
+			this.getImage(this.client.photoURL);
+		});
 	}
 
 	ngOnInit(): void {
-		if (this.id) {
-			this.auth
-				.readClient(this.id)
-				.then((client: Client) => {
-					this.client = client;
-					this.getImage(this.client.photoURL);
-				})
-				.catch(err => {
-					this.utils.openSnackBar(
-						'Si è verificato un errore con il caricamento dei dati del cliente',
-						'Riprovare, per favore.'
-					);
-					console.error(err);
-				});
-		}
+		if (this.id) this.clientService.readClient(this.id);
 	}
 
 	getClientWorkoutsOld() {

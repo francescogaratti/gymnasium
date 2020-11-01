@@ -18,12 +18,13 @@ import { Router } from '@angular/router';
 import { Observable, of, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
-import { User, Client } from '@models/user';
+import { User, Client, UserTypes } from '@models/user';
 // import { Client } from '@models/client';
 import { DigitalWorkout, StandardWorkout, Workout } from '@models/workout';
 import { HttpClient } from '@angular/common/http';
 import { ExerciseEntry } from '@models/exercise';
 import * as firebase from 'firebase';
+import { ClientService } from './client.service';
 
 // configuration for the ui
 const uiConfig = {
@@ -37,46 +38,70 @@ const uiConfig = {
 	providedIn: 'root',
 })
 export class AuthService {
-	user$: Observable<User>; // user observable
-	user: User;
 	ui: firebaseui.auth.AuthUI = new firebaseui.auth.AuthUI(auth()); // login firebase ui
-	asyncOperation: Subject<boolean> = new Subject<boolean>(); // signal to the progress bar
 
-	clients$: Subject<Client[]> = new Subject<Client[]>();
+	// firebase_user$: Observable<User>; // future logged user
+	user$: Observable<User>; // future user
+	// client$: Observable<Client>; // future client
+
+	user: User;
+	// client: Client;
+
+	// clients$: Subject<Client[]> = new Subject<Client[]>();
 	users$: Subject<User[]> = new Subject<User[]>();
+
+	users: User[] = [];
+	// clients: Client[] = [];
+
+	asyncOperation: Subject<boolean> = new Subject<boolean>(); // signal to the progress bar
 
 	constructor(
 		private afAuth: AngularFireAuth,
 		private afs: AngularFirestore,
 		private afstr: AngularFireStorage,
-		private aff: AngularFireFunctions,
-		private router: Router,
-		private http: HttpClient
+		private http: HttpClient,
+		private clientService: ClientService
 	) {
+		// get credentials
 		this.getUser();
-		this.user$.subscribe(firebase_user => {
-			this.readUser(firebase_user.uid).then((user: User) => this.startMessaging(user));
-		});
+		// get user data
+		this.user$.subscribe(firebase_user =>
+			this.readUser(firebase_user.uid).then((user: User) => {
+				this.user = user;
+				if (this.user && this.user.type) {
+					switch (this.user.type) {
+						case UserTypes.user:
+							break;
+						case UserTypes.client:
+							this.clientService.readClient(this.user.uid);
+							break;
+						case UserTypes.trainer:
+							break;
+						default:
+							break;
+					}
+				}
+				this.startMessaging(user);
+			})
+		);
+		// store all the users here
+		this.users$.subscribe((users: User[]) => (this.users = users));
 	}
 
+	/**
+	 * @description returns the user data if the user is logged, null otherwise
+	 */
 	async getUser() {
+		// this.asyncOperation.next(true);
 		this.user$ = this.afAuth.authState.pipe(
 			switchMap(user => {
 				this.asyncOperation.next(false);
 				// Logged in
-				if (user) {
-					this.user = user as User;
-					return of(this.user);
-				} else {
-					// Logged out
-					return of(null);
-				}
+				if (user) return of(user as User);
+				// Logged out
+				else return of(null);
 			})
 		);
-	}
-
-	messaging() {
-		return firebase.messaging();
 	}
 
 	startUi() {
@@ -85,31 +110,6 @@ export class AuthService {
 
 	signOut() {
 		this.afAuth.signOut();
-	}
-
-	firestore() {
-		return this.afs;
-	}
-
-	public async readClients() {
-		console.info('📘 - read');
-		this.asyncOperation.next(true);
-		let res = await this.afs
-			.collection('clients')
-			.get()
-			.toPromise()
-			.then(snapshot => {
-				let values: Client[] = [];
-				snapshot.forEach(doc => values.push(doc.data() as Client));
-				return values;
-			})
-			.catch(err => {
-				console.error(err);
-				return [];
-			});
-		this.asyncOperation.next(false);
-		console.info(res);
-		this.clients$.next(res); // send to subscribers
 	}
 
 	async readUser(id: string): Promise<User> {
@@ -150,53 +150,53 @@ export class AuthService {
 		this.users$.next(res); // send to subscribers
 	}
 
-	async readClient(id: string): Promise<Client> {
-		console.info('📘 - get client ' + id);
-		this.asyncOperation.next(true);
-		let client: Client = await this.afs
-			.collection('clients')
-			.doc(id)
-			.get()
-			.toPromise()
-			.then(snapshot => snapshot.data() as Client)
-			.catch(err => {
-				console.error(err);
-				return null;
-			});
-		this.asyncOperation.next(false);
-		return client;
-	}
+	// async readClient(id: string): Promise<Client> {
+	// 	console.info('📘 - get client ' + id);
+	// 	this.asyncOperation.next(true);
+	// 	let client: Client = await this.afs
+	// 		.collection('clients')
+	// 		.doc(id)
+	// 		.get()
+	// 		.toPromise()
+	// 		.then(snapshot => snapshot.data() as Client)
+	// 		.catch(err => {
+	// 			console.error(err);
+	// 			return null;
+	// 		});
+	// 	this.asyncOperation.next(false);
+	// 	return client;
+	// }
 
-	async newClient(client: Client): Promise<string> {
-		this.asyncOperation.next(true);
-		console.info('📗 - write');
-		let res: string = await this.afs
-			.collection('clients')
-			.add(client)
-			.then(async (docRef: DocumentReference) => docRef.id)
-			.catch(err => {
-				console.error(err);
-				return null;
-			});
-		this.asyncOperation.next(false);
-		return res;
-	}
+	// async newClient(client: Client): Promise<string> {
+	// 	this.asyncOperation.next(true);
+	// 	console.info('📗 - write');
+	// 	let res: string = await this.afs
+	// 		.collection('clients')
+	// 		.add(client)
+	// 		.then(async (docRef: DocumentReference) => docRef.id)
+	// 		.catch(err => {
+	// 			console.error(err);
+	// 			return null;
+	// 		});
+	// 	this.asyncOperation.next(false);
+	// 	return res;
+	// }
 
-	async updateClient(client: Client): Promise<boolean> {
-		this.asyncOperation.next(true);
-		console.info('📗 - update client');
-		let res: boolean = await this.afs
-			.collection('clients')
-			.doc(client.uid)
-			.set(JSON.parse(JSON.stringify(client)), { merge: true })
-			.then(() => true)
-			.catch(err => {
-				console.error(err);
-				return false;
-			});
-		this.asyncOperation.next(false);
-		return res;
-	}
+	// async updateClient(client: Client): Promise<boolean> {
+	// 	this.asyncOperation.next(true);
+	// 	console.info('📗 - update client');
+	// 	let res: boolean = await this.afs
+	// 		.collection('clients')
+	// 		.doc(client.uid)
+	// 		.set(JSON.parse(JSON.stringify(client)), { merge: true })
+	// 		.then(() => true)
+	// 		.catch(err => {
+	// 			console.error(err);
+	// 			return false;
+	// 		});
+	// 	this.asyncOperation.next(false);
+	// 	return res;
+	// }
 
 	async updateUser(user: User): Promise<boolean> {
 		this.asyncOperation.next(true);
@@ -214,47 +214,47 @@ export class AuthService {
 		return res;
 	}
 
-	async deleteClient(client: Client): Promise<boolean> {
-		this.asyncOperation.next(true);
-		console.info('📘 - read');
-		let res: boolean = false;
-		// records reference
-		let clientsRef = this.afs.collection('clients').ref;
-		// prepare query
-		let query = clientsRef.where('fiscalCode', '==', client.fiscalCode);
-		// find doc id with date == record.date
-		let id: string = await query
-			.get()
-			.then(found => {
-				if (!found) return null;
-				else {
-					if (found.docs.length > 1)
-						console.warn(
-							'more than one records found with fiscalCode: ',
-							client.fiscalCode
-						);
-					return found.docs[0].id; // me fido
-				}
-			})
-			.catch(err => {
-				console.error(err);
-				return null;
-			});
-		if (id) {
-			console.info('📕 - delete');
-			// delete that doc
-			res = await clientsRef
-				.doc(id)
-				.delete()
-				.then(() => true) // unica possibilità di diventare "true"
-				.catch(err => {
-					console.error(err);
-					return false;
-				});
-		}
-		this.asyncOperation.next(false);
-		return res;
-	}
+	// async deleteClient(client: Client): Promise<boolean> {
+	// 	this.asyncOperation.next(true);
+	// 	console.info('📘 - read');
+	// 	let res: boolean = false;
+	// 	// records reference
+	// 	let clientsRef = this.afs.collection('clients').ref;
+	// 	// prepare query
+	// 	let query = clientsRef.where('fiscalCode', '==', client.fiscalCode);
+	// 	// find doc id with date == record.date
+	// 	let id: string = await query
+	// 		.get()
+	// 		.then(found => {
+	// 			if (!found) return null;
+	// 			else {
+	// 				if (found.docs.length > 1)
+	// 					console.warn(
+	// 						'more than one records found with fiscalCode: ',
+	// 						client.fiscalCode
+	// 					);
+	// 				return found.docs[0].id; // me fido
+	// 			}
+	// 		})
+	// 		.catch(err => {
+	// 			console.error(err);
+	// 			return null;
+	// 		});
+	// 	if (id) {
+	// 		console.info('📕 - delete');
+	// 		// delete that doc
+	// 		res = await clientsRef
+	// 			.doc(id)
+	// 			.delete()
+	// 			.then(() => true) // unica possibilità di diventare "true"
+	// 			.catch(err => {
+	// 				console.error(err);
+	// 				return false;
+	// 			});
+	// 	}
+	// 	this.asyncOperation.next(false);
+	// 	return res;
+	// }
 
 	// workouts
 
@@ -310,24 +310,24 @@ export class AuthService {
 		return res;
 	}
 
-	async newClientWorkout(client: Client, workoutId: string): Promise<boolean> {
-		this.asyncOperation.next(true);
-		let new_workout_ref: DocumentReference = this.afs.collection('workouts').doc(workoutId).ref;
-		if (client.workouts) client.workouts.push(new_workout_ref);
-		else client.workouts = [new_workout_ref];
-		console.info('📗 - append workout');
-		let res: boolean = await this.afs
-			.collection('clients')
-			.doc(client.uid)
-			.set({ workouts: client.workouts }, { merge: true })
-			.then(() => true)
-			.catch(err => {
-				console.error(err);
-				return false;
-			});
-		this.asyncOperation.next(false);
-		return res;
-	}
+	// async newClientWorkout(client: Client, workoutId: string): Promise<boolean> {
+	// 	this.asyncOperation.next(true);
+	// 	let new_workout_ref: DocumentReference = this.afs.collection('workouts').doc(workoutId).ref;
+	// 	if (client.workouts) client.workouts.push(new_workout_ref);
+	// 	else client.workouts = [new_workout_ref];
+	// 	console.info('📗 - append workout');
+	// 	let res: boolean = await this.afs
+	// 		.collection('clients')
+	// 		.doc(client.uid)
+	// 		.set({ workouts: client.workouts }, { merge: true })
+	// 		.then(() => true)
+	// 		.catch(err => {
+	// 			console.error(err);
+	// 			return false;
+	// 		});
+	// 	this.asyncOperation.next(false);
+	// 	return res;
+	// }
 
 	public async readClientWorkoutsOld(client: Client): Promise<StandardWorkout[]> {
 		this.asyncOperation.next(true);
@@ -369,7 +369,7 @@ export class AuthService {
 				return null;
 			});
 		// ? now I have the workout ID ==> save into the client workouts list
-		let res: boolean = await this.newClientWorkout(client, workoutId);
+		let res: boolean = await this.clientService.newClientWorkout(client, workoutId);
 		this.asyncOperation.next(false);
 		return res;
 	}
@@ -434,7 +434,7 @@ export class AuthService {
 					return [];
 				});
 			client.workouts = updated_workouts;
-			res = await this.updateClient(client);
+			res = await this.clientService.updateClient(client);
 		}
 		this.asyncOperation.next(false);
 		return res;

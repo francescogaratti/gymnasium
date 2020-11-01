@@ -4,7 +4,7 @@ import firebase = require('firebase');
 /** extra dependencies */
 import * as nodemailer from 'nodemailer';
 /** models */
-import { User } from '../../../models/user';
+import { User, UserTypes } from '../../../models/user';
 
 const myEmail = 'life4weeks@gmail.com';
 const transporter = nodemailer.createTransport({
@@ -22,7 +22,10 @@ export const welcomeMail = functions.auth.user().onCreate(async (u: functions.au
 		displayName: u.displayName ? u.displayName : '',
 		photoURL: u.photoURL ? u.photoURL : '',
 		metadata: u.metadata,
+		tokenIds: [],
+		type: UserTypes.user,
 	};
+
 	const mailOptions = {
 		from: 'Ultra Gymnasium ' + myEmail,
 		to: user.email,

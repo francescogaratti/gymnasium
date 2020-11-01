@@ -4,6 +4,7 @@ import { Client, User } from '@models/user';
 // import { Client } from '@models/client';
 import { DigitalWorkout, StandardWorkout, Workout } from '@models/workout';
 import { AuthService } from '@services/auth.service';
+import { ClientService } from '@services/client.service';
 import { UtilsService } from '@services/utils.service';
 
 @Component({
@@ -32,35 +33,19 @@ export class PersonalAreaComponent implements OnInit {
 		private activatedRoute: ActivatedRoute,
 		private router: Router,
 		private auth: AuthService,
+		private clientService: ClientService,
 		private utils: UtilsService
 	) {
 		let last = this.activatedRoute.snapshot.queryParams['last'];
 		this.last = last && last == 'true' ? true : false;
-	}
-
-	ngOnInit(): void {
-		this.auth.user$.subscribe((user: User) => {
-			this.id = user.uid;
-			if (this.id) {
-				this.auth
-					.readClient(this.id)
-					.then((client: Client) => {
-						this.client = client;
-						this.getImage(this.client.photoURL);
-						if (this.last) {
-							this.getClientWorkouts();
-						}
-					})
-					.catch(err => {
-						this.utils.openSnackBar(
-							'Si è verificato un errore con il caricamento dei dati del cliente',
-							'Riprovare, per favore.'
-						);
-						console.error(err);
-					});
-			}
+		this.clientService.client$.subscribe((client: Client) => {
+			this.client = client;
+			this.getImage(this.client.photoURL);
+			if (this.last) this.getClientWorkouts();
 		});
 	}
+
+	ngOnInit(): void {}
 
 	getClientWorkoutsOld() {
 		this.auth

@@ -18,8 +18,6 @@ const transporter = nodemailer.createTransport({
 	},
 });
 
-// This registration token comes from the client FCM SDKs.
-// 'd3EisCzJPJ-Pz8dVjMrc7D:APA91bFuKBW6tTBm--M3TrO0ko9IpHgHovrBJBpK6uxuXvvKtqCasOaYXeSXBckB7gXCXFG6nx9lcXFYcd1_WWFTSD6edJ3H6Rdn7bfnufWs0nhA3wJf5poOUXWi6Vian_VF3zirPkZ6';
 export const SendNotificationNewWorkout = functions.firestore
 	.document('workouts/{workoutId}')
 	.onCreate(async (snap, context) => {
@@ -88,7 +86,6 @@ async function sendNotification(client: Client) {
 async function sendMail(client: Client, workout: DigitalWorkout) {
 	const wb = createWorkbook(workout);
 	const filename = workout.name + '.xlsx';
-	// wb.write(process.cwd() + '\\' + filename);
 	let excel_buffer: any = await wb.writeToBuffer().then((buffer: any) => buffer);
 
 	const mailOptions = {
@@ -136,5 +133,3 @@ async function sendMail(client: Client, workout: DigitalWorkout) {
 		}
 	});
 }
-
-// sendMail(new Client(), mock);

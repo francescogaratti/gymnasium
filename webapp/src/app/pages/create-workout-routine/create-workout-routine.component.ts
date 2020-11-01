@@ -14,6 +14,7 @@ import { Workout, StandardWorkout } from '@models/workout';
 // import { Client, mocks as clients } from '@models/client';
 import { UtilsService } from '@services/utils.service';
 import { Client } from '@models/user';
+import { ClientService } from '@services/client.service';
 // import { UtilsService } from '@services/utils.service';
 // import { Settings } from '@models/settings';
 
@@ -44,14 +45,19 @@ export class CreateWorkoutRoutineComponent implements OnInit {
 	percentage: number;
 	private selectedFile: File;
 	@ViewChild('stepper') stepper: MatHorizontalStepper;
-	constructor(private fb: FormBuilder, public auth: AuthService, private utils: UtilsService) {
+	constructor(
+		private fb: FormBuilder,
+		public auth: AuthService,
+		private utils: UtilsService,
+		private clientService: ClientService
+	) {
 		this.maxDate = new Date();
 		this.minDate = new Date();
-		this.auth.clients$.subscribe((clients: Client[]) => (this.clients = clients));
+		this.clientService.clients$.subscribe((clients: Client[]) => (this.clients = clients));
 	}
 
 	ngOnInit(): void {
-		this.auth.readClients();
+		// this.clients = this.clientService.getClients();
 		this.workoutFormGroup = this.fb.group({
 			client: [null, [Validators.required]],
 			startingDate: [null, [Validators.required]],
@@ -96,7 +102,7 @@ export class CreateWorkoutRoutineComponent implements OnInit {
 					let client: Client = this.clients.find(
 						(client: Client) => workout.clientId == client.uid
 					);
-					this.auth
+					this.clientService
 						.newClientWorkout(client, workout.id)
 						.then((value: boolean) => {
 							if (value) {

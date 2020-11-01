@@ -12,6 +12,7 @@ import { map, startWith } from 'rxjs/operators';
 
 import { MatAccordion } from '@angular/material/expansion';
 import { Client } from '@models/user';
+import { ClientService } from '@services/client.service';
 
 @Component({
 	selector: 'app-new-workout',
@@ -56,12 +57,17 @@ export class NewWorkoutComponent implements OnInit {
 
 	@ViewChild(MatAccordion) accordion: MatAccordion;
 
-	constructor(private auth: AuthService, private utils: UtilsService, public router: Router) {
+	constructor(
+		private auth: AuthService,
+		private utils: UtilsService,
+		public router: Router,
+		private clientService: ClientService
+	) {
 		this.filteredClients = this.clientCtrl.valueChanges.pipe(
 			startWith(''),
 			map(name => (name ? this._filterClientsByName(name) : this.clients.slice()))
 		);
-		this.auth.clients$.subscribe((clients: Client[]) => (this.clients = clients));
+		this.clientService.clients$.subscribe((clients: Client[]) => (this.clients = clients));
 	}
 
 	private _filterClientsByName(name: string): Client[] {
@@ -78,7 +84,7 @@ export class NewWorkoutComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.refreshInput();
-		this.auth.readClients();
+		this.clients = this.clientService.getClients();
 	}
 
 	addExercise(ws: WorkoutSession) {

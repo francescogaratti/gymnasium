@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, FormControl, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Client, User } from '@models/user';
+import { Client, User, UserTypes } from '@models/user';
 // import { Client } from '@models/client';
 import { AuthService } from '@services/auth.service';
+import { ClientService } from '@services/client.service';
 import { UtilsService } from '@services/utils.service';
 import { Observable } from 'rxjs/internal/Observable';
 import { map, startWith } from 'rxjs/operators';
@@ -63,8 +64,13 @@ export class NewClientComponent implements OnInit {
 		this.cittaFormControl,
 	];
 	my_input: HTMLInputElement = null;
-	constructor(private auth: AuthService, private utils: UtilsService, public router: Router) {
-		this.auth.clients$.subscribe((clients: Client[]) => (this.clients = clients));
+	constructor(
+		private auth: AuthService,
+		private utils: UtilsService,
+		public router: Router,
+		private clientService: ClientService
+	) {
+		this.clientService.clients$.subscribe((clients: Client[]) => (this.clients = clients));
 		this.auth.users$.subscribe((users: User[]) => (this.users = users));
 	}
 
@@ -77,7 +83,7 @@ export class NewClientComponent implements OnInit {
 			map(name => (name ? this._filterUsersByName(name) : this.users.slice()))
 		);
 		this.auth.readUsers();
-		// this.auth.readClients();
+		this.clientService.readClients();
 	}
 
 	private _filterUsersByName(name: string): User[] {
@@ -105,6 +111,7 @@ export class NewClientComponent implements OnInit {
 	}
 
 	addClient(): void {
+		this.selected_user.type = UserTypes.client;
 		this.client = new Client(this.selected_user);
 		// if the user modify the name, I better catch it here
 		this.client.displayName = this.nomeFormControl.value + ' ' + this.cognomeFormControl.value;
@@ -121,8 +128,8 @@ export class NewClientComponent implements OnInit {
 			this.auth
 				.uploadImageToClient(this.my_input.files[0], this.client.uid)
 				.then(path => {
-					console.info(path);
-					this.client.photoURL = path; // link to new photoURL
+					// console.info(path);
+					this.client.photoURL = path ? path : ''; // link to new photoURL
 					this.updateClient(this.client);
 				})
 				.catch(err => console.error('uploadImageToClient', err));
@@ -130,7 +137,8 @@ export class NewClientComponent implements OnInit {
 	}
 
 	async updateClient(client: Client): Promise<void> {
-		return this.auth
+		this.auth.updateUser(this.selected_user);
+		return this.clientService
 			.updateClient(client)
 			.then((value: boolean) => {
 				if (value) {

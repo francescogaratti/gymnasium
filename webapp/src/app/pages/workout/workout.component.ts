@@ -4,6 +4,7 @@ import { Client } from '@models/user';
 // import { Client } from '@models/client';
 import { DigitalWorkout, Workout } from '@models/workout';
 import { AuthService } from '@services/auth.service';
+import { ClientService } from '@services/client.service';
 import { UtilsService } from '@services/utils.service';
 @Component({
 	selector: 'app-workout',
@@ -17,9 +18,11 @@ export class WorkoutComponent implements OnInit {
 	constructor(
 		private activatedRoute: ActivatedRoute,
 		private auth: AuthService,
-		private utils: UtilsService
+		private utils: UtilsService,
+		private clientService: ClientService
 	) {
 		this.id = this.activatedRoute.snapshot.queryParams['id'];
+		this.clientService.client$.subscribe((client: Client) => (this.client = client));
 	}
 
 	ngOnInit(): void {
@@ -40,13 +43,7 @@ export class WorkoutComponent implements OnInit {
 	}
 
 	getClient(id: string) {
-		this.auth
-			.readClient(id)
-			.then((client: Client) => (this.client = client))
-			.catch(err => {
-				console.error(err);
-				this.utils.openSnackBar('Ops! Qualcosa è andato storto!', '💀💀💀');
-			});
+		this.clientService.readClient(id);
 	}
 
 	// generateExcel() {

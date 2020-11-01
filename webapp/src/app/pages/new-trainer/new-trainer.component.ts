@@ -6,6 +6,7 @@ import { EmployeeType } from '@models/employee';
 import { Trainer } from '@models/trainer';
 import { Client, User } from '@models/user';
 import { AuthService } from '@services/auth.service';
+import { ClientService } from '@services/client.service';
 import { UtilsService } from '@services/utils.service';
 
 export function checkFiscalCode(nameRe: RegExp): ValidatorFn {
@@ -52,7 +53,12 @@ export class NewTrainerComponent implements OnInit {
 		this.cittaFormControl,
 	];
 	my_input: HTMLInputElement = null;
-	constructor(private auth: AuthService, private utils: UtilsService, public router: Router) {}
+	constructor(
+		private auth: AuthService,
+		private utils: UtilsService,
+		public router: Router,
+		private clientService: ClientService
+	) {}
 
 	ngOnInit(): void {
 		this.my_input = document.createElement('input');
@@ -68,7 +74,7 @@ export class NewTrainerComponent implements OnInit {
 		this.client.city = this.cittaFormControl.value;
 		this.client.postalCode = this.codicePostaleFormControl.value;
 		console.info('Adding new client: ', this.client);
-		this.auth
+		this.clientService
 			.newClient(this.client)
 			.then((id: string) => {
 				if (id) {
@@ -78,7 +84,7 @@ export class NewTrainerComponent implements OnInit {
 						.then(path => {
 							console.info(path);
 							this.client.photoURL = path;
-							this.auth
+							this.clientService
 								.updateClient(this.client)
 								.then((value: boolean) => {
 									if (value) {

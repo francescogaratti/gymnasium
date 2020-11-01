@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Client } from '@models/user';
-// import { Client } from '@models/client';
-import { AuthService } from '@services/auth.service';
+import { ClientService } from '@services/client.service';
 import { UtilsService } from '@services/utils.service';
 
 @Component({
@@ -13,10 +12,12 @@ import { UtilsService } from '@services/utils.service';
 export class ClientsComponent implements OnInit {
 	displayedColumns: string[] = ['name', 'fiscalCode', 'delete', 'detail'];
 	clients: Client[] = [];
-	constructor(private auth: AuthService, private utils: UtilsService, public router: Router) {}
-
-	ngOnInit(): void {
-		this.auth.clients$.subscribe((clients: Client[]) => {
+	constructor(
+		private utils: UtilsService,
+		public router: Router,
+		private clientService: ClientService
+	) {
+		this.clientService.clients$.subscribe((clients: Client[]) => {
 			this.clients = clients;
 			if (!this.clients || this.clients.length == 0)
 				this.utils.openSnackBar(
@@ -27,22 +28,32 @@ export class ClientsComponent implements OnInit {
 		});
 	}
 
+	ngOnInit(): void {}
+
 	showClients() {
-		this.auth.readClients();
+		this.clientService.readClients();
 	}
 
 	remove(client: Client) {
-		console.info('remove', client);
-		this.auth.deleteClient(client).then(res => {
-			if (res) {
-				console.info('removed');
+		this.clientService
+			.deleteClient(client.uid)
+			.then(res => {
+				if (res) {
+					this.utils.openSnackBar(
+						'Il cliente ' + client.displayName + ' è stato correttamente rimosso',
+						'👋👋'
+					);
+					this.showClients();
+				}
+			})
+			.catch(err => {
+				console.error(err);
 				this.utils.openSnackBar(
-					'Il cliente ' + client.displayName + ' è stato correttamente rimosso',
-					'👋👋'
+					"Si è verificato un errore durante l'eliminazione del cliente " +
+						client.displayName,
+					'Si prega di riprovare.'
 				);
-				this.auth.readClients();
-			}
-		});
+			});
 	}
 
 	detail(client: Client) {
