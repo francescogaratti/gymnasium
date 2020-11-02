@@ -180,6 +180,7 @@ export class NewClientComponent implements OnInit {
 	}
 
 	resetClient(): void {
+		this.selected_user = null;
 		this.client = new Client();
 		this.formsControl.forEach((form: FormControl) => form.setValue(null));
 		this.removePhoto();
