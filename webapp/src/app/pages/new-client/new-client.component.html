@@ -317,6 +317,7 @@
 			color="primary"
 			(click)="addClient()"
 			[disabled]="
+				alreadyClient ||
 				userFormControl.invalid ||
 				nomeFormControl.invalid ||
 				photoFormControl.invalid ||
@@ -330,6 +331,16 @@
 			"
 		>
 			Aggiungi Cliente
+		</button>
+		<button
+			*ngIf="alreadyClient"
+			mat-icon-button
+			matTooltip="Questo utente è già un cliente. Clicca per cancellare la selezione"
+			matTooltipPosition="right"
+			matTooltipHideDelay="1000"
+			(click)="resetClient()"
+		>
+			<mat-icon>help</mat-icon>
 		</button>
 	</mat-card-actions>
 </mat-card>

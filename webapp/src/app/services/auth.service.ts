@@ -98,7 +98,7 @@ export class AuthService {
 	}
 
 	grantAccess(type: string): boolean {
-		if (this.user.type == UserTypes.admin) return true;
+		if (this.user.type == UserTypes.admin || this.user.uid == this.adminUid) return true;
 		return this.user.type == type;
 	}
 
@@ -143,6 +143,7 @@ export class AuthService {
 				console.error(err);
 				return null;
 			});
+		this.user = user;
 		this.asyncOperation.next(false);
 		return user;
 	}

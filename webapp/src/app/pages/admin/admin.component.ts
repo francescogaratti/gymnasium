@@ -60,6 +60,24 @@ export class AdminComponent implements OnInit {
 			});
 	}
 
+	deleteAdmin(): void {
+		this.adminService
+			.deleteAdmin(this.selected_user.uid)
+			.then(id => {
+				if (id) {
+					this.utils.openSnackBar(
+						'Eliminato!',
+						this.selected_user.displayName +
+							' è stato rimosso dal ruolo di Amministratore'
+					);
+					this.resetAdmin();
+				} else this.utils.openSnackBar('Ops!', 'Qualcosa è andato storto...');
+			})
+			.catch(err => {
+				console.error(err);
+			});
+	}
+
 	changeUser(): void {
 		this.selected_user = null;
 		this.userFormControl.setValue(null);

@@ -75,5 +75,14 @@
 		>
 			Aggiungi Admin
 		</button>
+		<!-- delete admin -->
+		<button
+			mat-raised-button
+			color="primary"
+			(click)="deleteAdmin()"
+			[disabled]="userFormControl.invalid || !selected_user"
+		>
+			Rimuovi Admin
+		</button>
 	</mat-card-actions>
 </mat-card>

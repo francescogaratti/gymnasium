@@ -47,23 +47,24 @@ export class ClientService {
 		this.asyncOperation.next(false);
 	}
 
-	public async readClients() {
+	public async readClients(): Promise<Client[]> {
 		this.asyncOperation.next(true);
 		console.info('📘 - read clients');
-		this.clients$ = await this.afs
+		let clients: Client[] = await this.afs
 			.collection('clients')
 			.get()
 			.toPromise()
 			.then(snapshot => {
 				let values: Client[] = [];
 				snapshot.forEach(doc => values.push(doc.data() as Client));
-				return of(values);
+				return values;
 			})
 			.catch(err => {
 				console.error(err);
-				return of([]);
+				return [];
 			});
 		this.asyncOperation.next(false);
+		return clients;
 	}
 
 	// *** POST ***

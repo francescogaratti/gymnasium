@@ -33,6 +33,8 @@ export class NewClientComponent implements OnInit {
 
 	filteredUsers: Observable<User[]>;
 
+	alreadyClient: boolean = false;
+
 	userFormControl: FormControl = new FormControl('', [Validators.required]);
 	nomeFormControl: FormControl = new FormControl('', [Validators.required]);
 	cognomeFormControl: FormControl = new FormControl('', [Validators.required]);
@@ -70,7 +72,7 @@ export class NewClientComponent implements OnInit {
 		public router: Router,
 		private clientService: ClientService
 	) {
-		this.clientService.clients$.subscribe((clients: Client[]) => (this.clients = clients));
+		// this.clientService.clients$.subscribe((clients: Client[]) => (this.clients = clients));
 		this.auth.users$.subscribe((users: User[]) => (this.users = users));
 	}
 
@@ -83,7 +85,15 @@ export class NewClientComponent implements OnInit {
 			map(name => (name ? this._filterUsersByName(name) : this.users.slice()))
 		);
 		this.auth.readUsers();
-		this.clientService.readClients();
+		this.clientService.readClients().then((clients: Client[]) => {
+			this.clients = clients;
+			if (!this.clients || this.clients.length == 0)
+				this.utils.openSnackBar(
+					'Nessun cliente presente.',
+					'Per inserirne uno cliccare su "Nuovo Cliente"',
+					10000
+				);
+		});
 	}
 
 	private _filterUsersByName(name: string): User[] {
@@ -96,6 +106,7 @@ export class NewClientComponent implements OnInit {
 		this.selected_user = null;
 		this.userFormControl.setValue(null);
 		this.removePhoto();
+		this.alreadyClient = false;
 	}
 
 	selectedValueChange(user: User) {
@@ -108,6 +119,18 @@ export class NewClientComponent implements OnInit {
 		) as HTMLImageElement;
 		photoProfile.src = this.selected_user.photoURL;
 		photoProfile.hidden = false;
+		// check if it's already a client
+		let client = this.clients.find((c: Client) => c.uid == user.uid);
+		if (client) {
+			this.alreadyClient = true;
+			// load all client data
+			this.birthdayFormControl.setValue(new Date(client.birthday));
+			this.sexFormControl.setValue(client.sex ? 'man' : 'woman');
+			this.codiceFiscaleFormControl.setValue(client.fiscalCode);
+			this.indirizzoFormControl.setValue(client.address);
+			this.cittaFormControl.setValue(client.city);
+			this.codicePostaleFormControl.setValue(client.postalCode);
+		}
 	}
 
 	addClient(): void {

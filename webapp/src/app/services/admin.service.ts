@@ -75,4 +75,20 @@ export class AdminService {
 	}
 
 	// *** DELETE ***
+
+	async deleteAdmin(id: string): Promise<boolean> {
+		this.asyncOperation.next(true);
+		console.info('📕 - delete');
+		let res: boolean = await this.afs
+			.collection('admins')
+			.doc(id)
+			.delete()
+			.then(() => true)
+			.catch(err => {
+				console.error(err);
+				return false;
+			});
+		this.asyncOperation.next(false);
+		return res;
+	}
 }

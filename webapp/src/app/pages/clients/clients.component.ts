@@ -16,8 +16,12 @@ export class ClientsComponent implements OnInit {
 		private utils: UtilsService,
 		public router: Router,
 		private clientService: ClientService
-	) {
-		this.clientService.clients$.subscribe((clients: Client[]) => {
+	) {}
+
+	ngOnInit(): void {}
+
+	showClients() {
+		this.clientService.readClients().then((clients: Client[]) => {
 			this.clients = clients;
 			if (!this.clients || this.clients.length == 0)
 				this.utils.openSnackBar(
@@ -26,12 +30,6 @@ export class ClientsComponent implements OnInit {
 					10000
 				);
 		});
-	}
-
-	ngOnInit(): void {}
-
-	showClients() {
-		this.clientService.readClients();
 	}
 
 	remove(client: Client) {
