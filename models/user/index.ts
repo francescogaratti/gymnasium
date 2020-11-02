@@ -38,6 +38,29 @@ export interface User {
 	metadata: Metadata;
 	tokenIds?: string[];
 	type?: string;
+	notifications: {
+		mail: boolean;
+		push: boolean;
+	};
+}
+
+export class User implements User {
+	constructor(user?: User) {
+		this.uid = user && user.uid ? user.uid : null;
+		this.email = user && user.email ? user.email : null;
+		this.displayName = user && user.displayName ? user.displayName : null;
+		this.photoURL = user && user.photoURL ? user.photoURL : null;
+		this.metadata = user && user.metadata ? user.metadata : null;
+		this.tokenIds = user && user.tokenIds ? user.tokenIds : null;
+		this.type = user && user.type ? user.type : null;
+		this.notifications =
+			user && user.notifications
+				? user.notifications
+				: {
+						mail: false,
+						push: false,
+				  };
+	}
 }
 
 export interface Client extends User {
@@ -50,17 +73,9 @@ export interface Client extends User {
 	workouts: any[];
 }
 
-export class Client implements Client {
+export class Client extends User {
 	constructor(user?: User) {
-		if (user) {
-			this.uid = user.uid;
-			this.email = user.email;
-			this.displayName = user.displayName;
-			this.photoURL = user.photoURL;
-			this.metadata = user.metadata;
-			this.tokenIds = user.tokenIds;
-			this.type = user.type;
-		}
+		super(user);
 	}
 }
 
@@ -81,28 +96,16 @@ export interface Receptionist extends Employee {}
 
 export interface Admin extends User {}
 
-export class Admin implements Admin {
+export class Admin extends User {
 	constructor(user: User) {
-		this.uid = user.uid ? user.uid : null;
-		this.email = user.email ? user.email : null;
-		this.displayName = user.displayName ? user.displayName : null;
-		this.photoURL = user.photoURL ? user.photoURL : null;
-		this.metadata = user.metadata ? user.metadata : null;
-		this.tokenIds = user.tokenIds ? user.tokenIds : null;
-		this.type = user.type ? user.type : null;
+		super(user);
 	}
 }
 
 export interface Manager extends User {}
 
-export class Manager implements Manager {
+export class Manager extends User {
 	constructor(user: User) {
-		this.uid = user.uid ? user.uid : null;
-		this.email = user.email ? user.email : null;
-		this.displayName = user.displayName ? user.displayName : null;
-		this.photoURL = user.photoURL ? user.photoURL : null;
-		this.metadata = user.metadata ? user.metadata : null;
-		this.tokenIds = user.tokenIds ? user.tokenIds : null;
-		this.type = user.type ? user.type : null;
+		super(user);
 	}
 }

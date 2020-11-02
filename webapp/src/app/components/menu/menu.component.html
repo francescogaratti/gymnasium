@@ -70,7 +70,7 @@
 					<i class="material-icons-two-tone">account_circle</i>
 				</button>
 			</ng-template>
-			<div *ngIf="managerService.manager$ | async; then manager"></div>
+			<!-- <div *ngIf="managerService.manager$ | async; then manager"></div> -->
 			<ng-template #manager>
 				<button
 					color="accent"
@@ -92,7 +92,7 @@
 				</button>
 			</ng-template>
 			<!--  trainer => new workout -->
-			<div *ngIf="trainerService.trainer$ | async; then trainer"></div>
+			<!-- <div *ngIf="trainerService.trainer$ | async; then trainer"></div> -->
 			<ng-template #trainer>
 				<button
 					color="accent"
@@ -105,7 +105,7 @@
 				</button>
 			</ng-template>
 			<!-- client => personal area + book -->
-			<div *ngIf="clientService.client$ | async; then client"></div>
+			<!-- <div *ngIf="clientService.client$ | async; then client"></div> -->
 			<ng-template #client>
 				<button
 					color="accent"

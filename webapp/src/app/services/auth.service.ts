@@ -115,7 +115,7 @@ export class AuthService {
 			switchMap(user => {
 				this.asyncOperation.next(false);
 				// Logged in
-				if (user) return of(user as User);
+				if (user) return this.readUser(user.uid);
 				// Logged out
 				else return of(null);
 			})

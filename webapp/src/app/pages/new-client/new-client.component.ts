@@ -51,6 +51,8 @@ export class NewClientComponent implements OnInit {
 	indirizzoFormControl: FormControl = new FormControl('', [Validators.required]);
 	provinciaFormControl: FormControl = new FormControl('', [Validators.required]);
 	cittaFormControl: FormControl = new FormControl('', [Validators.required]);
+	mailNotifications: boolean = false;
+	pushNotifications: boolean = true;
 
 	formsControl: FormControl[] = [
 		this.userFormControl,
@@ -145,6 +147,8 @@ export class NewClientComponent implements OnInit {
 		this.client.address = this.indirizzoFormControl.value;
 		this.client.city = this.cittaFormControl.value;
 		this.client.postalCode = this.codicePostaleFormControl.value;
+		this.client.notifications.push = this.pushNotifications;
+		this.client.notifications.mail = this.mailNotifications;
 
 		console.info('Adding new client: ', this.client);
 		if (this.my_input.files)
@@ -182,6 +186,8 @@ export class NewClientComponent implements OnInit {
 	resetClient(): void {
 		this.selected_user = null;
 		this.client = new Client();
+		this.pushNotifications = false;
+		this.mailNotifications = false;
 		this.formsControl.forEach((form: FormControl) => form.setValue(null));
 		this.removePhoto();
 	}

@@ -1,0 +1,21 @@
+<mat-drawer-container class="example-container" autosize>
+	<mat-drawer #drawer class="example-sidenav" mode="side">
+		<p>Auto-resizing sidenav</p>
+		<p *ngIf="showFiller">Lorem, ipsum dolor sit amet consectetur.</p>
+		<button (click)="showFiller = !showFiller" mat-raised-button>Toggle extra text</button>
+	</mat-drawer>
+</mat-drawer-container>
+<mat-toolbar color="accent">
+	<span (click)="router.navigateByUrl('home')" style="cursor: pointer">
+		<h1>
+			{{ title }}
+			{{ auth.user ? '| ' + auth.user?.type + ' : ' + auth.user.displayName : '' }}
+		</h1>
+	</span>
+	<span class="fill-remaining-space"></span>
+	<div class="example-sidenav-content">
+		<button type="button" mat-button (click)="drawer.toggle()">
+			<i class="material-icons">list</i>
+		</button>
+	</div>
+</mat-toolbar>

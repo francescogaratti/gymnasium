@@ -49,6 +49,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 import { HomeComponent } from './pages/home/home.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
@@ -67,6 +68,7 @@ import { NewTrainerComponent } from './pages/new-trainer/new-trainer.component';
 import { NewExerciseComponent } from './pages/new-exercise/new-exercise.component';
 import { BookComponent } from './pages/book/book.component';
 import { AdminComponent } from './pages/admin/admin.component';
+import { MobileSidenavComponent } from './components/mobile-sidenav/mobile-sidenav.component';
 
 @NgModule({
 	declarations: [
@@ -88,6 +90,7 @@ import { AdminComponent } from './pages/admin/admin.component';
 		NewExerciseComponent,
 		BookComponent,
 		AdminComponent,
+		MobileSidenavComponent,
 	],
 	imports: [
 		HttpClientModule,
@@ -123,6 +126,7 @@ import { AdminComponent } from './pages/admin/admin.component';
 		MatSortModule,
 		MatAutocompleteModule,
 		MatExpansionModule,
+		MatSidenavModule,
 	],
 	providers: [
 		MatDatepickerModule,

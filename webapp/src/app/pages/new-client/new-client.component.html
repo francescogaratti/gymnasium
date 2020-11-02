@@ -139,8 +139,8 @@
 						<mat-form-field style="margin: 10px" color="accent">
 							<mat-label>Sesso</mat-label>
 							<mat-select [formControl]="sexFormControl">
-								<mat-option value="man">Uomo</mat-option>
-								<mat-option value="woman">Donna</mat-option>
+								<mat-option value="man">Uomo ♂️</mat-option>
+								<mat-option value="woman">Donna ♀️</mat-option>
 							</mat-select>
 							<mat-error *ngIf="sexFormControl.hasError('required')">
 								Sesso <strong>obbligatorio</strong>
@@ -306,9 +306,20 @@
 				</tr>
 			</table>
 		</form>
-		<!-- id -->
-		<!-- displayName -->
-		<!-- fiscal code -->
+	</mat-card-content>
+	<mat-card-content>
+		<mat-label style="display: block">Notifiche mail</mat-label>
+		<mat-radio-group [(ngModel)]="mailNotifications">
+			<mat-radio-button style="margin: 0 5px" [value]="true">Attiva</mat-radio-button>
+			<mat-radio-button style="margin: 0 5px" [value]="false">Non attivare</mat-radio-button>
+		</mat-radio-group>
+	</mat-card-content>
+	<mat-card-content>
+		<mat-label style="display: block">Notifiche push</mat-label>
+		<mat-radio-group [(ngModel)]="pushNotifications">
+			<mat-radio-button style="margin: 0 5px" [value]="true">Attiva</mat-radio-button>
+			<mat-radio-button style="margin: 0 5px" [value]="false">Non attivare</mat-radio-button>
+		</mat-radio-group>
 	</mat-card-content>
 	<mat-card-actions>
 		<button mat-raised-button color="warn" (click)="resetClient()">Reset</button>
