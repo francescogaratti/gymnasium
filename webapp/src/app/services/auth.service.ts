@@ -98,7 +98,11 @@ export class AuthService {
 	}
 
 	grantAccess(type: string): boolean {
-		if (this.user.type == UserTypes.admin || this.user.uid == this.adminUid) return true;
+		if (
+			this.user.type == UserTypes.admin
+			// || this.user.uid == this.adminUid
+		)
+			return true;
 		return this.user.type == type;
 	}
 
@@ -131,6 +135,10 @@ export class AuthService {
 	}
 
 	async readUser(id: string): Promise<User> {
+		if (this.user) {
+			console.info('already read user');
+			return this.user;
+		}
 		console.info('📘 - get user ' + id);
 		this.asyncOperation.next(true);
 		let user: User = await this.afs

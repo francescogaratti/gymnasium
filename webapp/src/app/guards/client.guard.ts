@@ -22,7 +22,7 @@ export class ClientGuard implements CanActivate {
 	): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 		return this.auth.user$.pipe(
 			take(1),
-			map(user => user.type == UserTypes.client),
+			map(() => this.auth.grantAccess(UserTypes.client)),
 			tap(isClient => {
 				if (!isClient) {
 					console.log('access denied - not logged as client');

@@ -1,6 +1,9 @@
 <mat-toolbar color="accent">
 	<span (click)="router.navigateByUrl('home')" style="cursor: pointer">
-		<h1>{{ title }} {{ auth.user ? '| ' + type + ' : ' + auth.user.displayName : '' }}</h1>
+		<h1>
+			{{ title }}
+			{{ auth.user ? '| ' + auth.user?.type + ' : ' + auth.user?.displayName : '' }}
+		</h1>
 	</span>
 	<span class="fill-remaining-space"></span>
 	<span>
