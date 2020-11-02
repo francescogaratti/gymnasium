@@ -25,7 +25,7 @@
 					<i class="material-icons-two-tone">admin_panel_settings</i>
 				</button>
 			</ng-template>
-			<!-- <div *ngIf="managerService.manager$ | async; then manager"></div> -->
+			<div *ngIf="managerService.manager$ | async; then manager"></div>
 			<ng-template #manager>
 				<button
 					color="accent"

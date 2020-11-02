@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import { Admin } from '@models/user';
 import { Observable, of, Subject } from 'rxjs';
 
@@ -23,6 +23,8 @@ export class AdminService {
 		this.admins$.subscribe((admins: Admin[]) => (this.admins = admins));
 	}
 
+	// *** GET ***
+
 	public async readAdmin(id: string) {
 		this.asyncOperation.next(true);
 		console.info('📘 - read admin ' + id);
@@ -38,4 +40,39 @@ export class AdminService {
 			});
 		this.asyncOperation.next(false);
 	}
+
+	// *** POST ***
+
+	async newAdmin(admin: Admin): Promise<string> {
+		this.asyncOperation.next(true);
+		console.info('📗 - write');
+		let res: string = await this.afs
+			.collection('admins')
+			.add(JSON.parse(JSON.stringify(admin)))
+			.then(async (docRef: DocumentReference) => docRef.id)
+			.catch(err => {
+				console.error(err);
+				return null;
+			});
+		this.asyncOperation.next(false);
+		return res;
+	}
+
+	async updateAdmin(admin: Admin): Promise<boolean> {
+		this.asyncOperation.next(true);
+		console.info('📗 - update admin');
+		let res: boolean = await this.afs
+			.collection('admins')
+			.doc(admin.uid)
+			.set(JSON.parse(JSON.stringify(admin)), { merge: true })
+			.then(() => true)
+			.catch(err => {
+				console.error(err);
+				return false;
+			});
+		this.asyncOperation.next(false);
+		return res;
+	}
+
+	// *** DELETE ***
 }

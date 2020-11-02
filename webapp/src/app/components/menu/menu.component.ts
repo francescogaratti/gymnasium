@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AdminService } from '@services/admin.service';
 import { AuthService } from '@services/auth.service';
 import { ClientService } from '@services/client.service';
+import { ManagerService } from '@services/manager.service';
 import { TrainerService } from '@services/trainer.service';
 
 @Component({
@@ -18,7 +19,8 @@ export class MenuComponent implements OnInit {
 		public auth: AuthService,
 		public clientService: ClientService,
 		public trainerService: TrainerService,
-		public adminService: AdminService
+		public adminService: AdminService,
+		public managerService: ManagerService
 	) {}
 
 	ngOnInit(): void {}

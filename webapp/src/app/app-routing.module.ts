@@ -4,6 +4,7 @@ import { AdminGuard } from '@guards/admin.guard';
 import { AuthGuard } from '@guards/auth.guard';
 import { ClientGuard } from '@guards/client.guard';
 import { LoggedGuard } from '@guards/logged.guard';
+import { ManagerGuard } from '@guards/manager.guard';
 import { TrainerGuard } from '@guards/trainer.guard';
 import { AdminComponent } from '@pages/admin/admin.component';
 import { BookComponent } from '@pages/book/book.component';
@@ -22,15 +23,27 @@ const routes: Routes = [
 	{ path: 'home', component: HomeComponent },
 	{ path: 'login', component: LoginComponent, canActivate: [LoggedGuard] },
 	{ path: 'book', component: BookComponent, canActivate: [AuthGuard] },
-	{ path: 'workout', component: WorkoutComponent, canActivate: [TrainerGuard, AdminGuard] },
-	{ path: 'client', component: ClientComponent, canActivate: [TrainerGuard, AdminGuard] },
+	{
+		path: 'workout',
+		component: WorkoutComponent,
+		canActivate: [TrainerGuard, ManagerGuard, AdminGuard],
+	},
+	{
+		path: 'client',
+		component: ClientComponent,
+		canActivate: [TrainerGuard, ManagerGuard, AdminGuard],
+	},
 	{
 		path: 'new-workout',
 		component: NewWorkoutComponent,
 		canActivate: [TrainerGuard, AdminGuard],
 	},
-	{ path: 'new-client', component: NewClientComponent, canActivate: [AdminGuard] },
-	{ path: 'new-trainer', component: NewTrainerComponent, canActivate: [AdminGuard] },
+	{ path: 'new-client', component: NewClientComponent, canActivate: [ManagerGuard, AdminGuard] },
+	{
+		path: 'new-trainer',
+		component: NewTrainerComponent,
+		canActivate: [ManagerGuard, AdminGuard],
+	},
 	{
 		path: 'new-exercise',
 		component: NewExerciseComponent,

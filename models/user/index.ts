@@ -80,3 +80,29 @@ export interface Trainer extends Employee {
 export interface Receptionist extends Employee {}
 
 export interface Admin extends User {}
+
+export class Admin implements Admin {
+	constructor(user: User) {
+		this.uid = user.uid ? user.uid : null;
+		this.email = user.email ? user.email : null;
+		this.displayName = user.displayName ? user.displayName : null;
+		this.photoURL = user.photoURL ? user.photoURL : null;
+		this.metadata = user.metadata ? user.metadata : null;
+		this.tokenIds = user.tokenIds ? user.tokenIds : null;
+		this.type = user.type ? user.type : null;
+	}
+}
+
+export interface Manager extends User {}
+
+export class Manager implements Manager {
+	constructor(user: User) {
+		this.uid = user.uid ? user.uid : null;
+		this.email = user.email ? user.email : null;
+		this.displayName = user.displayName ? user.displayName : null;
+		this.photoURL = user.photoURL ? user.photoURL : null;
+		this.metadata = user.metadata ? user.metadata : null;
+		this.tokenIds = user.tokenIds ? user.tokenIds : null;
+		this.type = user.type ? user.type : null;
+	}
+}

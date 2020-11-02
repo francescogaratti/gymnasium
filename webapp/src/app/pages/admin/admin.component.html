@@ -1,1 +1,79 @@
-<p>admin works!</p>
+<mat-card align="center">
+	<mat-card-title> Crea un nuovo Admin </mat-card-title>
+	<mat-card-content>
+		<!-- filter user/client -->
+		<form class="example-form">
+			<p
+				style="
+					display: flex;
+					text-align: center;
+					align-items: center;
+					width: fit-content;
+					margin: 20px auto;
+				"
+			>
+				<img
+					id="photo-profile"
+					alt=""
+					style="
+						border-radius: 100%;
+						width: 100px;
+						height: 100px;
+						border: solid 2px white;
+					"
+					hidden="true"
+				/>
+			</p>
+			<mat-form-field class="example-full-width" color="accent">
+				<mat-label>Utente</mat-label>
+				<input
+					matInput
+					placeholder="Digita per filtrare..."
+					aria-label="User"
+					[matAutocomplete]="auto"
+					[formControl]="userFormControl"
+				/>
+				<button
+					mat-button
+					*ngIf="selected_user"
+					matSuffix
+					mat-icon-button
+					aria-label="Clear"
+					(click)="changeUser()"
+				>
+					<mat-icon color="accent">close</mat-icon>
+				</button>
+				<mat-autocomplete #auto="matAutocomplete">
+					<mat-option
+						*ngFor="let user of filteredUsers | async"
+						[value]="user.displayName"
+						(onSelectionChange)="selectedValueChange(user)"
+					>
+						<img
+							class="example-option-img"
+							aria-hidden
+							[src]="user.photoURL"
+							height="25"
+							style="border-radius: 100%"
+						/>
+						<span>{{ user.displayName }}</span> |
+						<small>
+							<em>{{ user.email }} </em>
+						</small>
+					</mat-option>
+				</mat-autocomplete>
+			</mat-form-field>
+		</form>
+	</mat-card-content>
+	<mat-card-actions>
+		<!-- create admin -->
+		<button
+			mat-raised-button
+			color="primary"
+			(click)="addAdmin()"
+			[disabled]="userFormControl.invalid || !selected_user"
+		>
+			Aggiungi Admin
+		</button>
+	</mat-card-actions>
+</mat-card>
