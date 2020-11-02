@@ -4,7 +4,6 @@
 	</span>
 	<span class="fill-remaining-space"></span>
 	<span>
-		<!-- <div *ngIf="(auth.user$ | async)?.uid === auth.getAdminUid(); then admin"></div> -->
 		<div *ngIf="auth.user$ | async; then authenticated; else guest"></div>
 		<ng-template #guest>
 			<button color="accent" mat-raised-button (click)="router.navigateByUrl('login')">
@@ -13,9 +12,21 @@
 			</button>
 		</ng-template>
 		<ng-template #authenticated>
-			<!-- admin => new trainer + new client -->
-			<div *ngIf="adminService.admin$ | async; then admin"></div>
+			<!-- manager => new trainer + new client -->
+			<div *ngIf="(auth.user$ | async)?.uid === auth.getAdminUid(); then admin"></div>
 			<ng-template #admin>
+				<button
+					color="accent"
+					mat-raised-button
+					(click)="router.navigateByUrl('admin')"
+					class="menu-tab"
+				>
+					Admin
+					<i class="material-icons-two-tone">admin_panel_settings</i>
+				</button>
+			</ng-template>
+			<!-- <div *ngIf="managerService.manager$ | async; then manager"></div> -->
+			<ng-template #manager>
 				<button
 					color="accent"
 					mat-raised-button

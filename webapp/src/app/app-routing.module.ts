@@ -5,6 +5,7 @@ import { AuthGuard } from '@guards/auth.guard';
 import { ClientGuard } from '@guards/client.guard';
 import { LoggedGuard } from '@guards/logged.guard';
 import { TrainerGuard } from '@guards/trainer.guard';
+import { AdminComponent } from '@pages/admin/admin.component';
 import { BookComponent } from '@pages/book/book.component';
 import { ClientComponent } from '@pages/client/client.component';
 import { HomeComponent } from '@pages/home/home.component';
@@ -36,6 +37,7 @@ const routes: Routes = [
 		canActivate: [TrainerGuard, AdminGuard],
 	},
 	{ path: 'area-personale', component: PersonalAreaComponent, canActivate: [AuthGuard] },
+	{ path: 'admin', component: AdminComponent, canActivate: [AdminGuard] },
 	{ path: '', redirectTo: 'home', pathMatch: 'full' },
 	{ path: '**', component: NotFoundComponent },
 ];

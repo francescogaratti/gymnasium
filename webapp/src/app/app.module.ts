@@ -66,6 +66,7 @@ import { NewClientComponent } from './pages/new-client/new-client.component';
 import { NewTrainerComponent } from './pages/new-trainer/new-trainer.component';
 import { NewExerciseComponent } from './pages/new-exercise/new-exercise.component';
 import { BookComponent } from './pages/book/book.component';
+import { AdminComponent } from './pages/admin/admin.component';
 
 @NgModule({
 	declarations: [
@@ -86,6 +87,7 @@ import { BookComponent } from './pages/book/book.component';
 		NewTrainerComponent,
 		NewExerciseComponent,
 		BookComponent,
+		AdminComponent,
 	],
 	imports: [
 		HttpClientModule,

@@ -40,6 +40,7 @@ const uiConfig = {
 	providedIn: 'root',
 })
 export class AuthService {
+	adminUid: string = 'LYdbifVoKLbU22PjidrlaeqHDNG3';
 	ui: firebaseui.auth.AuthUI = new firebaseui.auth.AuthUI(auth()); // login firebase ui
 
 	// firebase_user$: Observable<User>; // future logged user
@@ -94,6 +95,10 @@ export class AuthService {
 		);
 		// store all the users here
 		this.users$.subscribe((users: User[]) => (this.users = users));
+	}
+
+	getAdminUid(): string {
+		return this.adminUid;
 	}
 
 	/**
