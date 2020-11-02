@@ -37,15 +37,17 @@ export const SendNotificationNewWorkout = functions.firestore
 				return null;
 			});
 
-		if (client) {
-			// web notification
-			sendNotification(client)
-				.then(() => console.log('Notification sent'))
-				.catch((err: any) => console.error('Notification error', err));
-			// email with attachment
-			sendMail(client, workout)
-				.then(() => console.log('Email sent'))
-				.catch((err: any) => console.error('Email error', err));
+		if (client && client.notifications) {
+			if (client.notifications.push)
+				// web notification
+				sendNotification(client)
+					.then(() => console.log('Notification sent'))
+					.catch((err: any) => console.error('Notification error', err));
+			if (client.notifications.mail)
+				// email with attachment
+				sendMail(client, workout)
+					.then(() => console.log('Email sent'))
+					.catch((err: any) => console.error('Email error', err));
 		}
 	});
 
