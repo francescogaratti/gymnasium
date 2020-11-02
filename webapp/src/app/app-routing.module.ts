@@ -36,7 +36,7 @@ const routes: Routes = [
 	{
 		path: 'new-workout',
 		component: NewWorkoutComponent,
-		canActivate: [TrainerGuard, AdminGuard],
+		canActivate: [AdminGuard, TrainerGuard],
 	},
 	{ path: 'new-client', component: NewClientComponent, canActivate: [ManagerGuard, AdminGuard] },
 	{

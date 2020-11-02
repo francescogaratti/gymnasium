@@ -22,7 +22,7 @@ export class AdminGuard implements CanActivate {
 	): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 		return this.auth.user$.pipe(
 			take(1),
-			map(user => user.type == UserTypes.admin || user.uid == this.auth.getAdminUid()),
+			map(() => this.auth.grantAccess(UserTypes.admin)),
 			tap(isAdmin => {
 				if (!isAdmin) {
 					console.log('access denied - not logged as admin');

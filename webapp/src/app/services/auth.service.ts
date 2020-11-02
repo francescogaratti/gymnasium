@@ -97,6 +97,11 @@ export class AuthService {
 		this.users$.subscribe((users: User[]) => (this.users = users));
 	}
 
+	grantAccess(type: string): boolean {
+		if (this.user.type == UserTypes.admin) return true;
+		return this.user.type == type;
+	}
+
 	getAdminUid(): string {
 		return this.adminUid;
 	}

@@ -24,6 +24,51 @@
 					Admin
 					<i class="material-icons-two-tone">admin_panel_settings</i>
 				</button>
+				<button
+					color="accent"
+					mat-raised-button
+					(click)="router.navigateByUrl('new-client')"
+					class="menu-tab"
+				>
+					Nuovo Cliente
+					<i class="material-icons-two-tone">person_add</i>
+				</button>
+				<button
+					color="accent"
+					mat-raised-button
+					(click)="router.navigateByUrl('new-trainer')"
+					class="menu-tab"
+				>
+					Nuovo Istruttore
+					<i class="material-icons-two-tone">person_add</i>
+				</button>
+				<button
+					color="accent"
+					mat-raised-button
+					(click)="router.navigateByUrl('new-workout')"
+					class="menu-tab"
+				>
+					Nuovo Allenamento
+					<i class="material-icons-two-tone">fitness_center</i>
+				</button>
+				<button
+					color="accent"
+					mat-raised-button
+					(click)="router.navigateByUrl('book')"
+					class="menu-tab"
+				>
+					Prenota
+					<i class="material-icons-two-tone">today</i>
+				</button>
+				<button
+					color="accent"
+					mat-raised-button
+					(click)="router.navigateByUrl('area-personale')"
+					class="menu-tab"
+				>
+					Area Personale
+					<i class="material-icons-two-tone">account_circle</i>
+				</button>
 			</ng-template>
 			<div *ngIf="managerService.manager$ | async; then manager"></div>
 			<ng-template #manager>

@@ -22,7 +22,7 @@ export class TrainerGuard implements CanActivate {
 	): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 		return this.auth.user$.pipe(
 			take(1),
-			map(user => user.type == UserTypes.trainer),
+			map(() => this.auth.grantAccess(UserTypes.trainer)),
 			tap(isTrainer => {
 				if (!isTrainer) {
 					console.log('access denied - not logged as trainer');
