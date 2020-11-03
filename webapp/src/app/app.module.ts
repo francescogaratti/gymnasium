@@ -50,6 +50,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { HomeComponent } from './pages/home/home.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
@@ -127,6 +128,7 @@ import { MobileSidenavComponent } from './components/mobile-sidenav/mobile-siden
 		MatAutocompleteModule,
 		MatExpansionModule,
 		MatSidenavModule,
+		MatSlideToggleModule,
 	],
 	providers: [
 		MatDatepickerModule,

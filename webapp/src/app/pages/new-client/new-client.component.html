@@ -7,6 +7,15 @@
 	<mat-card-title style="margin-bottom: 20px">Aggiungi un nuovo cliente</mat-card-title>
 	<mat-card-content>
 		<form class="example-form">
+			<mat-slide-toggle
+				class="example-full-width"
+				color="accent"
+				style="margin: 10px 0"
+				[checked]="notShowClients"
+				(toggleChange)="toggleNotShowClients()"
+			>
+				Nascondi già clienti
+			</mat-slide-toggle>
 			<mat-form-field class="example-full-width" color="accent">
 				<mat-label>Utente</mat-label>
 				<input

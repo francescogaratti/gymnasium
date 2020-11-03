@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnChanges, OnInit, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, FormControl, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Client, User, UserTypes } from '@models/user';
@@ -30,9 +30,11 @@ export class NewClientComponent implements OnInit {
 	// all clients & users
 	clients: Client[] = [];
 	users: User[] = [];
+	usersNotClients: User[] = [];
 
 	filteredUsers: Observable<User[]>;
 
+	notShowClients: boolean = false; // flag to toggle already clients visibility
 	alreadyClient: boolean = false;
 
 	userFormControl: FormControl = new FormControl('', [Validators.required]);
@@ -73,35 +75,54 @@ export class NewClientComponent implements OnInit {
 		private utils: UtilsService,
 		public router: Router,
 		private clientService: ClientService
-	) {
-		// this.clientService.clients$.subscribe((clients: Client[]) => (this.clients = clients));
-		this.auth.users$.subscribe((users: User[]) => (this.users = users));
-	}
+	) {}
 
 	ngOnInit(): void {
 		this.my_input = document.createElement('input');
 		this.my_input.onchange = () => this.getFiles();
+
 		this.resetClient();
 		this.filteredUsers = this.userFormControl.valueChanges.pipe(
 			startWith(''),
 			map(name => (name ? this._filterUsersByName(name) : this.users.slice()))
 		);
-		this.auth.readUsers();
-		this.clientService.readClients().then((clients: Client[]) => {
-			this.clients = clients;
-			if (!this.clients || this.clients.length == 0)
-				this.utils.openSnackBar(
-					'Nessun cliente presente.',
-					'Per inserirne uno cliccare su "Nuovo Cliente"',
-					10000
-				);
-		});
+
+		this.readUsersClients();
+	}
+
+	async readUsersClients() {
+		this.users = await this.auth.readUsers();
+		this.clients = await this.clientService.readClients();
+		this.usersNotClients = [];
+		if (this.users && this.users.length > 0) {
+			if (this.clients && this.clients.length > 0)
+				this.users.forEach((u: User) => {
+					let found = this.clients.find((c: Client) => {
+						console.info(c.uid, u.uid);
+						return c.uid == u.uid;
+					});
+					if (!found) this.usersNotClients.push(u);
+				});
+			else this.usersNotClients = JSON.parse(JSON.stringify(this.users));
+		}
+	}
+
+	toggleNotShowClients() {
+		this.notShowClients = !this.notShowClients;
+		this.userFormControl.setValue(null);
 	}
 
 	private _filterUsersByName(name: string): User[] {
-		return this.users.filter(
-			(u: User) => u.displayName.toLocaleLowerCase().indexOf(name.toLocaleLowerCase()) !== -1
-		);
+		if (this.notShowClients)
+			return this.usersNotClients.filter(
+				(u: User) =>
+					u.displayName.toLocaleLowerCase().indexOf(name.toLocaleLowerCase()) !== -1
+			);
+		else
+			return this.users.filter(
+				(u: User) =>
+					u.displayName.toLocaleLowerCase().indexOf(name.toLocaleLowerCase()) !== -1
+			);
 	}
 
 	changeUser(): void {

@@ -98,11 +98,7 @@ export class AuthService {
 	}
 
 	grantAccess(type: string): boolean {
-		if (
-			this.user.type == UserTypes.admin
-			// || this.user.uid == this.adminUid
-		)
-			return true;
+		if (this.user.type == UserTypes.admin || this.user.uid == this.adminUid) return true;
 		return this.user.type == type;
 	}
 
@@ -156,10 +152,11 @@ export class AuthService {
 		return user;
 	}
 
-	public async readUsers() {
-		console.info('📘 - read');
+	public async readUsers(): Promise<User[]> {
+		// if (this.users) return this.users;
+		console.info('📘 - read users');
 		this.asyncOperation.next(true);
-		let res = await this.afs
+		let users: User[] = await this.afs
 			.collection('users')
 			.get()
 			.toPromise()
@@ -173,8 +170,9 @@ export class AuthService {
 				return [];
 			});
 		this.asyncOperation.next(false);
-		console.info(res);
-		this.users$.next(res); // send to subscribers
+		// this.users$.next(users); // send to subscribers
+		// console.info(users);
+		return users;
 	}
 
 	// async readClient(id: string): Promise<Client> {
