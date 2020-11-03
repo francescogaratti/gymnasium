@@ -46,13 +46,19 @@ export interface User {
 
 export class User implements User {
 	constructor(user?: User) {
-		this.uid = user && user.uid ? user.uid : null;
-		this.email = user && user.email ? user.email : null;
-		this.displayName = user && user.displayName ? user.displayName : null;
-		this.photoURL = user && user.photoURL ? user.photoURL : null;
-		this.metadata = user && user.metadata ? user.metadata : null;
-		this.tokenIds = user && user.tokenIds ? user.tokenIds : null;
-		this.type = user && user.type ? user.type : null;
+		this.uid = user && user.uid ? user.uid : '';
+		this.email = user && user.email ? user.email : '';
+		this.displayName = user && user.displayName ? user.displayName : '';
+		this.photoURL = user && user.photoURL ? user.photoURL : '';
+		this.metadata =
+			user && user.metadata
+				? user.metadata
+				: {
+						creationTime: '',
+						lastSignInTime: '',
+				  };
+		this.tokenIds = user && user.tokenIds ? user.tokenIds : [];
+		this.type = user && user.type ? user.type : '';
 		this.notifications =
 			user && user.notifications
 				? user.notifications

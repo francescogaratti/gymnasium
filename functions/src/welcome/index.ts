@@ -24,6 +24,10 @@ export const welcomeMail = functions.auth.user().onCreate(async (u: functions.au
 		metadata: u.metadata,
 		tokenIds: [],
 		type: UserTypes.user,
+		notifications: {
+			push: false,
+			mail: false,
+		},
 	};
 
 	const mailOptions = {
