@@ -31,20 +31,21 @@ export class ClientService {
 	 *
 	 * @param id client id
 	 */
-	public async readClient(id: string) {
+	public async readClient(id: string): Promise<Client> {
 		this.asyncOperation.next(true);
 		console.info('📘 - read client ' + id);
-		this.client$ = await this.afs
+		let client: Client = await this.afs
 			.collection('clients')
 			.doc(id)
 			.get()
 			.toPromise()
-			.then(snapshot => of(snapshot.data() as Client))
+			.then(snapshot => snapshot.data() as Client)
 			.catch(err => {
 				console.error(err);
-				return of(null);
+				return null;
 			});
 		this.asyncOperation.next(false);
+		return client;
 	}
 
 	public async readClients(): Promise<Client[]> {

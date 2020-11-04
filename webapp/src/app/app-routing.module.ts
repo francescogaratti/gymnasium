@@ -17,17 +17,11 @@ import { NewTrainerComponent } from '@pages/new-trainer/new-trainer.component';
 import { NewWorkoutComponent } from '@pages/new-workout/new-workout.component';
 import { NotFoundComponent } from '@pages/not-found/not-found.component';
 import { PersonalAreaComponent } from '@pages/personal-area/personal-area.component';
-import { WorkoutComponent } from '@pages/workout/workout.component';
 
 const routes: Routes = [
 	{ path: 'home', component: HomeComponent },
 	{ path: 'login', component: LoginComponent, canActivate: [LoggedGuard] },
 	{ path: 'book', component: BookComponent, canActivate: [AuthGuard] },
-	{
-		path: 'workout',
-		component: WorkoutComponent,
-		canActivate: [TrainerGuard, ManagerGuard, AdminGuard],
-	},
 	{
 		path: 'client',
 		component: ClientComponent,

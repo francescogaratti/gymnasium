@@ -3,6 +3,14 @@
 		<h1>
 			{{ title }}
 			{{ auth.user ? '| ' + auth.user?.type + ' : ' + auth.user?.displayName : '' }}
+			<img
+				*ngIf="auth.user?.photoURL"
+				class="example-option-img"
+				aria-hidden
+				[src]="auth.user.photoURL"
+				height="40"
+				style="border-radius: 100%; border: 1px solid white"
+			/>
 		</h1>
 	</span>
 	<span class="fill-remaining-space"></span>
@@ -73,7 +81,6 @@
 					<i class="material-icons-two-tone">account_circle</i>
 				</button>
 			</ng-template>
-			<!-- <div *ngIf="managerService.manager$ | async; then manager"></div> -->
 			<ng-template #manager>
 				<button
 					color="primary"
@@ -94,8 +101,6 @@
 					<i class="material-icons-two-tone">person_add</i>
 				</button>
 			</ng-template>
-			<!--  trainer => new workout -->
-			<!-- <div *ngIf="trainerService.trainer$ | async; then trainer"></div> -->
 			<ng-template #trainer>
 				<button
 					color="primary"
@@ -107,8 +112,6 @@
 					<i class="material-icons-two-tone">fitness_center</i>
 				</button>
 			</ng-template>
-			<!-- client => personal area + book -->
-			<!-- <div *ngIf="clientService.client$ | async; then client"></div> -->
 			<ng-template #client>
 				<button
 					color="primary"
@@ -129,7 +132,7 @@
 					<i class="material-icons-two-tone">account_circle</i>
 				</button>
 			</ng-template>
-			<button color="primary" mat-raised-button (click)="auth.signOut()" class="menu-tab">
+			<button mat-button (click)="auth.signOut()" class="menu-tab">
 				<mat-icon>exit_to_app</mat-icon>
 			</button>
 		</ng-template>

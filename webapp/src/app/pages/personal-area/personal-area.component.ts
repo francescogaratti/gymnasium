@@ -38,14 +38,18 @@ export class PersonalAreaComponent implements OnInit {
 	) {
 		let last = this.activatedRoute.snapshot.queryParams['last'];
 		this.last = last && last == 'true' ? true : false;
-		this.clientService.client$.subscribe((client: Client) => {
+		// this.clientService.client$.subscribe((client: Client) => {
+		// 	this.client = client;
+		// });
+	}
+
+	ngOnInit(): void {
+		this.clientService.readClient(this.auth.getUser().uid).then(client => {
 			this.client = client;
 			this.getImage(this.client.photoURL);
 			if (this.last) this.getClientWorkouts();
 		});
 	}
-
-	ngOnInit(): void {}
 
 	getClientWorkoutsOld() {
 		this.auth
@@ -61,7 +65,7 @@ export class PersonalAreaComponent implements OnInit {
 				this.workouts = workouts;
 				if (this.last && this.workouts.length > 0) {
 					// pre-select the last
-					this.detailWorkout(this.workouts[this.workouts.length - 1]);
+					this.selectWorkout(this.workouts[this.workouts.length - 1]);
 				}
 			})
 			.catch(err => console.error(err));
@@ -89,7 +93,7 @@ export class PersonalAreaComponent implements OnInit {
 			});
 	}
 
-	detailWorkout(workout: DigitalWorkout) {
+	selectWorkout(workout: DigitalWorkout) {
 		this.selected_workout = workout;
 	}
 

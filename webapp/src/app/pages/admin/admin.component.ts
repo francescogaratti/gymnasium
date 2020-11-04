@@ -18,22 +18,19 @@ export class AdminComponent implements OnInit {
 	filteredUsers: Observable<User[]>;
 
 	userFormControl: FormControl = new FormControl('', [Validators.required]);
-	// photoFormControl: FormControl = new FormControl('', [Validators.required]);
 
 	constructor(
 		private adminService: AdminService,
 		private auth: AuthService,
 		private utils: UtilsService
-	) {
-		this.auth.users$.subscribe((users: User[]) => (this.users = users));
-	}
+	) {}
 
 	ngOnInit(): void {
 		this.filteredUsers = this.userFormControl.valueChanges.pipe(
 			startWith(''),
 			map(name => (name ? this._filterUsersByName(name) : this.users.slice()))
 		);
-		this.auth.readUsers();
+		this.auth.readUsers().then(users => (this.users = users));
 	}
 
 	private _filterUsersByName(name: string): User[] {

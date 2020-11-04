@@ -1,11 +1,11 @@
-<mat-card *ngIf="workout" class="mat-elevation-z8">
+<mat-card *ngIf="workout" class="mat-elevation-z0">
 	<mat-card-title>
-		Allenamento: {{ workout.name }}
-		<!-- <button mat-icon-button color="primary" (click)="generateExcel()">
-			<i class="material-icons-two-tone">print</i>
-		</button> -->
+		Allenamento: <em>{{ workout.name }}</em>
 	</mat-card-title>
-	<mat-card-actions> </mat-card-actions>
+	<mat-card-actions>
+		<button mat-raised-button>Inizia Allenamento</button>
+		<button mat-raised-button (click)="downloadExcel(workout)">Download Excel</button>
+	</mat-card-actions>
 	<!-- list of workout sessions -->
 	<mat-accordion class="example-headers-align" multi>
 		<mat-expansion-panel *ngFor="let workout_session of workout.sessions">

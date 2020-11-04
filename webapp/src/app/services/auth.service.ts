@@ -68,7 +68,7 @@ export class AuthService {
 		private adminService: AdminService
 	) {
 		// get credentials
-		this.getUser();
+		this.getLoggedUser();
 		// get user data
 		this.user$.subscribe(firebase_user =>
 			this.readUser(firebase_user.uid).then((user: User) => {
@@ -109,7 +109,7 @@ export class AuthService {
 	/**
 	 * @description returns the user data if the user is logged, null otherwise
 	 */
-	async getUser() {
+	async getLoggedUser() {
 		// this.asyncOperation.next(true);
 		this.user$ = this.afAuth.authState.pipe(
 			switchMap(user => {
@@ -120,6 +120,10 @@ export class AuthService {
 				else return of(null);
 			})
 		);
+	}
+
+	getUser(): User {
+		return this.user ? this.user : null;
 	}
 
 	startUi() {
@@ -174,7 +178,6 @@ export class AuthService {
 		// console.info(users);
 		return users;
 	}
-
 
 	async updateUser(user: User): Promise<boolean> {
 		this.asyncOperation.next(true);
