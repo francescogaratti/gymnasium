@@ -86,6 +86,7 @@ export class CreateWorkoutRoutineComponent implements OnInit {
 		let workout: StandardWorkout = {
 			id: null,
 			name: null,
+			creationDate: new Date().toUTCString(),
 			clientId: this.client.value,
 			clientName: this.client.value,
 			trainerId: null,

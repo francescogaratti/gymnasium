@@ -14,7 +14,7 @@
 						<mat-label>Choose a client</mat-label>
 						<mat-select formControlName="client">
 							<h3>
-								<mat-option *ngFor="let client of clients" [value]="client.id">
+								<mat-option *ngFor="let client of clients" [value]="client.uid">
 									{{ client.displayName | titlecase }}
 								</mat-option>
 							</h3>

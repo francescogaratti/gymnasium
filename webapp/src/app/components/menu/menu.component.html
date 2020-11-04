@@ -1,4 +1,4 @@
-<mat-toolbar color="accent">
+<mat-toolbar color="primary">
 	<span (click)="router.navigateByUrl('home')" style="cursor: pointer">
 		<h1>
 			{{ title }}
@@ -9,7 +9,7 @@
 	<span>
 		<div *ngIf="auth.user$ | async; then authenticated; else guest"></div>
 		<ng-template #guest>
-			<button color="accent" mat-raised-button (click)="router.navigateByUrl('login')">
+			<button color="primary" mat-raised-button (click)="router.navigateByUrl('login')">
 				<i class="material-icons md-48">login</i>
 				Login
 			</button>
@@ -19,7 +19,7 @@
 			<div *ngIf="(auth.user$ | async)?.uid === auth.getAdminUid(); then admin"></div>
 			<ng-template #admin>
 				<button
-					color="accent"
+					color="primary"
 					mat-raised-button
 					(click)="router.navigateByUrl('admin')"
 					class="menu-tab"
@@ -28,7 +28,7 @@
 					<i class="material-icons-two-tone">admin_panel_settings</i>
 				</button>
 				<button
-					color="accent"
+					color="primary"
 					mat-raised-button
 					(click)="router.navigateByUrl('new-client')"
 					class="menu-tab"
@@ -37,7 +37,7 @@
 					<i class="material-icons-two-tone">person_add</i>
 				</button>
 				<button
-					color="accent"
+					color="primary"
 					mat-raised-button
 					(click)="router.navigateByUrl('new-trainer')"
 					class="menu-tab"
@@ -46,7 +46,7 @@
 					<i class="material-icons-two-tone">person_add</i>
 				</button>
 				<button
-					color="accent"
+					color="primary"
 					mat-raised-button
 					(click)="router.navigateByUrl('new-workout')"
 					class="menu-tab"
@@ -54,17 +54,17 @@
 					Nuovo Allenamento
 					<i class="material-icons-two-tone">fitness_center</i>
 				</button>
-				<button
-					color="accent"
+				<!-- <button
+					color="primary"
 					mat-raised-button
 					(click)="router.navigateByUrl('book')"
 					class="menu-tab"
 				>
 					Prenota
 					<i class="material-icons-two-tone">today</i>
-				</button>
+				</button> -->
 				<button
-					color="accent"
+					color="primary"
 					mat-raised-button
 					(click)="router.navigateByUrl('area-personale')"
 					class="menu-tab"
@@ -76,7 +76,7 @@
 			<!-- <div *ngIf="managerService.manager$ | async; then manager"></div> -->
 			<ng-template #manager>
 				<button
-					color="accent"
+					color="primary"
 					mat-raised-button
 					(click)="router.navigateByUrl('new-client')"
 					class="menu-tab"
@@ -85,7 +85,7 @@
 					<i class="material-icons-two-tone">person_add</i>
 				</button>
 				<button
-					color="accent"
+					color="primary"
 					mat-raised-button
 					(click)="router.navigateByUrl('new-trainer')"
 					class="menu-tab"
@@ -98,7 +98,7 @@
 			<!-- <div *ngIf="trainerService.trainer$ | async; then trainer"></div> -->
 			<ng-template #trainer>
 				<button
-					color="accent"
+					color="primary"
 					mat-raised-button
 					(click)="router.navigateByUrl('new-workout')"
 					class="menu-tab"
@@ -111,7 +111,7 @@
 			<!-- <div *ngIf="clientService.client$ | async; then client"></div> -->
 			<ng-template #client>
 				<button
-					color="accent"
+					color="primary"
 					mat-raised-button
 					(click)="router.navigateByUrl('book')"
 					class="menu-tab"
@@ -120,7 +120,7 @@
 					<i class="material-icons-two-tone">today</i>
 				</button>
 				<button
-					color="accent"
+					color="primary"
 					mat-raised-button
 					(click)="router.navigateByUrl('area-personale')"
 					class="menu-tab"
@@ -129,7 +129,7 @@
 					<i class="material-icons-two-tone">account_circle</i>
 				</button>
 			</ng-template>
-			<button color="accent" mat-raised-button (click)="auth.signOut()" class="menu-tab">
+			<button color="primary" mat-raised-button (click)="auth.signOut()" class="menu-tab">
 				<mat-icon>exit_to_app</mat-icon>
 			</button>
 		</ng-template>

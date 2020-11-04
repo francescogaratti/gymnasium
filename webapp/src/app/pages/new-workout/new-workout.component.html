@@ -46,15 +46,19 @@
 							[value]="client.displayName"
 							(onSelectionChange)="selectedValueChange(client)"
 						>
-							<!-- <img
+							<img
 								class="example-option-img"
 								aria-hidden
-								[src]="client.photoUrl"
+								[src]="client.photoURL"
 								height="25"
 								style="border-radius: 100%"
-							/> -->
+							/>
 							<span>{{ client.displayName }}</span> |
-							<small>CF : {{ client.fiscalCode }}</small>
+							<small>
+								<em>
+									{{ client.email }}
+								</em>
+							</small>
 						</mat-option>
 					</mat-autocomplete>
 				</mat-form-field>
@@ -68,6 +72,44 @@
 		class="example-full-width"
 	>
 		<mat-card-title style="margin-bottom: 20px">Crea un nuovo allenamento</mat-card-title>
+
+		<mat-card-subtitle
+			>Oppure carica un template
+			<mat-card-content style="display: table; margin: auto">
+				<form>
+					<mat-form-field class="example-full-width" align="center">
+						<mat-label>Template</mat-label>
+						<input
+							matInput
+							placeholder="Digita per filtrare..."
+							aria-label="Template"
+							[matAutocomplete]="auto_templates"
+							[formControl]="templateWorkoutFormControl"
+						/>
+						<button
+							mat-button
+							*ngIf="selected_template"
+							matSuffix
+							mat-icon-button
+							aria-label="Clear"
+							(click)="changeTemplate()"
+						>
+							<mat-icon color="accent">close</mat-icon>
+						</button>
+						<mat-autocomplete #auto_templates="matAutocomplete">
+							<mat-option
+								*ngFor="let template of templates"
+								[value]="template.name"
+								(onSelectionChange)="selectTemplateWorkout(template)"
+							>
+								<span>{{ template.name }}</span>
+							</mat-option>
+						</mat-autocomplete>
+					</mat-form-field>
+				</form>
+			</mat-card-content>
+		</mat-card-subtitle>
+
 		<!-- input workout data -->
 		<form>
 			<mat-form-field style="margin: 10px" color="accent">

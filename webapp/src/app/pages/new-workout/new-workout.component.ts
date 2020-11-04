@@ -1,9 +1,14 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-// import { Client } from '@models/client';
 import { Exercise } from '@models/exercise';
-import { DigitalWorkout, WorkoutSession, mock as digital_workout } from '@models/workout';
+import {
+	DigitalWorkout,
+	WorkoutSession,
+	standard,
+	starterUomo,
+	starterDonna,
+} from '@models/workout';
 import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
 
@@ -22,8 +27,9 @@ import { ClientService } from '@services/client.service';
 })
 export class NewWorkoutComponent implements OnInit {
 	before_changes_exercise: Exercise;
-	workout_sessions: WorkoutSession[] = digital_workout.sessions;
+	workout_sessions: WorkoutSession[] = [];
 
+	templateWorkoutFormControl: FormControl = new FormControl('', [Validators.required]);
 	sessionFormControl: FormControl = new FormControl('', [Validators.required]);
 	nameFormControl: FormControl = new FormControl('', [Validators.required]);
 	startingDateFormControl: FormControl = new FormControl('', [Validators.required]);
@@ -41,6 +47,9 @@ export class NewWorkoutComponent implements OnInit {
 	clientCtrl = new FormControl();
 	selected_client: Client = null;
 	URL: string = null;
+
+	templates: DigitalWorkout[] = [standard, starterUomo, starterDonna];
+	selected_template: DigitalWorkout = null;
 
 	my_input: HTMLInputElement = null;
 
@@ -67,7 +76,7 @@ export class NewWorkoutComponent implements OnInit {
 			startWith(''),
 			map(name => (name ? this._filterClientsByName(name) : this.clients.slice()))
 		);
-		this.clientService.clients$.subscribe((clients: Client[]) => (this.clients = clients));
+		// this.clientService.clients$.subscribe((clients: Client[]) => (this.clients = clients));
 	}
 
 	private _filterClientsByName(name: string): Client[] {
@@ -84,7 +93,7 @@ export class NewWorkoutComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.refreshInput();
-		this.clients = this.clientService.getClients();
+		this.clientService.readClients().then(clients => (this.clients = clients));
 	}
 
 	addExercise(ws: WorkoutSession) {
@@ -114,6 +123,17 @@ export class NewWorkoutComponent implements OnInit {
 		this.sessionFormControl.setValue('');
 	}
 
+	selectTemplateWorkout(template: DigitalWorkout) {
+		this.selected_template = template;
+		this.workout_sessions = template.sessions;
+	}
+
+	changeTemplate() {
+		this.workout_sessions = [];
+		this.selected_template = null;
+		this.templateWorkoutFormControl.setValue(null);
+	}
+
 	cleanForm() {
 		this.formsControl.forEach((f: FormControl) => f.setValue(null));
 	}
@@ -128,6 +148,7 @@ export class NewWorkoutComponent implements OnInit {
 		let workout: DigitalWorkout = {
 			id: null,
 			name: this.nameFormControl.value,
+			creationDate: new Date().toUTCString(),
 			clientId: this.selected_client.uid,
 			clientName: this.selected_client.displayName,
 			trainerId: this.auth.user.uid,

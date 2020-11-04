@@ -175,53 +175,6 @@ export class AuthService {
 		return users;
 	}
 
-	// async readClient(id: string): Promise<Client> {
-	// 	console.info('📘 - get client ' + id);
-	// 	this.asyncOperation.next(true);
-	// 	let client: Client = await this.afs
-	// 		.collection('clients')
-	// 		.doc(id)
-	// 		.get()
-	// 		.toPromise()
-	// 		.then(snapshot => snapshot.data() as Client)
-	// 		.catch(err => {
-	// 			console.error(err);
-	// 			return null;
-	// 		});
-	// 	this.asyncOperation.next(false);
-	// 	return client;
-	// }
-
-	// async newClient(client: Client): Promise<string> {
-	// 	this.asyncOperation.next(true);
-	// 	console.info('📗 - write');
-	// 	let res: string = await this.afs
-	// 		.collection('clients')
-	// 		.add(client)
-	// 		.then(async (docRef: DocumentReference) => docRef.id)
-	// 		.catch(err => {
-	// 			console.error(err);
-	// 			return null;
-	// 		});
-	// 	this.asyncOperation.next(false);
-	// 	return res;
-	// }
-
-	// async updateClient(client: Client): Promise<boolean> {
-	// 	this.asyncOperation.next(true);
-	// 	console.info('📗 - update client');
-	// 	let res: boolean = await this.afs
-	// 		.collection('clients')
-	// 		.doc(client.uid)
-	// 		.set(JSON.parse(JSON.stringify(client)), { merge: true })
-	// 		.then(() => true)
-	// 		.catch(err => {
-	// 			console.error(err);
-	// 			return false;
-	// 		});
-	// 	this.asyncOperation.next(false);
-	// 	return res;
-	// }
 
 	async updateUser(user: User): Promise<boolean> {
 		this.asyncOperation.next(true);
@@ -238,50 +191,6 @@ export class AuthService {
 		this.asyncOperation.next(false);
 		return res;
 	}
-
-	// async deleteClient(client: Client): Promise<boolean> {
-	// 	this.asyncOperation.next(true);
-	// 	console.info('📘 - read');
-	// 	let res: boolean = false;
-	// 	// records reference
-	// 	let clientsRef = this.afs.collection('clients').ref;
-	// 	// prepare query
-	// 	let query = clientsRef.where('fiscalCode', '==', client.fiscalCode);
-	// 	// find doc id with date == record.date
-	// 	let id: string = await query
-	// 		.get()
-	// 		.then(found => {
-	// 			if (!found) return null;
-	// 			else {
-	// 				if (found.docs.length > 1)
-	// 					console.warn(
-	// 						'more than one records found with fiscalCode: ',
-	// 						client.fiscalCode
-	// 					);
-	// 				return found.docs[0].id; // me fido
-	// 			}
-	// 		})
-	// 		.catch(err => {
-	// 			console.error(err);
-	// 			return null;
-	// 		});
-	// 	if (id) {
-	// 		console.info('📕 - delete');
-	// 		// delete that doc
-	// 		res = await clientsRef
-	// 			.doc(id)
-	// 			.delete()
-	// 			.then(() => true) // unica possibilità di diventare "true"
-	// 			.catch(err => {
-	// 				console.error(err);
-	// 				return false;
-	// 			});
-	// 	}
-	// 	this.asyncOperation.next(false);
-	// 	return res;
-	// }
-
-	// workouts
 
 	async newWorkoutOld(workout: StandardWorkout): Promise<string> {
 		this.asyncOperation.next(true);
@@ -334,25 +243,6 @@ export class AuthService {
 		this.asyncOperation.next(false);
 		return res;
 	}
-
-	// async newClientWorkout(client: Client, workoutId: string): Promise<boolean> {
-	// 	this.asyncOperation.next(true);
-	// 	let new_workout_ref: DocumentReference = this.afs.collection('workouts').doc(workoutId).ref;
-	// 	if (client.workouts) client.workouts.push(new_workout_ref);
-	// 	else client.workouts = [new_workout_ref];
-	// 	console.info('📗 - append workout');
-	// 	let res: boolean = await this.afs
-	// 		.collection('clients')
-	// 		.doc(client.uid)
-	// 		.set({ workouts: client.workouts }, { merge: true })
-	// 		.then(() => true)
-	// 		.catch(err => {
-	// 			console.error(err);
-	// 			return false;
-	// 		});
-	// 	this.asyncOperation.next(false);
-	// 	return res;
-	// }
 
 	public async readClientWorkoutsOld(client: Client): Promise<StandardWorkout[]> {
 		this.asyncOperation.next(true);

@@ -31,6 +31,8 @@
 						],
 						"styles": [
 							"./node_modules/@angular/material/prebuilt-themes/purple-green.css",
+							"./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+							"./node_modules/@angular/material/prebuilt-themes/pink-bluegrey.css",
 							"src/styles.sass"
 						],
 						"scripts": []
@@ -97,6 +99,8 @@
 							"src/firebase-messaging-sw.js"
 						],
 						"styles": [
+							"./node_modules/@angular/material/prebuilt-themes/pink-bluegrey.css",
+							"./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
 							"./node_modules/@angular/material/prebuilt-themes/purple-green.css",
 							"src/styles.sass"
 						],

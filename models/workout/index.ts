@@ -3,6 +3,8 @@ export interface Workout {
 	id: string;
 	name: string;
 
+	creationDate: string;
+
 	clientId: string;
 	clientName: string;
 
@@ -27,9 +29,10 @@ export interface WorkoutSession {
 	notes: string;
 }
 
-export const mock: DigitalWorkout = {
+export const standard: DigitalWorkout = {
 	id: '',
 	name: 'Primo Allenamento Test',
+	creationDate: '01-01-2000',
 	clientId: '',
 	clientName: '',
 	trainerId: '',
@@ -164,6 +167,223 @@ export const mock: DigitalWorkout = {
 				},
 			],
 			notes: 'Gambe + Spalle',
+		},
+	],
+};
+
+export const starterUomo: DigitalWorkout = {
+	id: '',
+	name: 'Starter - Uomo',
+	creationDate: '',
+	clientId: '',
+	clientName: '',
+	trainerId: '',
+	trainerName: '',
+	startingDate: '',
+	endingDate: '',
+	sessions: [
+		{
+			name: 'Allenamento A',
+			exercises: [
+				{
+					id: null,
+					name: 'Corsa',
+					sets: 0,
+					reps: 0,
+					rest: {
+						minutes: 2,
+						seconds: 0,
+					},
+					notes: null,
+				},
+				{
+					id: null,
+					name: 'Addominali',
+					sets: 10,
+					reps: 20,
+					rest: {
+						minutes: 2,
+						seconds: 0,
+					},
+					notes: null,
+				},
+				{
+					id: null,
+					name: 'Chest press',
+					sets: 5,
+					reps: 12,
+					rest: {
+						minutes: 2,
+						seconds: 0,
+					},
+					notes: null,
+				},
+				{
+					id: null,
+					name: 'Lat machine',
+					sets: 5,
+					reps: 12,
+					rest: {
+						minutes: 2,
+						seconds: 0,
+					},
+					notes: null,
+				},
+			],
+			notes: 'Cardio + parte alta',
+		},
+		{
+			name: 'Allenamento B',
+			exercises: [
+				{
+					id: null,
+					name: 'Corsa',
+					sets: 0,
+					reps: 0,
+					rest: {
+						minutes: 2,
+						seconds: 0,
+					},
+					notes: null,
+				},
+				{
+					id: null,
+					name: 'Addominali',
+					sets: 10,
+					reps: 20,
+					rest: {
+						minutes: 2,
+						seconds: 0,
+					},
+					notes: null,
+				},
+				{
+					id: null,
+					name: 'Leg extension',
+					sets: 5,
+					reps: 12,
+					rest: {
+						minutes: 2,
+						seconds: 0,
+					},
+					notes: null,
+				},
+				{
+					id: null,
+					name: 'Leg curl',
+					sets: 5,
+					reps: 12,
+					rest: {
+						minutes: 2,
+						seconds: 0,
+					},
+					notes: null,
+				},
+			],
+			notes: 'Cardio + parte bassa',
+		},
+	],
+};
+
+export const starterDonna: DigitalWorkout = {
+	id: '',
+	name: 'Starter - Donna',
+	creationDate: '',
+	clientId: '',
+	clientName: '',
+	trainerId: '',
+	trainerName: '',
+	startingDate: '',
+	endingDate: '',
+	sessions: [
+		{
+			name: 'Allenamento A',
+			exercises: [
+				{
+					id: null,
+					name: 'Corsa',
+					sets: 0,
+					reps: 0,
+					rest: {
+						minutes: 2,
+						seconds: 0,
+					},
+					notes: null,
+				},
+				{
+					id: null,
+					name: 'Addominali',
+					sets: 10,
+					reps: 20,
+					rest: {
+						minutes: 2,
+						seconds: 0,
+					},
+					notes: null,
+				},
+				{
+					id: null,
+					name: 'Bag squat',
+					sets: 5,
+					reps: 12,
+					rest: {
+						minutes: 2,
+						seconds: 0,
+					},
+					notes: null,
+				},
+			],
+			notes: 'Cardio + squat',
+		},
+		{
+			name: 'Allenamento B',
+			exercises: [
+				{
+					id: null,
+					name: 'Corsa',
+					sets: 0,
+					reps: 0,
+					rest: {
+						minutes: 2,
+						seconds: 0,
+					},
+					notes: null,
+				},
+				{
+					id: null,
+					name: 'Addominali',
+					sets: 10,
+					reps: 20,
+					rest: {
+						minutes: 2,
+						seconds: 0,
+					},
+					notes: null,
+				},
+				{
+					id: null,
+					name: 'Leg extension',
+					sets: 5,
+					reps: 12,
+					rest: {
+						minutes: 2,
+						seconds: 0,
+					},
+					notes: null,
+				},
+				{
+					id: null,
+					name: 'Leg curl',
+					sets: 5,
+					reps: 12,
+					rest: {
+						minutes: 2,
+						seconds: 0,
+					},
+					notes: null,
+				},
+			],
+			notes: 'Cardio + parte bassa',
 		},
 	],
 };
