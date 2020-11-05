@@ -46,6 +46,7 @@ export class PersonalAreaComponent implements OnInit {
 	ngOnInit(): void {
 		this.clientService.readClient(this.auth.getUser().uid).then(client => {
 			this.client = client;
+			console.info(this.client);
 			this.getImage(this.client.photoURL);
 			if (this.last) this.getClientWorkouts();
 		});

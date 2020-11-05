@@ -85,13 +85,13 @@ export class ClientService {
 		return res;
 	}
 
-	async updateClient(client: Client): Promise<boolean> {
+	async updateClient(client: Client, deepCopy?: boolean): Promise<boolean> {
 		this.asyncOperation.next(true);
 		console.info('📗 - update client');
 		let res: boolean = await this.afs
 			.collection('clients')
 			.doc(client.uid)
-			.set(JSON.parse(JSON.stringify(client)), { merge: true })
+			.set(deepCopy ? JSON.parse(JSON.stringify(client)) : client, { merge: true })
 			.then(() => true)
 			.catch(err => {
 				console.error(err);

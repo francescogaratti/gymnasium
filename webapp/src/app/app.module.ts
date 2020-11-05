@@ -70,6 +70,7 @@ import { NewExerciseComponent } from './pages/new-exercise/new-exercise.componen
 import { BookComponent } from './pages/book/book.component';
 import { AdminComponent } from './pages/admin/admin.component';
 import { MobileSidenavComponent } from './components/mobile-sidenav/mobile-sidenav.component';
+import { InfoComponent } from './components/info/info.component';
 
 @NgModule({
 	declarations: [
@@ -92,6 +93,7 @@ import { MobileSidenavComponent } from './components/mobile-sidenav/mobile-siden
 		BookComponent,
 		AdminComponent,
 		MobileSidenavComponent,
+		InfoComponent,
 	],
 	imports: [
 		HttpClientModule,

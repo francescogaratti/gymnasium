@@ -292,8 +292,9 @@ export class AuthService {
 		return res;
 	}
 
+	// todo: extract workouts from client.workouts
 	public async readClientWorkouts(client: Client): Promise<DigitalWorkout[]> {
-		console.info('📘 - read');
+		console.info('📘 - read client workouts');
 		this.asyncOperation.next(true);
 		let workouts: DigitalWorkout[] = await this.afs
 			.collection('clients')
@@ -352,7 +353,7 @@ export class AuthService {
 					return [];
 				});
 			client.workouts = updated_workouts;
-			res = await this.clientService.updateClient(client);
+			res = await this.clientService.updateClient(client, false);
 		}
 		this.asyncOperation.next(false);
 		return res;
