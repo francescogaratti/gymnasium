@@ -71,6 +71,7 @@ import { BookComponent } from './pages/book/book.component';
 import { AdminComponent } from './pages/admin/admin.component';
 import { MobileSidenavComponent } from './components/mobile-sidenav/mobile-sidenav.component';
 import { InfoComponent } from './components/info/info.component';
+import { UploadPhotoComponent } from './components/upload-photo/upload-photo.component';
 
 @NgModule({
 	declarations: [
@@ -94,6 +95,7 @@ import { InfoComponent } from './components/info/info.component';
 		AdminComponent,
 		MobileSidenavComponent,
 		InfoComponent,
+		UploadPhotoComponent,
 	],
 	imports: [
 		HttpClientModule,

@@ -1,8 +1,51 @@
 <mat-card>
 	<mat-card-title> {{ client?.displayName ? client.displayName : '' }} </mat-card-title>
 	<mat-card-content>
-		<!-- list of attributes based on client type -->
+		<!-- basic attributes -->
+		<app-upload-photo [title]="'Foto Profilo'" [src]="client.photoURL"> </app-upload-photo>
 		<form class="form">
+			<table class="full-width" cellspacing="0">
+				<tr>
+					<td>
+						<mat-form-field class="full-width" color="accent">
+							<mat-label>Nome</mat-label>
+							<input type="text" matInput required [formControl]="nameFC" />
+							<button
+								mat-button
+								*ngIf="nameFC.value"
+								matSuffix
+								mat-icon-button
+								aria-label="Clear"
+								(click)="nameFC.setValue(null)"
+							>
+								<mat-icon>close</mat-icon>
+							</button>
+						</mat-form-field>
+					</td>
+					<td>
+						<mat-form-field class="full-width" color="accent">
+							<mat-label>Cognome</mat-label>
+							<input
+								#cognome
+								matInput
+								required
+								placeholder="Rossi"
+								[formControl]="surnameFC"
+							/>
+							<button
+								mat-button
+								*ngIf="surnameFC.value"
+								matSuffix
+								mat-icon-button
+								aria-label="Clear"
+								(click)="surnameFC.setValue(null)"
+							>
+								<mat-icon>close</mat-icon>
+							</button>
+						</mat-form-field>
+					</td>
+				</tr>
+			</table>
 			<mat-form-field class="full-width">
 				<mat-label> Email </mat-label>
 				<input
@@ -13,6 +56,70 @@
 				/>
 			</mat-form-field>
 		</form>
+		<div ngSwitch="user.type">
+			<!-- client attributes -->
+			<form class="form" *ngSwitchCase="UserTypes.client">
+				<!-- 
+					fiscalCode: string;
+					address: string;
+					city: string;
+					postalCode: string;
+					workouts: any[];
+								-->
+				<!-- birthday -->
+				<mat-form-field class="full-width" color="accent">
+					<mat-label>Data di Nascita</mat-label>
+					<input
+						matInput
+						[matDatepicker]="picker"
+						(focus)="picker.open()"
+						[formControl]="birthdayFC"
+						readonly
+						required
+					/>
+					<mat-error *ngIf="birthdayFC.hasError('required')">
+						Data di nascita <strong>obbligatoria</strong>
+					</mat-error>
+					<button
+						mat-button
+						*ngIf="birthdayFC.value"
+						matSuffix
+						mat-icon-button
+						aria-label="Clear"
+						(click)="birthdayFC.setValue(null)"
+					>
+						<mat-icon>close</mat-icon>
+					</button>
+					<mat-datepicker #picker [disabled]="!pendingChanges"></mat-datepicker>
+				</mat-form-field>
+				<!-- sex -->
+				<mat-form-field color="accent" class="full-width">
+					<mat-label>Sesso</mat-label>
+					<mat-select [formControl]="sexFC" [disabled]="!pendingChanges">
+						<mat-option value="man">Uomo ♂️</mat-option>
+						<mat-option value="woman">Donna ♀️</mat-option>
+					</mat-select>
+					<mat-error *ngIf="sexFC.hasError('required')">
+						Sesso <strong>obbligatorio</strong>
+					</mat-error>
+					<button
+						mat-button
+						*ngIf="sexFC.value"
+						matSuffix
+						mat-icon-button
+						aria-label="Clear"
+						(click)="sexFC.setValue(null)"
+					>
+						<mat-icon>close</mat-icon>
+					</button>
+				</mat-form-field>
+			</form>
+			<!-- default -->
+			<form class="form" *ngSwitchDefault></form>
+		</div>
+
+		<!-- trainer attributes -->
+		<!-- manager attributes -->
 	</mat-card-content>
 	<mat-card-actions>
 		<button color="warn" mat-raised-button *ngIf="pendingChanges" (click)="backup()">
