@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Client, User, UserTypes } from '@models/user';
+import { DigitalWorkout } from '@models/workout';
+import { AuthService } from '@services/auth.service';
 
 @Component({
 	selector: 'app-info',
@@ -23,7 +25,10 @@ export class InfoComponent implements OnInit {
 	sexFC: FormControl = new FormControl('', [Validators.required]);
 	birthdayFC: FormControl = new FormControl('', [Validators.required]);
 
-	constructor() {}
+	/** workouts */
+	workouts: DigitalWorkout[] = [];
+
+	constructor(private auth: AuthService) {}
 
 	ngOnInit(): void {
 		delete this.client.workouts;
@@ -49,5 +54,14 @@ export class InfoComponent implements OnInit {
 	}
 	modify(): void {
 		this.pendingChanges = true;
+	}
+
+	getClientWorkouts() {
+		this.auth
+			.readClientWorkouts(this.client)
+			.then((workouts: DigitalWorkout[]) => {
+				this.workouts = workouts;
+			})
+			.catch(err => console.error(err));
 	}
 }

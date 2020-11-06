@@ -319,7 +319,7 @@ export class AuthService {
 		return workouts;
 	}
 
-	async deleteWorkout(workout: Workout, client: Client): Promise<boolean> {
+	async deleteWorkout(workout: Workout, client?: Client): Promise<boolean> {
 		this.asyncOperation.next(true);
 		console.info('📕 - delete');
 		// delete from the workouts list
@@ -337,7 +337,7 @@ export class AuthService {
 			console.info('📘 - read');
 			let updated_workouts: DocumentReference[] = await this.afs
 				.collection('clients')
-				.doc(client.uid)
+				.doc(workout.clientId)
 				.get()
 				.toPromise()
 				.then(async snapshot => {

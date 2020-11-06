@@ -72,6 +72,7 @@ import { AdminComponent } from './pages/admin/admin.component';
 import { MobileSidenavComponent } from './components/mobile-sidenav/mobile-sidenav.component';
 import { InfoComponent } from './components/info/info.component';
 import { UploadPhotoComponent } from './components/upload-photo/upload-photo.component';
+import { WorkoutsComponent } from './components/workouts/workouts.component';
 
 @NgModule({
 	declarations: [
@@ -96,6 +97,7 @@ import { UploadPhotoComponent } from './components/upload-photo/upload-photo.com
 		MobileSidenavComponent,
 		InfoComponent,
 		UploadPhotoComponent,
+		WorkoutsComponent,
 	],
 	imports: [
 		HttpClientModule,

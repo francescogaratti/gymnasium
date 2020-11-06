@@ -1,7 +1,7 @@
 <mat-card *ngIf="client" align="center" class="mat-elevation-z0">
 	<app-info [client]="client"></app-info>
-	<mat-card class="mat-elevation-z8" style="margin: 10px auto; width: 50%">
-		<mat-card-content>
+	<mat-card class="mat-elevation-z0" style="margin: 10px auto; width: 50%">
+		<!-- <mat-card-content>
 			<div *ngIf="client" align="center">
 				<img
 					*ngIf="URL"
@@ -20,8 +20,7 @@
 			<button mat-raised-button color="primary" (click)="getClientWorkouts()">
 				I miei Allenamenti
 			</button>
-		</mat-card-actions>
-		<!-- workouts new -->
+		</mat-card-actions> -->
 		<mat-card
 			*ngIf="workouts?.length > 0"
 			class="mat-elevation-z8"
@@ -89,7 +88,7 @@
 		</mat-card>
 	</mat-card>
 	<!-- detail workout -->
-	<mat-card style="margin: 10px auto; width: 50%" *ngIf="selected_workout">
+	<!-- <mat-card style="margin: 10px auto; width: 50%" *ngIf="selected_workout">
 		<app-workout [workout]="selected_workout"></app-workout>
-	</mat-card>
+	</mat-card> -->
 </mat-card>
