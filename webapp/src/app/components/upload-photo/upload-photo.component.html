@@ -1,10 +1,10 @@
 <p id="upload-photo-p">
 	<img id="photo" #photo alt="" [hidden]="!src" />
-	<button mat-raised-button *ngIf="!src" aria-label="Upload" (click)="uploadPhoto()">
+	<button mat-raised-button *ngIf="!src && enabled" aria-label="Upload" (click)="uploadPhoto()">
 		{{ title }}
 		<i class="material-icons-two-tone">add_a_photo</i>
 	</button>
-	<button *ngIf="src" mat-icon-button aria-label="Clear" (click)="removePhoto()">
+	<button *ngIf="src && enabled" mat-icon-button aria-label="Clear" (click)="removePhoto()">
 		<mat-icon>clear</mat-icon>
 	</button>
 </p>

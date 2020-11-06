@@ -2,7 +2,8 @@
 	<mat-card-title> {{ client?.displayName ? client.displayName : '' }} </mat-card-title>
 	<mat-card-content>
 		<!-- basic attributes -->
-		<app-upload-photo [title]="'Foto Profilo'" [src]="client.photoURL"> </app-upload-photo>
+		<app-upload-photo [title]="'Foto Profilo'" [src]="client.photoURL" [enabled]="true">
+		</app-upload-photo>
 		<form class="form">
 			<table class="full-width" cellspacing="0">
 				<tr>

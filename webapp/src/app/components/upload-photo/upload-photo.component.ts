@@ -8,6 +8,7 @@ import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '
 export class UploadPhotoComponent implements OnInit, AfterViewInit {
 	@Input() title: string = 'Carica Foto';
 	@Input() src: string = null;
+	@Input() enabled: boolean = true;
 
 	@ViewChild('photo') photo: ElementRef;
 	input: HTMLInputElement = null;
