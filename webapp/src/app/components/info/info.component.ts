@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Client, User, UserTypes } from '@models/user';
 import { DigitalWorkout } from '@models/workout';
@@ -13,6 +13,7 @@ export class InfoComponent implements OnInit {
 	UserTypes = UserTypes;
 	@Input() user: User = null;
 	@Input() client: Client = null;
+	@Output() workouts: EventEmitter<DigitalWorkout[]> = new EventEmitter();
 
 	originalUser: User = null;
 	originalClient: Client = null;
@@ -26,7 +27,7 @@ export class InfoComponent implements OnInit {
 	birthdayFC: FormControl = new FormControl('', [Validators.required]);
 
 	/** workouts */
-	workouts: DigitalWorkout[] = [];
+	// workouts: DigitalWorkout[] = [];
 
 	constructor(private auth: AuthService) {}
 
@@ -60,7 +61,7 @@ export class InfoComponent implements OnInit {
 		this.auth
 			.readClientWorkouts(this.client)
 			.then((workouts: DigitalWorkout[]) => {
-				this.workouts = workouts;
+				this.workouts.emit(workouts);
 			})
 			.catch(err => console.error(err));
 	}

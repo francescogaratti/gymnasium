@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DigitalWorkout } from '@models/workout';
 import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
@@ -10,8 +10,8 @@ import { UtilsService } from '@services/utils.service';
 })
 export class WorkoutsComponent implements OnInit {
 	@Input() workouts: DigitalWorkout[] = [];
+	@Output() selectedWorkout: EventEmitter<DigitalWorkout> = new EventEmitter<DigitalWorkout>();
 
-	selectedWorkout: DigitalWorkout = null;
 	columnsWorkouts: string[] = [
 		'name',
 		'trainer',
@@ -48,7 +48,7 @@ export class WorkoutsComponent implements OnInit {
 	}
 
 	selectWorkout(workout: DigitalWorkout) {
-		this.selectedWorkout = workout;
+		this.selectedWorkout.emit(workout);
 	}
 
 	exportExcel(workout: DigitalWorkout) {
