@@ -1,9 +1,9 @@
 <mat-card *ngIf="client" align="center" class="mat-elevation-z0">
-	<app-info [client]="client" (workouts)="workouts = $event"></app-info>
+	<app-info id="info" [client]="client" (workouts)="workouts = $event"></app-info>
 	<app-workouts
-		style="max-width: 500px; width: 45%; min-width: 500px"
+		id="workouts"
 		[workouts]="workouts"
 		(selectedWorkout)="selectedWorkout = $event"
 	></app-workouts>
-	<app-workout [workout]="selectedWorkout"></app-workout>
+	<app-workout id="workout" [workout]="selectedWorkout"></app-workout>
 </mat-card>
