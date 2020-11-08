@@ -20,6 +20,15 @@ export enum UserTypes {
 	receptionist = 'Receptionist',
 }
 
+export interface Address {
+	state: string;
+	province: string;
+	city: string;
+	postalCode: string;
+	street: string;
+	number: string;
+}
+
 /**
  * @interface User
  * @description interface for the user data returned by `firebase auth`
@@ -73,9 +82,7 @@ export interface Client extends User {
 	sex: boolean;
 	birthday: string;
 	fiscalCode: string;
-	address: string;
-	city: string;
-	postalCode: string;
+	address: Address;
 	workouts: any[];
 }
 

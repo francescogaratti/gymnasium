@@ -115,7 +115,7 @@
 											name="address"
 											type="text"
 											matInput
-											[(ngModel)]="client.address"
+											[(ngModel)]="client.address.street"
 											[readonly]="!pendingChanges"
 										/>
 									</mat-form-field>
@@ -127,7 +127,7 @@
 											name="city"
 											type="text"
 											matInput
-											[(ngModel)]="client.city"
+											[(ngModel)]="client.address.city"
 											[readonly]="!pendingChanges"
 										/>
 									</mat-form-field>
@@ -141,7 +141,7 @@
 											name="postalCode"
 											type="number"
 											matInput
-											[(ngModel)]="client.postalCode"
+											[(ngModel)]="client.address.postalCode"
 											[readonly]="!pendingChanges"
 										/>
 									</mat-form-field>

@@ -42,7 +42,7 @@ export class NewClientComponent implements OnInit {
 	cognomeFormControl: FormControl = new FormControl('', [Validators.required]);
 	birthdayFormControl: FormControl = new FormControl('', [Validators.required]);
 	sexFormControl: FormControl = new FormControl('', [Validators.required]);
-	codicePostaleFormControl: FormControl = new FormControl('', [Validators.required]);
+	postalCodeFormControl: FormControl = new FormControl('', [Validators.required]);
 	codiceFiscaleFormControl: FormControl = new FormControl('', [
 		Validators.required,
 		Validators.maxLength(16),
@@ -50,9 +50,11 @@ export class NewClientComponent implements OnInit {
 		// Validators.pattern(fiscalCodePattern),
 	]);
 	photoFormControl: FormControl = new FormControl('', [Validators.required]);
-	indirizzoFormControl: FormControl = new FormControl('', [Validators.required]);
-	provinciaFormControl: FormControl = new FormControl('', [Validators.required]);
-	cittaFormControl: FormControl = new FormControl('', [Validators.required]);
+
+	provinceFormControl: FormControl = new FormControl('', [Validators.required]);
+	cityFormControl: FormControl = new FormControl('', [Validators.required]);
+	streetFormControl: FormControl = new FormControl('', [Validators.required]);
+	numberFC: FormControl = new FormControl('', [Validators.required]);
 	mailNotifications: boolean = false;
 	pushNotifications: boolean = true;
 
@@ -62,12 +64,14 @@ export class NewClientComponent implements OnInit {
 		this.cognomeFormControl,
 		this.birthdayFormControl,
 		this.sexFormControl,
-		this.codicePostaleFormControl,
 		this.codiceFiscaleFormControl,
 		this.photoFormControl,
-		this.indirizzoFormControl,
-		this.provinciaFormControl,
-		this.cittaFormControl,
+
+		this.provinceFormControl,
+		this.cityFormControl,
+		this.postalCodeFormControl,
+		this.streetFormControl,
+		this.numberFC,
 	];
 	my_input: HTMLInputElement = null;
 	constructor(
@@ -150,9 +154,13 @@ export class NewClientComponent implements OnInit {
 			this.birthdayFormControl.setValue(new Date(client.birthday));
 			this.sexFormControl.setValue(client.sex ? 'man' : 'woman');
 			this.codiceFiscaleFormControl.setValue(client.fiscalCode);
-			this.indirizzoFormControl.setValue(client.address);
-			this.cittaFormControl.setValue(client.city);
-			this.codicePostaleFormControl.setValue(client.postalCode);
+			// address information
+			// todo: state
+			// todo: province
+			this.cityFormControl.setValue(client.address.city);
+			this.postalCodeFormControl.setValue(client.address.postalCode);
+			this.streetFormControl.setValue(client.address.street);
+			this.numberFC.setValue(client.address.number);
 		}
 	}
 
@@ -165,9 +173,15 @@ export class NewClientComponent implements OnInit {
 		this.client.birthday = new Date(this.birthdayFormControl.value).toUTCString();
 		this.client.sex = this.sexFormControl.value == 'man' ? true : false;
 		this.client.fiscalCode = this.codiceFiscaleFormControl.value;
-		this.client.address = this.indirizzoFormControl.value;
-		this.client.city = this.cittaFormControl.value;
-		this.client.postalCode = this.codicePostaleFormControl.value;
+
+		// residence information
+		this.client.address.state = 'Italia';
+		this.client.address.province = 'Vicenza';
+		this.client.address.city = this.cityFormControl.value;
+		this.client.address.postalCode = this.postalCodeFormControl.value;
+		this.client.address.street = this.streetFormControl.value;
+		this.client.address.number = this.numberFC.value;
+		// notifications
 		this.client.notifications.push = this.pushNotifications;
 		this.client.notifications.mail = this.mailNotifications;
 
