@@ -21,16 +21,6 @@
 									[formControl]="nameFC"
 									[readonly]="!pendingChanges"
 								/>
-								<button
-									mat-button
-									*ngIf="nameFC.value && pendingChanges"
-									matSuffix
-									mat-icon-button
-									aria-label="Clear"
-									(click)="nameFC.setValue(null)"
-								>
-									<mat-icon>close</mat-icon>
-								</button>
 							</mat-form-field>
 						</td>
 						<td>
@@ -44,16 +34,6 @@
 									[formControl]="surnameFC"
 									[readonly]="!pendingChanges"
 								/>
-								<button
-									mat-button
-									*ngIf="surnameFC.value && pendingChanges"
-									matSuffix
-									mat-icon-button
-									aria-label="Clear"
-									(click)="surnameFC.setValue(null)"
-								>
-									<mat-icon>close</mat-icon>
-								</button>
 							</mat-form-field>
 						</td>
 					</tr>
@@ -74,15 +54,11 @@
 				<mat-card-content>
 					<!-- client attributes -->
 					<form class="form" *ngSwitchCase="UserTypes.client">
-						<!-- 
-							address: string;
-							city: string;
-							postalCode: string;
-										-->
 						<mat-form-field class="full-width">
 							<mat-label> Codice Fiscale </mat-label>
 							<input
 								name="fiscalCode"
+								type="text"
 								matInput
 								[(ngModel)]="client.fiscalCode"
 								[readonly]="!pendingChanges"
@@ -105,16 +81,6 @@
 										<mat-error *ngIf="birthdayFC.hasError('required')">
 											Data di nascita <strong>obbligatoria</strong>
 										</mat-error>
-										<button
-											mat-button
-											*ngIf="birthdayFC.value && pendingChanges"
-											matSuffix
-											mat-icon-button
-											aria-label="Clear"
-											(click)="birthdayFC.setValue(null)"
-										>
-											<mat-icon>close</mat-icon>
-										</button>
 										<mat-datepicker
 											#picker
 											[disabled]="!pendingChanges"
@@ -128,6 +94,7 @@
 										<mat-select
 											[formControl]="sexFC"
 											[disabled]="!pendingChanges"
+											required
 										>
 											<mat-option value="man">Uomo ♂️</mat-option>
 											<mat-option value="woman">Donna ♀️</mat-option>
@@ -135,16 +102,48 @@
 										<mat-error *ngIf="sexFC.hasError('required')">
 											Sesso <strong>obbligatorio</strong>
 										</mat-error>
-										<button
-											mat-button
-											*ngIf="sexFC.value && pendingChanges"
-											matSuffix
-											mat-icon-button
-											aria-label="Clear"
-											(click)="sexFC.setValue(null)"
-										>
-											<mat-icon>close</mat-icon>
-										</button>
+									</mat-form-field>
+								</td>
+							</tr>
+						</table>
+						<table class="full-width" cellspacing="0">
+							<tr>
+								<td>
+									<mat-form-field color="accent">
+										<mat-label> Indirizzo </mat-label>
+										<input
+											name="address"
+											type="text"
+											matInput
+											[(ngModel)]="client.address"
+											[readonly]="!pendingChanges"
+										/>
+									</mat-form-field>
+								</td>
+								<td>
+									<mat-form-field color="accent">
+										<mat-label> Citta </mat-label>
+										<input
+											name="city"
+											type="text"
+											matInput
+											[(ngModel)]="client.city"
+											[readonly]="!pendingChanges"
+										/>
+									</mat-form-field>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<mat-form-field color="accent">
+										<mat-label> Codice postale </mat-label>
+										<input
+											name="postalCode"
+											type="number"
+											matInput
+											[(ngModel)]="client.postalCode"
+											[readonly]="!pendingChanges"
+										/>
 									</mat-form-field>
 								</td>
 							</tr>
