@@ -1,5 +1,6 @@
 <mat-sidenav-container>
 	<mat-sidenav #sidenav mode="over" id="sidenav">
+		<h3>Menù</h3>
 		<div *ngIf="auth.user$ | async; then authenticated; else guest"></div>
 		<ng-template #guest>
 			<button color="primary" mat-raised-button (click)="router.navigateByUrl('login')">

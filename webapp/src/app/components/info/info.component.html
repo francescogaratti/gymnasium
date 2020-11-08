@@ -9,10 +9,10 @@
 			>
 			</app-upload-photo>
 			<form class="form">
-				<table class="full-width" cellspacing="0">
+				<table cellspacing="1" align="center">
 					<tr>
 						<td>
-							<mat-form-field class="full-width" color="accent">
+							<mat-form-field class="field-large" color="accent">
 								<mat-label>Nome</mat-label>
 								<input
 									type="text"
@@ -24,7 +24,7 @@
 							</mat-form-field>
 						</td>
 						<td>
-							<mat-form-field class="full-width" color="accent">
+							<mat-form-field class="field-large" color="accent">
 								<mat-label>Cognome</mat-label>
 								<input
 									#cognome
@@ -38,7 +38,7 @@
 						</td>
 					</tr>
 				</table>
-				<mat-form-field class="full-width">
+				<mat-form-field class="field-extra-extra-large">
 					<mat-label> Email </mat-label>
 					<input
 						name="email"
@@ -54,7 +54,7 @@
 				<mat-card-content>
 					<!-- client attributes -->
 					<form class="form" *ngSwitchCase="UserTypes.client">
-						<mat-form-field class="full-width">
+						<mat-form-field class="field-extra-extra-large">
 							<mat-label> Codice Fiscale </mat-label>
 							<input
 								name="fiscalCode"
@@ -64,11 +64,11 @@
 								[readonly]="!pendingChanges"
 							/>
 						</mat-form-field>
-						<table class="full-width" cellspacing="0">
+						<table cellspacing="1" align="center">
 							<tr>
 								<td>
 									<!-- birthday -->
-									<mat-form-field class="full-width" color="accent">
+									<mat-form-field class="field-large" color="accent">
 										<mat-label>Data di Nascita</mat-label>
 										<input
 											matInput
@@ -89,7 +89,7 @@
 								</td>
 								<td>
 									<!-- sex -->
-									<mat-form-field color="accent" class="full-width">
+									<mat-form-field color="accent" class="field-large">
 										<mat-label>Sesso</mat-label>
 										<mat-select
 											[formControl]="sexFC"
@@ -106,10 +106,66 @@
 								</td>
 							</tr>
 						</table>
-						<table class="full-width" cellspacing="0">
+						<table cellspacing="1" align="center">
 							<tr>
 								<td>
-									<mat-form-field color="accent">
+									<mat-form-field color="accent" class="field-large">
+										<mat-label> Stato </mat-label>
+										<input
+											name="state"
+											type="text"
+											matInput
+											[(ngModel)]="client.address.state"
+											[readonly]="!pendingChanges"
+											disabled
+										/>
+									</mat-form-field>
+								</td>
+								<td>
+									<mat-form-field color="accent" class="field-large">
+										<mat-label> Provincia </mat-label>
+										<input
+											name="province"
+											type="text"
+											matInput
+											[(ngModel)]="client.address.province"
+											[readonly]="!pendingChanges"
+											disabled
+										/>
+									</mat-form-field>
+								</td>
+							</tr>
+						</table>
+						<table cellspacing="1" align="center">
+							<tr>
+								<td>
+									<mat-form-field color="accent" class="field-extra-large">
+										<mat-label> Citta </mat-label>
+										<input
+											name="city"
+											type="text"
+											matInput
+											[(ngModel)]="client.address.city"
+											[readonly]="!pendingChanges"
+										/>
+									</mat-form-field>
+								</td>
+								<td>
+									<mat-form-field color="accent" class="field-medium">
+										<mat-label> Codice postale </mat-label>
+										<input
+											name="postalCode"
+											type="text"
+											matInput
+											[(ngModel)]="client.address.postalCode"
+											[readonly]="!pendingChanges"
+										/>
+									</mat-form-field>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<mat-form-field color="accent" class="field-extra-large">
 										<mat-label> Indirizzo </mat-label>
 										<input
 											name="address"
@@ -121,27 +177,13 @@
 									</mat-form-field>
 								</td>
 								<td>
-									<mat-form-field color="accent">
-										<mat-label> Citta </mat-label>
+									<mat-form-field color="accent" class="field-medium">
+										<mat-label> Numero </mat-label>
 										<input
-											name="city"
+											name="number"
 											type="text"
 											matInput
-											[(ngModel)]="client.address.city"
-											[readonly]="!pendingChanges"
-										/>
-									</mat-form-field>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<mat-form-field color="accent">
-										<mat-label> Codice postale </mat-label>
-										<input
-											name="postalCode"
-											type="number"
-											matInput
-											[(ngModel)]="client.address.postalCode"
+											[(ngModel)]="client.address.number"
 											[readonly]="!pendingChanges"
 										/>
 									</mat-form-field>
