@@ -1,54 +1,53 @@
-<div id="container">
-	<mat-sidenav-container>
-		<mat-sidenav #sidenav mode="over" id="sidenav">
-			<div *ngIf="auth.user$ | async; then authenticated; else guest"></div>
-			<ng-template #guest>
-				<button color="primary" mat-raised-button (click)="router.navigateByUrl('login')">
-					<i class="material-icons md-48">login</i>
-					Login
+<mat-sidenav-container>
+	<mat-sidenav #sidenav mode="over" id="sidenav">
+		<div *ngIf="auth.user$ | async; then authenticated; else guest"></div>
+		<ng-template #guest>
+			<button color="primary" mat-raised-button (click)="router.navigateByUrl('login')">
+				<i class="material-icons md-48">login</i>
+				Login
+			</button>
+		</ng-template>
+		<ng-template #authenticated>
+			<!-- manager => new trainer + new client -->
+			<div *ngIf="(auth.user$ | async)?.uid === auth.getAdminUid(); then admin"></div>
+			<ng-template #admin>
+				<button
+					color="primary"
+					mat-raised-button
+					(click)="router.navigateByUrl('admin')"
+					class="menu-tab"
+				>
+					Admin
+					<i class="material-icons-two-tone">admin_panel_settings</i>
 				</button>
-			</ng-template>
-			<ng-template #authenticated>
-				<!-- manager => new trainer + new client -->
-				<div *ngIf="(auth.user$ | async)?.uid === auth.getAdminUid(); then admin"></div>
-				<ng-template #admin>
-					<button
-						color="primary"
-						mat-raised-button
-						(click)="router.navigateByUrl('admin')"
-						class="menu-tab"
-					>
-						Admin
-						<i class="material-icons-two-tone">admin_panel_settings</i>
-					</button>
-					<button
-						color="primary"
-						mat-raised-button
-						(click)="router.navigateByUrl('new-client')"
-						class="menu-tab"
-					>
-						Nuovo Cliente
-						<i class="material-icons-two-tone">person_add</i>
-					</button>
-					<button
-						color="primary"
-						mat-raised-button
-						(click)="router.navigateByUrl('new-trainer')"
-						class="menu-tab"
-					>
-						Nuovo Istruttore
-						<i class="material-icons-two-tone">person_add</i>
-					</button>
-					<button
-						color="primary"
-						mat-raised-button
-						(click)="router.navigateByUrl('new-workout')"
-						class="menu-tab"
-					>
-						Nuovo Allenamento
-						<i class="material-icons-two-tone">fitness_center</i>
-					</button>
-					<!-- <button
+				<button
+					color="primary"
+					mat-raised-button
+					(click)="router.navigateByUrl('new-client')"
+					class="menu-tab"
+				>
+					Nuovo Cliente
+					<i class="material-icons-two-tone">person_add</i>
+				</button>
+				<button
+					color="primary"
+					mat-raised-button
+					(click)="router.navigateByUrl('new-trainer')"
+					class="menu-tab"
+				>
+					Nuovo Istruttore
+					<i class="material-icons-two-tone">person_add</i>
+				</button>
+				<button
+					color="primary"
+					mat-raised-button
+					(click)="router.navigateByUrl('new-workout')"
+					class="menu-tab"
+				>
+					Nuovo Allenamento
+					<i class="material-icons-two-tone">fitness_center</i>
+				</button>
+				<!-- <button
 						color="primary"
 						mat-raised-button
 						(click)="router.navigateByUrl('book')"
@@ -57,89 +56,86 @@
 						Prenota
 						<i class="material-icons-two-tone">today</i>
 					</button> -->
-					<button
-						color="primary"
-						mat-raised-button
-						(click)="router.navigateByUrl('area-personale')"
-						class="menu-tab"
-					>
-						Area Personale
-						<i class="material-icons-two-tone">account_circle</i>
-					</button>
-				</ng-template>
-				<ng-template #manager>
-					<button
-						color="primary"
-						mat-raised-button
-						(click)="router.navigateByUrl('new-client')"
-						class="menu-tab"
-					>
-						Nuovo Cliente
-						<i class="material-icons-two-tone">person_add</i>
-					</button>
-					<button
-						color="primary"
-						mat-raised-button
-						(click)="router.navigateByUrl('new-trainer')"
-						class="menu-tab"
-					>
-						Nuovo Istruttore
-						<i class="material-icons-two-tone">person_add</i>
-					</button>
-				</ng-template>
-				<ng-template #trainer>
-					<button
-						color="primary"
-						mat-raised-button
-						(click)="router.navigateByUrl('new-workout')"
-						class="menu-tab"
-					>
-						Nuovo Allenamento
-						<i class="material-icons-two-tone">fitness_center</i>
-					</button>
-				</ng-template>
-				<ng-template #client>
-					<button
-						color="primary"
-						mat-raised-button
-						(click)="router.navigateByUrl('book')"
-						class="menu-tab"
-					>
-						Prenota
-						<i class="material-icons-two-tone">today</i>
-					</button>
-					<button
-						color="primary"
-						mat-raised-button
-						(click)="router.navigateByUrl('area-personale')"
-						class="menu-tab"
-					>
-						Area Personale
-						<i class="material-icons-two-tone">account_circle</i>
-					</button>
-				</ng-template>
-				<button mat-button (click)="auth.signOut()" class="menu-tab">
-					<mat-icon>exit_to_app</mat-icon>
+				<button
+					color="primary"
+					mat-raised-button
+					(click)="router.navigateByUrl('area-personale')"
+					class="menu-tab"
+				>
+					Area Personale
+					<i class="material-icons-two-tone">account_circle</i>
 				</button>
 			</ng-template>
-		</mat-sidenav>
-		<mat-sidenav-content>
-			<mat-toolbar color="primary">
-				<div class="example-sidenav-content">
-					<button type="button" mat-button (click)="sidenav.toggle()">
-						<i class="material-icons">list</i>
-					</button>
-				</div>
-				<span (click)="router.navigateByUrl('home')" style="cursor: pointer">
-					<h1>
-						{{ title }}
-						{{
-							auth.user ? '| ' + auth.user?.type + ' : ' + auth.user.displayName : ''
-						}}
-					</h1>
-				</span>
-				<span class="fill-remaining-space"></span>
-			</mat-toolbar>
-		</mat-sidenav-content>
-	</mat-sidenav-container>
-</div>
+			<ng-template #manager>
+				<button
+					color="primary"
+					mat-raised-button
+					(click)="router.navigateByUrl('new-client')"
+					class="menu-tab"
+				>
+					Nuovo Cliente
+					<i class="material-icons-two-tone">person_add</i>
+				</button>
+				<button
+					color="primary"
+					mat-raised-button
+					(click)="router.navigateByUrl('new-trainer')"
+					class="menu-tab"
+				>
+					Nuovo Istruttore
+					<i class="material-icons-two-tone">person_add</i>
+				</button>
+			</ng-template>
+			<ng-template #trainer>
+				<button
+					color="primary"
+					mat-raised-button
+					(click)="router.navigateByUrl('new-workout')"
+					class="menu-tab"
+				>
+					Nuovo Allenamento
+					<i class="material-icons-two-tone">fitness_center</i>
+				</button>
+			</ng-template>
+			<ng-template #client>
+				<button
+					color="primary"
+					mat-raised-button
+					(click)="router.navigateByUrl('book')"
+					class="menu-tab"
+				>
+					Prenota
+					<i class="material-icons-two-tone">today</i>
+				</button>
+				<button
+					color="primary"
+					mat-raised-button
+					(click)="router.navigateByUrl('area-personale')"
+					class="menu-tab"
+				>
+					Area Personale
+					<i class="material-icons-two-tone">account_circle</i>
+				</button>
+			</ng-template>
+			<button mat-button (click)="auth.signOut()" class="menu-tab">
+				<mat-icon>exit_to_app</mat-icon>
+			</button>
+		</ng-template>
+	</mat-sidenav>
+	<mat-sidenav-content>
+		<mat-toolbar color="primary">
+			<div class="example-sidenav-content">
+				<button type="button" mat-button (click)="sidenav.toggle()">
+					<i class="material-icons">list</i>
+				</button>
+			</div>
+			<span (click)="router.navigateByUrl('home')" style="cursor: pointer">
+				<h1>
+					{{ title }}
+					{{ auth.user ? '| ' + auth.user?.type + ' : ' + auth.user.displayName : '' }}
+				</h1>
+			</span>
+			<span class="fill-remaining-space"></span>
+		</mat-toolbar>
+	</mat-sidenav-content>
+</mat-sidenav-container>
