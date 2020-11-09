@@ -70,29 +70,30 @@ export class AuthService {
 		// get credentials
 		this.getLoggedUser();
 		// get user data
-		this.user$.subscribe(firebase_user =>
-			this.readUser(firebase_user.uid).then((user: User) => {
-				this.user = user;
-				if (this.user && this.user.type) {
-					switch (this.user.type) {
-						case UserTypes.user:
-							break;
-						case UserTypes.client:
-							this.clientService.readClient(this.user.uid);
-							break;
-						case UserTypes.trainer:
-							this.trainerService.readTrainer(this.user.uid);
-							break;
-						case UserTypes.admin:
-							this.adminService.readAdmin(this.user.uid);
-							break;
-						default:
-							break;
+		this.user$.subscribe(firebase_user => {
+			if (firebase_user)
+				this.readUser(firebase_user.uid).then((user: User) => {
+					this.user = user;
+					if (this.user && this.user.type) {
+						switch (this.user.type) {
+							case UserTypes.user:
+								break;
+							case UserTypes.client:
+								this.clientService.readClient(this.user.uid);
+								break;
+							case UserTypes.trainer:
+								this.trainerService.readTrainer(this.user.uid);
+								break;
+							case UserTypes.admin:
+								this.adminService.readAdmin(this.user.uid);
+								break;
+							default:
+								break;
+						}
 					}
-				}
-				this.startMessaging(user);
-			})
-		);
+					this.startMessaging(user);
+				});
+		});
 		// store all the users here
 		this.users$.subscribe((users: User[]) => (this.users = users));
 	}
