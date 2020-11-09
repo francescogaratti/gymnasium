@@ -44,7 +44,7 @@
 					Nuovo Cliente
 					<i class="material-icons-two-tone">person_add</i>
 				</button>
-				<button
+				<!-- <button
 					color="primary"
 					mat-raised-button
 					(click)="router.navigateByUrl('new-trainer')"
@@ -52,7 +52,7 @@
 				>
 					Nuovo Istruttore
 					<i class="material-icons-two-tone">person_add</i>
-				</button>
+				</button> -->
 				<button
 					color="primary"
 					mat-raised-button
@@ -71,7 +71,7 @@
 					Prenota
 					<i class="material-icons-two-tone">today</i>
 				</button> -->
-				<button
+				<!-- <button
 					color="primary"
 					mat-raised-button
 					(click)="router.navigateByUrl('area-personale')"
@@ -79,7 +79,7 @@
 				>
 					Area Personale
 					<i class="material-icons-two-tone">account_circle</i>
-				</button>
+				</button> -->
 			</ng-template>
 			<ng-template #manager>
 				<button
@@ -112,8 +112,9 @@
 					<i class="material-icons-two-tone">fitness_center</i>
 				</button>
 			</ng-template>
+			<div *ngIf="(auth.user$ | async)?.type === 'Client'; then client"></div>
 			<ng-template #client>
-				<button
+				<!-- <button
 					color="primary"
 					mat-raised-button
 					(click)="router.navigateByUrl('book')"
@@ -121,7 +122,7 @@
 				>
 					Prenota
 					<i class="material-icons-two-tone">today</i>
-				</button>
+				</button> -->
 				<button
 					color="primary"
 					mat-raised-button
