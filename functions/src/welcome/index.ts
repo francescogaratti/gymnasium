@@ -45,7 +45,7 @@ export const welcomeMail = functions.auth.user().onCreate(async (u: functions.au
 				<p style="display: block;">
 					Questa è un'email di conferma che ti sei registrato con successo al sito <strong>Ultra Gymnasium</strong>.
 				</p>
-				<a style="display: block;" href="https://ultra-gymnasium.web.app">Go to website<a />
+				<a style="display: block;" href="https://ultra-gymnasium.web.app">Vai al sito<a />
 			</body>	
 		`,
 	};
