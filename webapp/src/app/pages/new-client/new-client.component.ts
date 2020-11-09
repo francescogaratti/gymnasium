@@ -175,12 +175,14 @@ export class NewClientComponent implements OnInit {
 		this.client.fiscalCode = this.codiceFiscaleFormControl.value;
 
 		// residence information
-		this.client.address.state = 'Italia';
-		this.client.address.province = 'Vicenza';
-		this.client.address.city = this.cityFormControl.value;
-		this.client.address.postalCode = this.postalCodeFormControl.value;
-		this.client.address.street = this.streetFormControl.value;
-		this.client.address.number = this.numberFC.value;
+		this.client.address = {
+			state: 'Italia',
+			province: 'Vicenza',
+			city: this.cityFormControl.value,
+			postalCode: this.postalCodeFormControl.value,
+			street: this.streetFormControl.value,
+			number: this.numberFC.value,
+		};
 		// notifications
 		this.client.notifications.push = this.pushNotifications;
 		this.client.notifications.mail = this.mailNotifications;
@@ -190,7 +192,6 @@ export class NewClientComponent implements OnInit {
 			this.auth
 				.uploadImageToClient(this.my_input.files[0], this.client.uid)
 				.then(path => {
-					// console.info(path);
 					this.client.photoURL = path ? path : ''; // link to new photoURL
 					this.updateClient(this.client);
 				})
@@ -201,7 +202,7 @@ export class NewClientComponent implements OnInit {
 	async updateClient(client: Client): Promise<void> {
 		this.auth.updateUser(this.selected_user);
 		return this.clientService
-			.updateClient(client)
+			.updateClient(client, true)
 			.then((value: boolean) => {
 				if (value) {
 					this.utils.openSnackBar(
@@ -228,7 +229,6 @@ export class NewClientComponent implements OnInit {
 	}
 
 	uploadPhoto() {
-		console.info('uploadPhoto');
 		this.my_input.setAttribute('type', 'file');
 		this.my_input.click();
 	}
