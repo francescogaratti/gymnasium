@@ -86,6 +86,8 @@ export class User implements User {
 export interface Client extends User {
 	sex: boolean;
 	birthday: string;
+	birthCountry: string;
+	birthCity: string;
 	fiscalCode: string;
 	address: Address;
 	workouts: any[];

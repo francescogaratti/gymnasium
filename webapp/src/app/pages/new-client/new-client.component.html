@@ -16,6 +16,7 @@
 			>
 				Nascondi già clienti
 			</mat-slide-toggle>
+			<!-- user -->
 			<mat-form-field class="example-full-width" color="accent">
 				<mat-label>Utente</mat-label>
 				<input
@@ -55,17 +56,75 @@
 					</mat-option>
 				</mat-autocomplete>
 			</mat-form-field>
-
-			<mat-form-field class="example-full-width">
-				<mat-label>Email</mat-label>
-				<input matInput disabled [value]="selected_user?.email" />
-			</mat-form-field>
-
+			<!-- location -->
 			<mat-form-field class="example-full-width">
 				<mat-label>Sede</mat-label>
 				<input matInput disabled value="Gymnasium #1" />
 			</mat-form-field>
 
+			<!-- *** CONTACT -->
+			<!-- photo -->
+			<p
+				style="
+					display: flex;
+					text-align: center;
+					align-items: center;
+					width: fit-content;
+					margin: 20px auto;
+				"
+			>
+				<img
+					id="photo-profile"
+					alt=""
+					style="
+						border-radius: 100%;
+						width: 100px;
+						height: 100px;
+						border: solid 2px white;
+					"
+					hidden="true"
+				/>
+				<button
+					mat-raised-button
+					*ngIf="!photoFormControl.value"
+					aria-label="Upload"
+					(click)="uploadPhoto()"
+				>
+					Foto profilo
+					<i class="material-icons-two-tone">add_a_photo</i>
+				</button>
+				<button
+					*ngIf="photoFormControl.value"
+					mat-icon-button
+					aria-label="Clear"
+					(click)="photoFormControl.setValue(null); removePhoto()"
+				>
+					<mat-icon>clear</mat-icon>
+				</button>
+			</p>
+			<!-- email -->
+			<mat-form-field class="example-full-width">
+				<mat-label>Email</mat-label>
+				<input matInput [formControl]="emailFC" />
+				<mat-error *ngIf="emailFC.hasError('required')">
+					La mail è <strong>obbligatoria</strong>
+				</mat-error>
+				<mat-error *ngIf="emailFC.hasError('email')">
+					Inserire una mail <strong>valida</strong>
+				</mat-error>
+				<button
+					mat-button
+					*ngIf="emailFC.value"
+					matSuffix
+					mat-icon-button
+					aria-label="Clear"
+					(click)="emailFC.setValue(null)"
+				>
+					<mat-icon>close</mat-icon>
+				</button>
+			</mat-form-field>
+			<!-- *** ANAGRAPHICS -->
+			<!-- name - surname -->
 			<table class="example-full-width" cellspacing="0">
 				<tr>
 					<td>
@@ -114,7 +173,7 @@
 					</td>
 				</tr>
 			</table>
-
+			<!-- birthday - sex -->
 			<table class="example-full-width" cellspacing="0">
 				<tr>
 					<td>
@@ -168,97 +227,141 @@
 					</td>
 				</tr>
 			</table>
-
-			<p>
-				<mat-form-field class="example-full-width" color="accent">
-					<mat-label>Codice Fiscale</mat-label>
-					<input
-						matInput
-						#codiceFiscale
-						maxlength="16"
-						minlength="16"
-						required
-						[formControl]="codiceFiscaleFormControl"
-					/>
-					<mat-hint align="end">{{ codiceFiscale.value.length }} / 16</mat-hint>
-					<br />
-					<mat-error *ngIf="codiceFiscaleFormControl.hasError('required')">
-						Codice fiscale <strong>obbligatorio</strong>
-					</mat-error>
-					<mat-error *ngIf="codiceFiscaleFormControl.hasError('minlength')">
-						Minimo 16 caratteri
-					</mat-error>
-					<mat-error *ngIf="codiceFiscaleFormControl.hasError('maxlength')">
-						Massimo 16 caratteri
-					</mat-error>
-					<mat-error *ngIf="codiceFiscaleFormControl.hasError('pattern')">
-						Inserisci un codice fiscale <strong>valido</strong>
-					</mat-error>
-					<button
-						mat-button
-						*ngIf="codiceFiscaleFormControl.value"
-						matSuffix
-						mat-icon-button
-						aria-label="Clear"
-						(click)="codiceFiscaleFormControl.setValue(null)"
-					>
-						<mat-icon>close</mat-icon>
-					</button>
-				</mat-form-field>
-			</p>
-
-			<p
-				style="
-					display: flex;
-					text-align: center;
-					align-items: center;
-					width: fit-content;
-					margin: 20px auto;
-				"
-			>
-				<img
-					id="photo-profile"
-					alt=""
-					style="
-						border-radius: 100%;
-						width: 100px;
-						height: 100px;
-						border: solid 2px white;
-					"
-					hidden="true"
-				/>
-				<button
-					mat-raised-button
-					*ngIf="!photoFormControl.value"
-					aria-label="Upload"
-					(click)="uploadPhoto()"
-				>
-					Foto profilo
-					<i class="material-icons-two-tone">add_a_photo</i>
-				</button>
-				<button
-					*ngIf="photoFormControl.value"
-					mat-icon-button
-					aria-label="Clear"
-					(click)="photoFormControl.setValue(null); removePhoto()"
-				>
-					<mat-icon>clear</mat-icon>
-				</button>
-			</p>
-
-			<!-- state - province -->
+			<!-- birthCountry - birthCity -->
 			<table class="example-full-width" cellspacing="0">
 				<tr>
 					<td>
 						<mat-form-field class="example-full-width" color="accent">
+							<mat-label>Paese di nascita</mat-label>
+							<input
+								matInput
+								required
+								placeholder="Italia"
+								[formControl]="birthCountryFC"
+							/>
+							<mat-error *ngIf="birthCountryFC.hasError('required')">
+								Il paese di nascita è <strong>obbligatorio</strong>
+							</mat-error>
+							<button
+								mat-button
+								*ngIf="birthCountryFC.value"
+								matSuffix
+								mat-icon-button
+								aria-label="Clear"
+								(click)="birthCountryFC.setValue(null)"
+							>
+								<mat-icon>close</mat-icon>
+							</button>
+						</mat-form-field>
+					</td>
+					<td>
+						<mat-form-field class="example-full-width" color="accent">
+							<mat-label>Comune di nascita</mat-label>
+							<input
+								matInput
+								placeholder="Vicenza"
+								required
+								[formControl]="birthCityFC"
+							/>
+							<mat-error *ngIf="birthCityFC.hasError('required')">
+								Il comune di nascita è <strong>obbligatorio</strong>
+							</mat-error>
+							<button
+								mat-button
+								*ngIf="birthCityFC.value"
+								matSuffix
+								mat-icon-button
+								aria-label="Clear"
+								(click)="birthCityFC.setValue(null)"
+							>
+								<mat-icon>close</mat-icon>
+							</button>
+						</mat-form-field>
+					</td>
+				</tr>
+			</table>
+			<!-- fiscal code -->
+			<mat-form-field class="example-full-width" color="accent">
+				<mat-label>Codice Fiscale</mat-label>
+				<input
+					matInput
+					#codiceFiscale
+					maxlength="16"
+					minlength="16"
+					required
+					[formControl]="codiceFiscaleFormControl"
+				/>
+				<mat-hint align="end">{{ codiceFiscale.value.length }} / 16</mat-hint>
+				<br />
+				<mat-error *ngIf="codiceFiscaleFormControl.hasError('required')">
+					Codice fiscale <strong>obbligatorio</strong>
+				</mat-error>
+				<mat-error *ngIf="codiceFiscaleFormControl.hasError('minlength')">
+					Minimo 16 caratteri
+				</mat-error>
+				<mat-error *ngIf="codiceFiscaleFormControl.hasError('maxlength')">
+					Massimo 16 caratteri
+				</mat-error>
+				<mat-error *ngIf="codiceFiscaleFormControl.hasError('pattern')">
+					Inserisci un codice fiscale <strong>valido</strong>
+				</mat-error>
+				<button
+					mat-button
+					*ngIf="codiceFiscaleFormControl.value"
+					matSuffix
+					mat-icon-button
+					aria-label="Clear"
+					(click)="codiceFiscaleFormControl.setValue(null)"
+				>
+					<mat-icon>close</mat-icon>
+				</button>
+			</mat-form-field>
+			<br /><br />
+			<!-- *** RESIDENCE -->
+			<table class="example-full-width" cellspacing="0">
+				<!-- state - province -->
+				<tr>
+					<td>
+						<mat-form-field class="example-full-width" color="accent">
 							<mat-label>Stato</mat-label>
-							<input matInput value="Italia" disabled />
+							<input
+								matInput
+								placeholder="Italia"
+								[formControl]="stateFormControl"
+								required
+							/>
+							<mat-error *ngIf="stateFormControl.hasError('required')">
+								Lo stato di residenza è <strong>obbligatorio</strong>
+							</mat-error>
+							<button
+								mat-button
+								*ngIf="stateFormControl.value"
+								matSuffix
+								mat-icon-button
+								aria-label="Clear"
+								(click)="stateFormControl.setValue(null)"
+							>
+								<mat-icon>close</mat-icon>
+							</button>
 						</mat-form-field>
 					</td>
 					<td>
 						<mat-form-field class="example-full-width" color="accent">
 							<mat-label>Provincia</mat-label>
-							<input matInput value="Vicenza" disabled />
+							<input matInput [formControl]="provinceFormControl" required />
+							<mat-error *ngIf="provinceFormControl.hasError('required')">
+								La provincia di residenza è <strong>obbligatoria</strong>
+							</mat-error>
+							<button
+								mat-button
+								*ngIf="provinceFormControl.value"
+								matSuffix
+								mat-icon-button
+								aria-label="Clear"
+								(click)="provinceFormControl.setValue(null)"
+							>
+								<mat-icon>close</mat-icon>
+							</button>
 						</mat-form-field>
 					</td>
 				</tr>
@@ -351,21 +454,27 @@
 				</tr>
 			</table>
 		</form>
+		<!-- notifications -->
+		<p style="display: inline-grid">
+			<mat-slide-toggle
+				class="example-full-width"
+				color="accent"
+				style="margin: 10px 0"
+				[(ngModel)]="mailNotifications"
+			>
+				Notifiche mail <strong> {{ mailNotifications ? 'ON' : 'OFF' }} </strong>
+			</mat-slide-toggle>
+			<mat-slide-toggle
+				class="example-full-width"
+				color="accent"
+				style="margin: 10px 0"
+				[(ngModel)]="pushNotifications"
+			>
+				Notifiche push <strong> {{ pushNotifications ? 'ON' : 'OFF' }} </strong>
+			</mat-slide-toggle>
+		</p>
 	</mat-card-content>
-	<mat-card-content>
-		<mat-label style="display: block">Notifiche mail</mat-label>
-		<mat-radio-group [(ngModel)]="mailNotifications">
-			<mat-radio-button style="margin: 0 5px" [value]="true">Attiva</mat-radio-button>
-			<mat-radio-button style="margin: 0 5px" [value]="false">Non attivare</mat-radio-button>
-		</mat-radio-group>
-	</mat-card-content>
-	<mat-card-content>
-		<mat-label style="display: block">Notifiche push</mat-label>
-		<mat-radio-group [(ngModel)]="pushNotifications">
-			<mat-radio-button style="margin: 0 5px" [value]="true">Attiva</mat-radio-button>
-			<mat-radio-button style="margin: 0 5px" [value]="false">Non attivare</mat-radio-button>
-		</mat-radio-group>
-	</mat-card-content>
+
 	<mat-card-actions>
 		<button mat-raised-button color="warn" (click)="resetClient()">Reset</button>
 		<button
@@ -375,15 +484,21 @@
 			[disabled]="
 				alreadyClient ||
 				userFormControl.invalid ||
-				nomeFormControl.invalid ||
 				photoFormControl.invalid ||
+				emailFC.invalid ||
+				nomeFormControl.invalid ||
 				cognomeFormControl.invalid ||
 				birthdayFormControl.invalid ||
 				sexFormControl.invalid ||
+				birthCountryFC.invalid ||
+				birthCityFC.invalid ||
 				codiceFiscaleFormControl.invalid ||
+				stateFormControl.invalid ||
+				provinceFormControl.invalid ||
+				cityFormControl.invalid ||
 				postalCodeFormControl.invalid ||
 				streetFormControl.invalid ||
-				cityFormControl.invalid
+				numberFC.invalid
 			"
 		>
 			Aggiungi Cliente

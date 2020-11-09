@@ -37,41 +37,58 @@ export class NewClientComponent implements OnInit {
 	notShowClients: boolean = false; // flag to toggle already clients visibility
 	alreadyClient: boolean = false;
 
+	/** input client */
+
 	userFormControl: FormControl = new FormControl('', [Validators.required]);
+
 	nomeFormControl: FormControl = new FormControl('', [Validators.required]);
 	cognomeFormControl: FormControl = new FormControl('', [Validators.required]);
 	birthdayFormControl: FormControl = new FormControl('', [Validators.required]);
 	sexFormControl: FormControl = new FormControl('', [Validators.required]);
-	postalCodeFormControl: FormControl = new FormControl('', [Validators.required]);
+	birthCountryFC: FormControl = new FormControl('', [Validators.required]);
+	birthCityFC: FormControl = new FormControl('', [Validators.required]);
 	codiceFiscaleFormControl: FormControl = new FormControl('', [
 		Validators.required,
 		Validators.maxLength(16),
 		Validators.minLength(16),
 		// Validators.pattern(fiscalCodePattern),
 	]);
-	photoFormControl: FormControl = new FormControl('', [Validators.required]);
 
+	stateFormControl: FormControl = new FormControl('', [Validators.required]);
 	provinceFormControl: FormControl = new FormControl('', [Validators.required]);
 	cityFormControl: FormControl = new FormControl('', [Validators.required]);
+	postalCodeFormControl: FormControl = new FormControl('', [Validators.required]);
 	streetFormControl: FormControl = new FormControl('', [Validators.required]);
 	numberFC: FormControl = new FormControl('', [Validators.required]);
+
+	photoFormControl: FormControl = new FormControl('', [Validators.required]);
+	emailFC: FormControl = new FormControl('', [Validators.required, Validators.email]);
+
 	mailNotifications: boolean = false;
 	pushNotifications: boolean = true;
 
+	/** ****** */
+
 	formsControl: FormControl[] = [
 		this.userFormControl,
+		// anagraphics
 		this.nomeFormControl,
 		this.cognomeFormControl,
 		this.birthdayFormControl,
 		this.sexFormControl,
+		this.birthCityFC,
+		this.birthCountryFC,
 		this.codiceFiscaleFormControl,
-		this.photoFormControl,
-
+		// residence
+		this.stateFormControl,
 		this.provinceFormControl,
 		this.cityFormControl,
 		this.postalCodeFormControl,
 		this.streetFormControl,
 		this.numberFC,
+		// contact
+		this.photoFormControl,
+		this.emailFC,
 	];
 	my_input: HTMLInputElement = null;
 	constructor(
@@ -140,6 +157,7 @@ export class NewClientComponent implements OnInit {
 		this.selected_user = user;
 		this.nomeFormControl.setValue(this.selected_user.displayName.split(' ')[0]);
 		this.cognomeFormControl.setValue(this.selected_user.displayName.split(' ')[1]);
+		this.emailFC.setValue(this.selected_user.email);
 		this.photoFormControl.setValue(this.selected_user.photoURL);
 		let photoProfile: HTMLImageElement = document.getElementById(
 			'photo-profile'
@@ -150,42 +168,52 @@ export class NewClientComponent implements OnInit {
 		let client = this.clients.find((c: Client) => c.uid == user.uid);
 		if (client) {
 			this.alreadyClient = true;
-			// load all client data
+			// anagraphics
 			this.birthdayFormControl.setValue(new Date(client.birthday));
 			this.sexFormControl.setValue(client.sex ? 'man' : 'woman');
+			this.birthCountryFC.setValue(client.birthCountry);
+			this.birthCityFC.setValue(client.birthCity);
 			this.codiceFiscaleFormControl.setValue(client.fiscalCode);
-			// address information
-			// todo: state
-			// todo: province
+			// residence
+			this.stateFormControl.setValue(client.address.state);
+			this.provinceFormControl.setValue(client.address.province);
 			this.cityFormControl.setValue(client.address.city);
 			this.postalCodeFormControl.setValue(client.address.postalCode);
 			this.streetFormControl.setValue(client.address.street);
 			this.numberFC.setValue(client.address.number);
+			// notifications
+			this.mailNotifications = client.notifications.mail;
+			this.pushNotifications = client.notifications.push;
 		}
 	}
 
 	addClient(): void {
 		this.selected_user.type = UserTypes.client;
 		this.client = new Client(this.selected_user);
-		// if the user modify the name, I better catch it here
+		// anagraphics
 		this.client.displayName = this.nomeFormControl.value + ' ' + this.cognomeFormControl.value;
-
 		this.client.birthday = new Date(this.birthdayFormControl.value).toUTCString();
 		this.client.sex = this.sexFormControl.value == 'man' ? true : false;
+		this.client.birthCountry = this.birthCountryFC.value;
+		this.client.birthCity = this.birthCityFC.value;
 		this.client.fiscalCode = this.codiceFiscaleFormControl.value;
 
 		// residence information
 		this.client.address = {
-			state: 'Italia',
-			province: 'Vicenza',
+			state: this.stateFormControl.value,
+			province: this.provinceFormControl.value,
 			city: this.cityFormControl.value,
 			postalCode: this.postalCodeFormControl.value,
 			street: this.streetFormControl.value,
 			number: this.numberFC.value,
 		};
 		// notifications
-		this.client.notifications.push = this.pushNotifications;
-		this.client.notifications.mail = this.mailNotifications;
+		this.client.notifications = {
+			mail: this.mailNotifications,
+			push: this.pushNotifications,
+		};
+
+		this.client.email = this.emailFC.value;
 
 		console.info('Adding new client: ', this.client);
 		if (this.my_input.files)
@@ -220,6 +248,7 @@ export class NewClientComponent implements OnInit {
 	}
 
 	resetClient(): void {
+		this.alreadyClient = false;
 		this.selected_user = null;
 		this.client = new Client();
 		this.pushNotifications = false;
