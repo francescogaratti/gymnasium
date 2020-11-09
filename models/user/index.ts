@@ -1,4 +1,3 @@
-import { Shift } from '../shift';
 /**
  * @interface Metadata
  * @description contains additional info about the user
@@ -27,6 +26,12 @@ export interface Address {
 	postalCode: string;
 	street: string;
 	number: string;
+}
+
+export interface Shift {
+	day: string;
+	start: string;
+	end: string;
 }
 
 /**
