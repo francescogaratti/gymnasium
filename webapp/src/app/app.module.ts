@@ -73,6 +73,10 @@ import { MobileSidenavComponent } from './components/mobile-sidenav/mobile-siden
 import { InfoComponent } from './components/info/info.component';
 import { UploadPhotoComponent } from './components/upload-photo/upload-photo.component';
 import { WorkoutsComponent } from './components/workouts/workouts.component';
+import { DiaryComponent } from './pages/diary/diary.component';
+import { ClientDataComponent } from './pages/diary/client-data/client-data.component';
+import { FitCheckComponent } from './pages/diary/fit-check/fit-check.component';
+import { TrainingCheckComponent } from './pages/diary/training-check/training-check.component';
 
 @NgModule({
 	declarations: [
@@ -98,6 +102,10 @@ import { WorkoutsComponent } from './components/workouts/workouts.component';
 		InfoComponent,
 		UploadPhotoComponent,
 		WorkoutsComponent,
+		DiaryComponent,
+		ClientDataComponent,
+		FitCheckComponent,
+		TrainingCheckComponent,
 	],
 	imports: [
 		HttpClientModule,

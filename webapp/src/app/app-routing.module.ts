@@ -9,6 +9,7 @@ import { TrainerGuard } from '@guards/trainer.guard';
 import { AdminComponent } from '@pages/admin/admin.component';
 import { BookComponent } from '@pages/book/book.component';
 import { ClientComponent } from '@pages/client/client.component';
+import { DiaryComponent } from '@pages/diary/diary.component';
 import { HomeComponent } from '@pages/home/home.component';
 import { LoginComponent } from '@pages/login/login.component';
 import { NewClientComponent } from '@pages/new-client/new-client.component';
@@ -41,6 +42,11 @@ const routes: Routes = [
 	{
 		path: 'new-exercise',
 		component: NewExerciseComponent,
+		canActivate: [TrainerGuard, AdminGuard],
+	},
+	{
+		path: 'diario',
+		component: DiaryComponent,
 		canActivate: [TrainerGuard, AdminGuard],
 	},
 	{ path: 'area-personale', component: PersonalAreaComponent, canActivate: [AuthGuard] },

@@ -1,0 +1,13 @@
+<div align="center">
+	<mat-card class="my-card mat-elevation-z2">
+		<app-client-data></app-client-data>
+	</mat-card>
+	<mat-card class="my-card mat-elevation-z2">
+		<app-fit-check></app-fit-check>
+	</mat-card>
+	<mat-card align="center" class="my-card mat-elevation-z0">
+		<div *ngFor="let trainingCheck of diary.trainingChecks">
+			<app-training-check [trainingCheck]></app-training-check>
+		</div>
+	</mat-card>
+</div>
