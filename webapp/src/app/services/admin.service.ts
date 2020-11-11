@@ -8,44 +8,64 @@ import { Observable, of, Subject } from 'rxjs';
 })
 export class AdminService {
 	// actual admin
-	admin$: Observable<Admin> = new Observable<Admin>(); // future admin
-	private admin: Admin;
+	admin$: Subject<Admin> = new Subject<Admin>(); // future admin
+	private admin: Admin = null;
 	// all the clients
-	admins$: Observable<Admin[]> = new Observable<Admin[]>();
-	private admins: Admin[] = [];
+	admins$: Subject<Admin[]> = new Subject<Admin[]>();
+	private admins: Admin[] = null;
 
 	asyncOperation: Subject<boolean> = new Subject<boolean>(); // signal to the progress bar
 
-	constructor(private afs: AngularFirestore) {
-		// store the admin here
-		this.admin$.subscribe((admin: Admin) => (this.admin = admin));
-		// store all the clients here
-		this.admins$.subscribe((admins: Admin[]) => (this.admins = admins));
-	}
+	constructor(private afs: AngularFirestore) {}
 
 	// *** GET ***
 
-	public async readAdmin(id: string) {
-		this.asyncOperation.next(true);
+	public async readAdmin(id: string): Promise<Admin> {
+		if (this.admin) return this.admin;
 		console.info('📘 - read admin ' + id);
-		this.admin$ = await this.afs
+		this.asyncOperation.next(true);
+		this.admin = await this.afs
 			.collection('admins')
 			.doc(id)
 			.get()
 			.toPromise()
-			.then(snapshot => of(snapshot.data() as Admin))
+			.then(snapshot => snapshot.data() as Admin)
 			.catch(err => {
 				console.error(err);
-				return of(null);
+				return null;
 			});
+		this.admin$.next(this.admin);
 		this.asyncOperation.next(false);
+		return this.admin;
+	}
+
+	public async readAdmins(): Promise<Admin[]> {
+		if (this.admins) return this.admins;
+		console.info('📘 - read admins');
+		this.asyncOperation.next(true);
+		this.admins = await this.afs
+			.collection('admins')
+			.get()
+			.toPromise()
+			.then(snapshot => {
+				let values: Admin[] = [];
+				snapshot.forEach(doc => values.push(doc.data() as Admin));
+				return values;
+			})
+			.catch(err => {
+				console.error(err);
+				return [];
+			});
+		this.admins$.next(this.admins);
+		this.asyncOperation.next(false);
+		return this.admins;
 	}
 
 	// *** POST ***
 
 	async newAdmin(admin: Admin): Promise<string> {
-		this.asyncOperation.next(true);
 		console.info('📗 - write');
+		this.asyncOperation.next(true);
 		let res: string = await this.afs
 			.collection('admins')
 			.add(JSON.parse(JSON.stringify(admin)))

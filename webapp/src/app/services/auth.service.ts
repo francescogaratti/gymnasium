@@ -61,44 +61,35 @@ export class AuthService {
 		private trainerService: TrainerService,
 		private adminService: AdminService
 	) {
-		// get credentials
-		// this.getLoggedUser();
-		// get user data
-		// this.user$.subscribe(firebase_user => {
-		// if (firebase_user)
-		// 	this.readUser(firebase_user.uid).then((user: User) => {
-		// 		this.user = user;
-		// 		if (this.user && this.user.type) {
-		// 			switch (this.user.type) {
-		// 				case UserTypes.user:
-		// 					break;
-		// 				case UserTypes.client:
-		// 					this.clientService.readClient(this.user.uid);
-		// 					break;
-		// 				case UserTypes.trainer:
-		// 					this.trainerService.readTrainer(this.user.uid);
-		// 					break;
-		// 				case UserTypes.admin:
-		// 					this.adminService.readAdmin(this.user.uid);
-		// 					break;
-		// 				default:
-		// 					break;
-		// 			}
-		// 		}
-		// 		this.startMessaging(user);
-		// 	});
-		// });
+		this.user$.subscribe(user => {
+			if (user) {
+				if (user && user.type) {
+					switch (user.type) {
+						case UserTypes.user:
+							break;
+						case UserTypes.client:
+							this.clientService.readClient(user.uid);
+							break;
+						case UserTypes.trainer:
+							this.trainerService.readTrainer(user.uid);
+							break;
+						case UserTypes.admin:
+							this.adminService.readAdmin(user.uid);
+							break;
+						default:
+							break;
+					}
+				}
+				this.startMessaging(user);
+			}
+		});
 		// store all the users here
-		// this.users$.subscribe((users: User[]) => (this.users = users));
-		// this.getFirebaseUser();
-		this.user$.subscribe(user => this.startMessaging(user));
+		this.users$.subscribe((users: User[]) => (this.users = users));
 	}
 
-	async grantAccessNew(type?: string): Promise<boolean> {
-		console.info('grantAccessNew');
+	async grantAccess(type?: string): Promise<boolean> {
 		// for logged access
 		if (!this.user) {
-			console.info('Reading user from Firebase.auth');
 			this.user = await this.getFirebaseUser()
 				.then(user => user)
 				.catch(() => null);
@@ -112,7 +103,8 @@ export class AuthService {
 	}
 
 	async getFirebaseUser(): Promise<User> {
-		console.info('getFirebaseUser');
+		if (this.user) return this.user;
+		console.info('🔥 Firebase User');
 		const firebaseUser: firebase.User = await this.afAuth.authState
 			.pipe(first())
 			.toPromise()
@@ -138,10 +130,7 @@ export class AuthService {
 	}
 
 	async readUser(id: string): Promise<User> {
-		if (this.user) {
-			console.info('already read user');
-			return this.user;
-		}
+		if (this.user) return this.user;
 		console.info('📘 - get user ' + id);
 		this.asyncOperation.next(true);
 		let user: User = await this.afs
@@ -164,7 +153,7 @@ export class AuthService {
 		if (this.users) return this.users;
 		console.info('📘 - read users');
 		this.asyncOperation.next(true);
-		let users: User[] = await this.afs
+		this.users = await this.afs
 			.collection('users')
 			.get()
 			.toPromise()
@@ -177,10 +166,9 @@ export class AuthService {
 				console.error(err);
 				return [];
 			});
+		this.users$.next(this.users); // send to subscribers
 		this.asyncOperation.next(false);
-		// this.users$.next(users); // send to subscribers
-		// console.info(users);
-		return users;
+		return this.users;
 	}
 
 	async updateUser(user: User): Promise<boolean> {

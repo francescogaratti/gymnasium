@@ -1,29 +1,22 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import { Client } from '@models/user';
-import { Observable, of, Subject } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-import { AuthService } from './auth.service';
+import { Subject } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class ClientService {
 	// actual client
-	client$: Observable<Client> = new Observable<Client>(); // future client
-	private client: Client;
+	client$: Subject<Client> = new Subject<Client>(); // future client
+	private client: Client = null;
 	// all the clients
-	clients$: Observable<Client[]> = new Observable<Client[]>();
-	private clients: Client[] = [];
+	clients$: Subject<Client[]> = new Subject<Client[]>();
+	private clients: Client[] = null;
 
 	asyncOperation: Subject<boolean> = new Subject<boolean>(); // signal to the progress bar
 
-	constructor(private afs: AngularFirestore) {
-		// store the client here
-		this.client$.subscribe((client: Client) => (this.client = client));
-		// store all the clients here
-		this.clients$.subscribe((clients: Client[]) => (this.clients = clients));
-	}
+	constructor(private afs: AngularFirestore) {}
 
 	// *** READ ***
 
@@ -32,9 +25,10 @@ export class ClientService {
 	 * @param id client id
 	 */
 	public async readClient(id: string): Promise<Client> {
-		this.asyncOperation.next(true);
+		if (this.client) return this.client;
 		console.info('📘 - read client ' + id);
-		let client: Client = await this.afs
+		this.asyncOperation.next(true);
+		this.client = await this.afs
 			.collection('clients')
 			.doc(id)
 			.get()
@@ -44,14 +38,16 @@ export class ClientService {
 				console.error(err);
 				return null;
 			});
+		this.client$.next(this.client);
 		this.asyncOperation.next(false);
-		return client;
+		return this.client;
 	}
 
 	public async readClients(): Promise<Client[]> {
-		this.asyncOperation.next(true);
+		if (this.clients) return this.clients;
 		console.info('📘 - read clients');
-		let clients: Client[] = await this.afs
+		this.asyncOperation.next(true);
+		this.clients = await this.afs
 			.collection('clients')
 			.get()
 			.toPromise()
@@ -64,8 +60,9 @@ export class ClientService {
 				console.error(err);
 				return [];
 			});
+		this.clients$.next(this.clients);
 		this.asyncOperation.next(false);
-		return clients;
+		return this.clients;
 	}
 
 	// *** POST ***

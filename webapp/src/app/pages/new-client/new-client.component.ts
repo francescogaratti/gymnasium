@@ -119,7 +119,7 @@ export class NewClientComponent implements OnInit {
 			if (this.clients && this.clients.length > 0)
 				this.users.forEach((u: User) => {
 					let found = this.clients.find((c: Client) => {
-						console.info(c.uid, u.uid);
+						// console.info(c.uid, u.uid);
 						return c.uid == u.uid;
 					});
 					if (!found) this.usersNotClients.push(u);
