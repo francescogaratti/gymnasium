@@ -10,7 +10,7 @@
 		</ng-template>
 		<ng-template #authenticated>
 			<!-- manager => new trainer + new client -->
-			<div *ngIf="(auth.user$ | async)?.uid === auth.getAdminUid(); then admin"></div>
+			<div *ngIf="auth.isAdmin((auth.user$ | async)?.uid); then admin"></div>
 			<ng-template #admin>
 				<button
 					color="primary"

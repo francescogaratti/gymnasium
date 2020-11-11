@@ -20,16 +20,13 @@ export class LoggedGuard implements CanActivate {
 		next: ActivatedRouteSnapshot,
 		state: RouterStateSnapshot
 	): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-		return this.auth.user$.pipe(
-			take(1),
-			map(user => !!!user),
-			tap(loggedOut => {
-				if (loggedOut) console.log('signed out');
-				else {
-					console.log('already logged');
-					this.router.navigateByUrl('/home');
-				}
-			})
-		);
+		return this.auth.grantAccessNew().then(loggedIn => {
+			if (!loggedIn) console.log('signed out');
+			else {
+				console.log('already logged');
+				this.router.navigateByUrl('/home');
+			}
+			return !loggedIn;
+		});
 	}
 }

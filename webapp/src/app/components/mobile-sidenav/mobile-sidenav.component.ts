@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { User, UserTypes } from '@models/user';
 import { AuthService } from '@services/auth.service';
 
 @Component({
@@ -10,7 +11,11 @@ import { AuthService } from '@services/auth.service';
 export class MobileSidenavComponent implements OnInit {
 	title = 'Gymnasium';
 	showFiller = false;
-	constructor(public router: Router, public auth: AuthService) {}
+	user: User = null;
+	UserTypes = UserTypes;
+	constructor(public router: Router, public auth: AuthService) {
+		this.auth.user$.subscribe(user => (this.user = user));
+	}
 
 	ngOnInit(): void {}
 }

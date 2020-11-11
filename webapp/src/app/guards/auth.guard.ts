@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 
 import { AuthService } from '@services/auth.service';
 import { tap, map, take } from 'rxjs/operators';
+import { UserTypes } from '@models/user';
 
 @Injectable({
 	providedIn: 'root',
@@ -20,15 +21,12 @@ export class AuthGuard implements CanActivate {
 		next: ActivatedRouteSnapshot,
 		state: RouterStateSnapshot
 	): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-		return this.auth.user$.pipe(
-			take(1),
-			map(user => !!user),
-			tap(loggedIn => {
-				if (!loggedIn) {
-					console.log('access denied');
-					this.router.navigate(['/login']);
-				}
-			})
-		);
+		return this.auth.grantAccessNew().then(loggedIn => {
+			if (!loggedIn) {
+				console.log('access denied');
+				this.router.navigate(['/login']);
+			}
+			return loggedIn;
+		});
 	}
 }

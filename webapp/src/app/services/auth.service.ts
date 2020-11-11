@@ -16,7 +16,7 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import { Router } from '@angular/router';
 
 import { Observable, of, Subject } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { first, switchMap } from 'rxjs/operators';
 
 import { User, Client, UserTypes } from '@models/user';
 // import { Client } from '@models/client';
@@ -40,21 +40,15 @@ const uiConfig = {
 	providedIn: 'root',
 })
 export class AuthService {
-	adminUid: string = 'WRcrJKbtjpfe2nIQJpQWhkrwOdx2';
+	adminUids: string[] = ['WRcrJKbtjpfe2nIQJpQWhkrwOdx2'];
 	ui: firebaseui.auth.AuthUI = new firebaseui.auth.AuthUI(auth()); // login firebase ui
 
-	// firebase_user$: Observable<User>; // future logged user
-	user$: Observable<User>; // future user
-	// client$: Observable<Client>; // future client
+	// user$: Observable<User>; // future user
+	user$: Subject<User> = new Subject<User>(); // future user
+	user: User = null;
 
-	user: User;
-	// client: Client;
-
-	// clients$: Subject<Client[]> = new Subject<Client[]>();
 	users$: Subject<User[]> = new Subject<User[]>();
-
-	users: User[] = [];
-	// clients: Client[] = [];
+	users: User[] = null;
 
 	asyncOperation: Subject<boolean> = new Subject<boolean>(); // signal to the progress bar
 
@@ -68,59 +62,67 @@ export class AuthService {
 		private adminService: AdminService
 	) {
 		// get credentials
-		this.getLoggedUser();
+		// this.getLoggedUser();
 		// get user data
-		this.user$.subscribe(firebase_user => {
-			if (firebase_user)
-				this.readUser(firebase_user.uid).then((user: User) => {
-					this.user = user;
-					if (this.user && this.user.type) {
-						switch (this.user.type) {
-							case UserTypes.user:
-								break;
-							case UserTypes.client:
-								this.clientService.readClient(this.user.uid);
-								break;
-							case UserTypes.trainer:
-								this.trainerService.readTrainer(this.user.uid);
-								break;
-							case UserTypes.admin:
-								this.adminService.readAdmin(this.user.uid);
-								break;
-							default:
-								break;
-						}
-					}
-					this.startMessaging(user);
-				});
-		});
+		// this.user$.subscribe(firebase_user => {
+		// if (firebase_user)
+		// 	this.readUser(firebase_user.uid).then((user: User) => {
+		// 		this.user = user;
+		// 		if (this.user && this.user.type) {
+		// 			switch (this.user.type) {
+		// 				case UserTypes.user:
+		// 					break;
+		// 				case UserTypes.client:
+		// 					this.clientService.readClient(this.user.uid);
+		// 					break;
+		// 				case UserTypes.trainer:
+		// 					this.trainerService.readTrainer(this.user.uid);
+		// 					break;
+		// 				case UserTypes.admin:
+		// 					this.adminService.readAdmin(this.user.uid);
+		// 					break;
+		// 				default:
+		// 					break;
+		// 			}
+		// 		}
+		// 		this.startMessaging(user);
+		// 	});
+		// });
 		// store all the users here
-		this.users$.subscribe((users: User[]) => (this.users = users));
+		// this.users$.subscribe((users: User[]) => (this.users = users));
+		// this.getFirebaseUser();
+		this.user$.subscribe(user => this.startMessaging(user));
 	}
 
-	grantAccess(type: string): boolean {
-		if (this.user.type == UserTypes.admin || this.user.uid == this.adminUid) return true;
-		return this.user.type == type;
+	async grantAccessNew(type?: string): Promise<boolean> {
+		console.info('grantAccessNew');
+		// for logged access
+		if (!this.user) {
+			console.info('Reading user from Firebase.auth');
+			this.user = await this.getFirebaseUser()
+				.then(user => user)
+				.catch(() => null);
+		}
+		if (!type) return !!this.user;
+		return this.user && (this.user.type == UserTypes.admin || this.user.type == type);
 	}
 
-	getAdminUid(): string {
-		return this.adminUid;
+	isAdmin(uid: string): boolean {
+		return !!this.adminUids.find(id => id == uid);
 	}
 
-	/**
-	 * @description returns the user data if the user is logged, null otherwise
-	 */
-	async getLoggedUser() {
-		// this.asyncOperation.next(true);
-		this.user$ = this.afAuth.authState.pipe(
-			switchMap(user => {
-				this.asyncOperation.next(false);
-				// Logged in
-				if (user) return this.readUser(user.uid);
-				// Logged out
-				else return of(null);
-			})
-		);
+	async getFirebaseUser(): Promise<User> {
+		console.info('getFirebaseUser');
+		const firebaseUser: firebase.User = await this.afAuth.authState
+			.pipe(first())
+			.toPromise()
+			.then(u => u)
+			.catch(() => null);
+		return firebaseUser
+			? this.readUser(firebaseUser.uid)
+					.then(u => u)
+					.catch(() => null)
+			: null;
 	}
 
 	getUser(): User {
@@ -153,12 +155,13 @@ export class AuthService {
 				return null;
 			});
 		this.user = user;
+		this.user$.next(this.user);
 		this.asyncOperation.next(false);
 		return user;
 	}
 
 	public async readUsers(): Promise<User[]> {
-		// if (this.users) return this.users;
+		if (this.users) return this.users;
 		console.info('📘 - read users');
 		this.asyncOperation.next(true);
 		let users: User[] = await this.afs
