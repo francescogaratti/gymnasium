@@ -1,1 +1,8 @@
-<p>client-data works!</p>
+<form class="form">
+	<app-user-select
+		[name]="'Cliente'"
+		[users]="users"
+		(onSelectUser)="selectedUser = $event"
+	></app-user-select>
+	<button mat-stroked-button (click)="showUser()">utente selezionato</button>
+</form>
