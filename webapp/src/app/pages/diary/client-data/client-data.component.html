@@ -1,8 +1,229 @@
 <form class="form">
 	<app-user-select
+		class="field-large"
 		[name]="'Cliente'"
-		[users]="users"
-		(onSelectUser)="selectedUser = $event"
+		[users]="clients"
+		(onSelectUser)="selectedClient = $event"
 	></app-user-select>
-	<button mat-stroked-button (click)="showUser()">utente selezionato</button>
+	<!-- subscription +  club + date start + trainer -->
+	<fieldset>
+		<legend>Tu e il Gymnasium</legend>
+		<table class="full-width" cellspacing="0">
+			<tr>
+				<td>
+					<mat-form-field class="field-large" color="accent">
+						<mat-label>Abbonamento</mat-label>
+						<mat-select [formControl]="subscriptionFC">
+							<mat-option value="month">Mensile</mat-option>
+							<mat-option value="one-year">Annuale</mat-option>
+							<mat-option value="two-year">Biennale</mat-option>
+						</mat-select>
+						<mat-error *ngIf="subscriptionFC.hasError('required')">
+							Campo <strong>obbligatorio</strong>
+						</mat-error>
+						<button
+							mat-button
+							*ngIf="subscriptionFC.value"
+							matSuffix
+							mat-icon-button
+							aria-label="Clear"
+							(click)="subscriptionFC.setValue(null)"
+						>
+							<mat-icon>close</mat-icon>
+						</button>
+					</mat-form-field>
+				</td>
+				<td>
+					<mat-form-field class="field-large" color="accent">
+						<mat-label>Club</mat-label>
+						<mat-select [formControl]="clubFC">
+							<mat-option value="gymnasium1"
+								>Gymnasium - Montecchio Maggiore</mat-option
+							>
+							<mat-option value="gymnasium2">Gymnasium - Soave</mat-option>
+							<mat-option value="gymnasium3">Gymnasium - Padova</mat-option>
+						</mat-select>
+						<mat-error *ngIf="clubFC.hasError('required')">
+							Campo <strong>obbligatorio</strong>
+						</mat-error>
+						<button
+							mat-button
+							*ngIf="clubFC.value"
+							matSuffix
+							mat-icon-button
+							aria-label="Clear"
+							(click)="clubFC.setValue(null)"
+						>
+							<mat-icon>close</mat-icon>
+						</button>
+					</mat-form-field>
+				</td>
+				<td>
+					<mat-form-field class="field-large" color="accent">
+						<mat-label>Data Inizio</mat-label>
+						<input
+							matInput
+							[matDatepicker]="pickerDateStart"
+							(focus)="pickerDateStart.open()"
+							[formControl]="dateStartFC"
+							readonly
+							required
+						/>
+						<mat-error *ngIf="dateStartFC.hasError('required')">
+							Campo <strong>obbligatorio</strong>
+						</mat-error>
+						<button
+							mat-button
+							*ngIf="dateStartFC.value"
+							matSuffix
+							mat-icon-button
+							aria-label="Clear"
+							(click)="dateStartFC.setValue(null)"
+						>
+							<mat-icon>close</mat-icon>
+						</button>
+					</mat-form-field>
+					<mat-datepicker #pickerDateStart></mat-datepicker>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3">
+					<app-user-select
+						class="field-extra-large"
+						[name]="'Trainer'"
+						[users]="clients"
+						(onSelectUser)="selectedTrainer = $event"
+					></app-user-select>
+				</td>
+			</tr>
+		</table>
+		<table class="full-width" cellspacing="0">
+			<tr>
+				<td>
+					<mat-form-field color="accent">
+						<mat-label>Tipo di lavoro</mat-label>
+						<input
+							matInput
+							placeholder="Programmatore"
+							[formControl]="jobTypeFC"
+							required
+						/>
+						<mat-error *ngIf="jobTypeFC.hasError('required')">
+							Campo <strong>obbligatorio</strong>
+						</mat-error>
+						<button
+							mat-button
+							*ngIf="jobTypeFC.value"
+							matSuffix
+							mat-icon-button
+							aria-label="Clear"
+							(click)="jobTypeFC.setValue(null)"
+						>
+							<mat-icon>close</mat-icon>
+						</button>
+					</mat-form-field>
+				</td>
+				<td>
+					<mat-slide-toggle
+						name="alreadyAttended"
+						color="accent"
+						style="margin: 10px 0"
+						[(ngModel)]="alreadyAttended"
+					>
+						Ho già frequentato il club
+					</mat-slide-toggle>
+				</td>
+			</tr>
+		</table>
+		<table class="full-width" cellspacing="0">
+			<tr>
+				<td>
+					<mat-form-field color="accent">
+						<mat-label>Esperienze sportive</mat-label>
+						<input
+							matInput
+							placeholder="Calcio, pallavolo, ..."
+							[formControl]="experiencesFC"
+							required
+						/>
+						<mat-error *ngIf="experiencesFC.hasError('required')">
+							Campo <strong>obbligatorio</strong>
+						</mat-error>
+						<button
+							mat-button
+							*ngIf="experiencesFC.value"
+							matSuffix
+							mat-icon-button
+							aria-label="Clear"
+							(click)="experiencesFC.setValue(null)"
+						>
+							<mat-icon>close</mat-icon>
+						</button>
+					</mat-form-field>
+				</td>
+				<td>
+					<mat-form-field class="field-large" color="accent">
+						<mat-label>Durata</mat-label>
+						<input
+							matInput
+							type="number"
+							placeholder="1"
+							style="width: 25%; float: left"
+							[formControl]="durationValueFC"
+							required
+						/>
+						<mat-select
+							[formControl]="durationPeriodFC"
+							style="width: 75%; float: left"
+						>
+							<mat-option *ngFor="let period of keys(Periods)" [value]="period">{{
+								period
+							}}</mat-option>
+						</mat-select>
+						<mat-error
+							*ngIf="
+								durationPeriodFC.hasError('required') ||
+								durationValueFC.hasError('required')
+							"
+						>
+							Campo <strong>obbligatorio</strong>
+						</mat-error>
+					</mat-form-field>
+				</td>
+
+				<td>
+					<mat-form-field class="field-large" color="accent">
+						<mat-label>Durata</mat-label>
+						<input
+							matInput
+							type="number"
+							placeholder="1"
+							style="width: 25%; float: left"
+							[formControl]="frequencyValueFC"
+							required
+						/>
+						<mat-select
+							[formControl]="frequencyPeriodFC"
+							style="width: 75%; float: left"
+						>
+							<mat-option *ngFor="let period of keys(Periods)" [value]="period">{{
+								period
+							}}</mat-option>
+						</mat-select>
+						<mat-error
+							*ngIf="
+								frequencyPeriodFC.hasError('required') ||
+								frequencyValueFC.hasError('required')
+							"
+						>
+							Campo <strong>obbligatorio</strong>
+						</mat-error>
+					</mat-form-field>
+				</td>
+			</tr>
+		</table>
+	</fieldset>
+	<fieldset>
+		<legend>Obiettivo</legend>
+	</fieldset>
 </form>

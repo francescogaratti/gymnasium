@@ -29,7 +29,7 @@ export interface DiaryClientData {
 	jobType: string; // todo: select from enum
 	alreadyAttended: boolean;
 
-	experiences: string[]; // ? select from list
+	experiences: string;
 	duration: Frequency;
 	frequency: Frequency;
 
@@ -96,7 +96,7 @@ export const clientData: DiaryClientData = {
 	jobType: '',
 	alreadyAttended: false,
 
-	experiences: [], // ? select from list
+	experiences: '', // ? select from list
 	duration: {
 		value: 3,
 		period: Periods.weeks,
