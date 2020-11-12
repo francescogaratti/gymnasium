@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { Periods } from '@models/diary';
+import { Frequencies, Periods, TimeRanges, DiaryClientData } from '@models/diary';
 import { Client, Trainer, User } from '@models/user';
 import { ClientService } from '@services/client.service';
 import { TrainerService } from '@services/trainer.service';
@@ -12,6 +12,8 @@ import { TrainerService } from '@services/trainer.service';
 })
 export class ClientDataComponent implements OnInit {
 	Periods = Periods;
+	Frequencies = Frequencies;
+	TimeRanges = TimeRanges;
 	clients: Client[] = [];
 	trainers: Trainer[] = [];
 	selectedClient: Client = null;
@@ -32,25 +34,34 @@ export class ClientDataComponent implements OnInit {
 	frequencyPeriodFC: FormControl = new FormControl('', [Validators.required]);
 
 	achieved: boolean = false;
-	achievedNotes: string = '';
+	achievedNotesFC: FormControl = new FormControl('', [Validators.required]);
 
-	goal: string = '';
+	goalFC: FormControl = new FormControl('', [Validators.required]);
 
-	timeToAchieveFC: FormControl = new FormControl('', [Validators.required]);
+	timeToAchieveValueFC: FormControl = new FormControl('', [Validators.required]);
+	timeToAchievePeriodFC: FormControl = new FormControl('', [Validators.required]);
 	keepGoal: boolean = false;
 
 	whenFC: FormControl = new FormControl('', [Validators.required]);
-	trainingRangeFC: FormControl = new FormControl('', [Validators.required]);
-	trainingFrequencyFC: FormControl = new FormControl('', [Validators.required]);
+	trainingRangeStartFC: FormControl = new FormControl('', [Validators.required]);
+	trainingRangeEndFC: FormControl = new FormControl('', [Validators.required]);
+	trainingFrequencyValueFC: FormControl = new FormControl('', [Validators.required]);
+	trainingFrequencyPeriodFC: FormControl = new FormControl('', [Validators.required]);
 
 	constructor(private clientService: ClientService, private trainerService: TrainerService) {
 		this.clientService.readClients().then(clients => (this.clients = clients));
 		this.trainerService.readTrainers().then(trainers => (this.trainers = trainers));
 	}
 
-	keys(obj: any) {
+	values(obj: any) {
 		return Object.values(obj);
 	}
 
 	ngOnInit(): void {}
+
+	// todo: create new diary client data
+	confirm(): void {
+		// let clientData: DiaryClientData = {
+		// };
+	}
 }

@@ -130,7 +130,7 @@
 						style="margin: 10px 0"
 						[(ngModel)]="alreadyAttended"
 					>
-						Ho già frequentato il club
+						Ha già frequentato il club
 					</mat-slide-toggle>
 				</td>
 			</tr>
@@ -162,7 +162,7 @@
 					</mat-form-field>
 				</td>
 				<td>
-					<mat-form-field class="field-large" color="accent">
+					<mat-form-field class="field-large" color="accent" floatLabel="always">
 						<mat-label>Durata</mat-label>
 						<input
 							matInput
@@ -176,7 +176,7 @@
 							[formControl]="durationPeriodFC"
 							style="width: 75%; float: left"
 						>
-							<mat-option *ngFor="let period of keys(Periods)" [value]="period">{{
+							<mat-option *ngFor="let period of values(Periods)" [value]="period">{{
 								period
 							}}</mat-option>
 						</mat-select>
@@ -192,8 +192,8 @@
 				</td>
 
 				<td>
-					<mat-form-field class="field-large" color="accent">
-						<mat-label>Durata</mat-label>
+					<mat-form-field class="field-large" color="accent" floatLabel="always">
+						<mat-label>Frequenza</mat-label>
 						<input
 							matInput
 							type="number"
@@ -206,9 +206,11 @@
 							[formControl]="frequencyPeriodFC"
 							style="width: 75%; float: left"
 						>
-							<mat-option *ngFor="let period of keys(Periods)" [value]="period">{{
-								period
-							}}</mat-option>
+							<mat-option
+								*ngFor="let frequency of values(Frequencies)"
+								[value]="frequency"
+								>{{ frequency }}</mat-option
+							>
 						</mat-select>
 						<mat-error
 							*ngIf="
@@ -225,5 +227,214 @@
 	</fieldset>
 	<fieldset>
 		<legend>Obiettivo</legend>
+		<table class="full-width" cellspacing="0">
+			<tr>
+				<td>
+					<mat-form-field class="field-extra-large">
+						<mat-label>Ha raggiunto l'obiettivo</mat-label>
+						<textarea
+							matInput
+							placeholder="Si, perchè... / No, perchè..."
+							[formControl]="achievedNotesFC"
+							required
+						></textarea>
+						<mat-error *ngIf="achievedNotesFC.hasError('required')">
+							Campo <strong>obbligatorio</strong>
+						</mat-error>
+					</mat-form-field>
+				</td>
+				<td>
+					<mat-slide-toggle
+						name="achieved"
+						color="accent"
+						style="margin: 10px 0"
+						[(ngModel)]="achieved"
+					>
+						Ha raggiunto l'obiettivo
+					</mat-slide-toggle>
+				</td>
+			</tr>
+		</table>
+		<!-- goal -->
+		<mat-form-field class="full-width">
+			<mat-label>Obiettivo attuale</mat-label>
+			<textarea
+				name="goal"
+				matInput
+				placeholder="Perchè è importante per te?"
+				[formControl]="goalFC"
+				style="min-height: 200px"
+				required
+			></textarea>
+			<mat-error *ngIf="goalFC.hasError('required')">
+				Campo <strong>obbligatorio</strong>
+			</mat-error>
+		</mat-form-field>
+		<!-- timeToAchieve + keeo goal -->
+		<table class="full-width" cellspacing="0">
+			<tr>
+				<td>
+					<mat-form-field class="field-large" color="accent" floatLabel="always">
+						<mat-label>Quanto tempo per raggiungere l'obiettivo</mat-label>
+						<input
+							matInput
+							type="number"
+							placeholder="1"
+							style="width: 25%; float: left"
+							[formControl]="timeToAchieveValueFC"
+							required
+						/>
+						<mat-select
+							[formControl]="timeToAchievePeriodFC"
+							style="width: 75%; float: left"
+						>
+							<mat-option *ngFor="let period of values(Periods)" [value]="period">{{
+								period
+							}}</mat-option>
+						</mat-select>
+						<mat-error
+							*ngIf="
+								timeToAchievePeriodFC.hasError('required') ||
+								timeToAchieveValueFC.hasError('required')
+							"
+						>
+							Campo <strong>obbligatorio</strong>
+						</mat-error>
+					</mat-form-field>
+				</td>
+				<td>
+					<mat-slide-toggle
+						name="keepGoal"
+						color="accent"
+						style="margin: 10px 0"
+						[(ngModel)]="keepGoal"
+					>
+						Vuole mantenerlo
+					</mat-slide-toggle>
+				</td>
+			</tr>
+		</table>
+		<!-- when + range + frequency -->
+		<table class="full-width" cellspacing="0">
+			<tr>
+				<td>
+					<mat-form-field class="field-large" color="accent">
+						<mat-label>Quando vuoi iniziare</mat-label>
+						<input
+							matInput
+							[matDatepicker]="pickerDateNewStart"
+							(focus)="pickerDateNewStart.open()"
+							[formControl]="whenFC"
+							readonly
+							required
+						/>
+						<mat-error *ngIf="whenFC.hasError('required')">
+							Campo <strong>obbligatorio</strong>
+						</mat-error>
+						<button
+							mat-button
+							*ngIf="whenFC.value"
+							matSuffix
+							mat-icon-button
+							aria-label="Clear"
+							(click)="whenFC.setValue(null)"
+						>
+							<mat-icon>close</mat-icon>
+						</button>
+					</mat-form-field>
+					<mat-datepicker #pickerDateNewStart></mat-datepicker>
+				</td>
+				<td>
+					<mat-form-field class="field-large" color="accent" floatLabel="always">
+						<mat-label> Orari allenamento</mat-label>
+						<mat-select
+							[formControl]="trainingRangeStartFC"
+							style="width: 50%; float: left"
+						>
+							<mat-option *ngFor="let range of TimeRanges" [value]="range">{{
+								range
+							}}</mat-option>
+						</mat-select>
+						<mat-select
+							[formControl]="trainingRangeEndFC"
+							style="width: 50%; float: left"
+						>
+							<mat-option *ngFor="let range of TimeRanges" [value]="range">{{
+								range
+							}}</mat-option>
+						</mat-select>
+						<mat-error
+							*ngIf="
+								trainingRangeStartFC.hasError('required') ||
+								trainingRangeEndFC.hasError('required')
+							"
+						>
+							Campo <strong>obbligatorio</strong>
+						</mat-error>
+					</mat-form-field>
+				</td>
+				<td>
+					<mat-form-field class="field-large" color="accent" floatLabel="always">
+						<mat-label>Quante volte alla settimana</mat-label>
+						<input
+							matInput
+							type="number"
+							placeholder="1"
+							style="width: 25%; float: left"
+							[formControl]="trainingFrequencyValueFC"
+							required
+						/>
+						<mat-select
+							[formControl]="trainingFrequencyPeriodFC"
+							style="width: 75%; float: left"
+						>
+							<mat-option *ngFor="let period of values(Periods)" [value]="period">{{
+								period
+							}}</mat-option>
+						</mat-select>
+						<mat-error
+							*ngIf="
+								trainingFrequencyValueFC.hasError('required') ||
+								trainingFrequencyPeriodFC.hasError('required')
+							"
+						>
+							Campo <strong>obbligatorio</strong>
+						</mat-error>
+					</mat-form-field>
+				</td>
+			</tr>
+		</table>
 	</fieldset>
 </form>
+<mat-card>
+	<mat-card-actions>
+		<button
+			mat-raised-button
+			(click)="confirm()"
+			[disabled]="
+				!selectedClient ||
+				!selectedTrainer ||
+				subscriptionFC.invalid ||
+				clubFC.invalid ||
+				dateStartFC.invalid ||
+				jobTypeFC.invalid ||
+				experiencesFC.invalid ||
+				durationValueFC.invalid ||
+				durationPeriodFC.invalid ||
+				frequencyValueFC.invalid ||
+				frequencyPeriodFC.invalid ||
+				achievedNotesFC.invalid ||
+				goalFC.invalid ||
+				timeToAchieveValueFC.invalid ||
+				timeToAchievePeriodFC.invalid ||
+				whenFC.invalid ||
+				trainingRangeStartFC.invalid ||
+				trainingRangeEndFC.invalid ||
+				trainingFrequencyValueFC.invalid ||
+				trainingFrequencyValueFC.invalid
+			"
+		>
+			Conferma
+		</button>
+	</mat-card-actions>
+</mat-card>
