@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { Admin, User } from '@models/user';
+import { Admin, User, UserTypes } from '@models/user';
 import { AdminService } from '@services/admin.service';
 import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
@@ -40,6 +40,8 @@ export class AdminComponent implements OnInit {
 	}
 
 	addAdmin(): void {
+		this.selected_user.type = UserTypes.admin;
+		this.auth.updateUser(this.selected_user);
 		const admin: Admin = new Admin(this.selected_user);
 		this.adminService
 			.updateAdmin(admin)
@@ -58,6 +60,8 @@ export class AdminComponent implements OnInit {
 	}
 
 	deleteAdmin(): void {
+		this.selected_user.type = UserTypes.client;
+		this.auth.updateUser(this.selected_user);
 		this.adminService
 			.deleteAdmin(this.selected_user.uid)
 			.then(id => {
