@@ -78,10 +78,9 @@ export interface FitCheck {
 	height: number;
 	weight: number;
 	smoker: boolean;
-	injuries: string[];
-	drugs: string[];
+	injuries: string;
+	drugs: string;
 	diet: string;
-	notes: string;
 }
 
 export interface TrainingCheck {
@@ -102,12 +101,14 @@ export interface TrainingCheck {
 }
 
 export interface Diary {
+	uid: string;
 	clientData: DiaryClientData;
 	fitCheck: FitCheck;
 	trainingChecks: TrainingCheck[];
 	date: string;
 	consultantId: string;
 	consultantName: string;
+	notes: string;
 }
 
 export const clientData: DiaryClientData = {
@@ -160,10 +161,9 @@ export const fitCheck: FitCheck = {
 	height: 181,
 	weight: 77,
 	smoker: false,
-	injuries: [],
-	drugs: [],
+	injuries: '',
+	drugs: '',
 	diet: 'mangio molte proteine e poca verdura',
-	notes: 'note aggiuntive del trainer',
 };
 
 export const trainingChecks: TrainingCheck[] = [
@@ -189,10 +189,12 @@ export const trainingChecks: TrainingCheck[] = [
 ];
 
 export const diary: Diary = {
+	uid: null,
 	clientData: clientData,
 	fitCheck: fitCheck,
 	trainingChecks: trainingChecks,
 	date: '01-01-2020',
 	consultantId: '0123456789',
 	consultantName: 'Andrea Meggiolaro',
+	notes: 'note aggiuntive del consulente',
 };

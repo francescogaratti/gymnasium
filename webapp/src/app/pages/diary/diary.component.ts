@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { diary, Diary } from '@models/diary';
+import { diary, Diary, DiaryClientData } from '@models/diary';
 @Component({
 	selector: 'app-diary',
 	templateUrl: './diary.component.html',
@@ -7,6 +7,7 @@ import { diary, Diary } from '@models/diary';
 })
 export class DiaryComponent implements OnInit {
 	diary: Diary = null;
+	clientData: DiaryClientData = null;
 	constructor() {}
 
 	ngOnInit(): void {

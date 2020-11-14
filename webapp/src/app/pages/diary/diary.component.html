@@ -1,6 +1,6 @@
 <div align="center">
 	<mat-card class="my-card mat-elevation-z2">
-		<app-client-data></app-client-data>
+		<app-client-data (onNewClientData)="clientData = $event"></app-client-data>
 	</mat-card>
 	<mat-card class="my-card mat-elevation-z2">
 		<app-fit-check></app-fit-check>

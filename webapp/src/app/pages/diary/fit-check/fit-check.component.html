@@ -1,1 +1,134 @@
-<p>fit-check works!</p>
+<h3>Fit Check Tecnico</h3>
+<form class="form">
+	<mat-form-field color="accent" class="full-width">
+		<mat-label>Condizioni di salute</mat-label>
+		<textarea matInput [formControl]="healthStatusFC" required></textarea>
+		<mat-error *ngIf="healthStatusFC.hasError('required')">
+			Campo <strong>obbligatorio</strong>
+		</mat-error>
+		<button
+			mat-button
+			*ngIf="healthStatusFC.value"
+			matSuffix
+			mat-icon-button
+			aria-label="Clear"
+			(click)="healthStatusFC.setValue(null)"
+		>
+			<mat-icon>close</mat-icon>
+		</button>
+	</mat-form-field>
+	<table class="full-width" cellspacing="0">
+		<tr>
+			<td>
+				<mat-form-field color="accent">
+					<mat-label>Altezza</mat-label>
+					<input matInput type="number" [formControl]="heightFC" required />
+					<mat-error *ngIf="heightFC.hasError('required')">
+						Campo <strong>obbligatorio</strong>
+					</mat-error>
+					<button
+						mat-button
+						*ngIf="heightFC.value"
+						matSuffix
+						mat-icon-button
+						aria-label="Clear"
+						(click)="heightFC.setValue(null)"
+					>
+						<mat-icon>close</mat-icon>
+					</button>
+				</mat-form-field>
+			</td>
+			<td>
+				<mat-form-field color="accent">
+					<mat-label>Peso</mat-label>
+					<input matInput type="number" [formControl]="weightFC" required />
+					<mat-error *ngIf="weightFC.hasError('required')">
+						Campo <strong>obbligatorio</strong>
+					</mat-error>
+					<button
+						mat-button
+						*ngIf="weightFC.value"
+						matSuffix
+						mat-icon-button
+						aria-label="Clear"
+						(click)="weightFC.setValue(null)"
+					>
+						<mat-icon>close</mat-icon>
+					</button>
+				</mat-form-field>
+			</td>
+			<td>
+				<mat-slide-toggle
+					name="smoker"
+					color="accent"
+					style="margin: 10px 0"
+					[(ngModel)]="smoker"
+				>
+					Fumatore
+				</mat-slide-toggle>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<mat-form-field color="accent">
+					<mat-label>Eventuali infortuni</mat-label>
+					<input matInput [formControl]="injuriesFC" required />
+					<mat-error *ngIf="injuriesFC.hasError('required')">
+						Campo <strong>obbligatorio</strong>
+					</mat-error>
+					<button
+						mat-button
+						*ngIf="injuriesFC.value"
+						matSuffix
+						mat-icon-button
+						aria-label="Clear"
+						(click)="injuriesFC.setValue(null)"
+					>
+						<mat-icon>close</mat-icon>
+					</button>
+				</mat-form-field>
+			</td>
+			<td>
+				<mat-form-field color="accent">
+					<mat-label>Farmaci assunti</mat-label>
+					<input matInput [formControl]="drugsFC" required />
+					<mat-error *ngIf="drugsFC.hasError('required')">
+						Campo <strong>obbligatorio</strong>
+					</mat-error>
+					<button
+						mat-button
+						*ngIf="drugsFC.value"
+						matSuffix
+						mat-icon-button
+						aria-label="Clear"
+						(click)="drugsFC.setValue(null)"
+					>
+						<mat-icon>close</mat-icon>
+					</button>
+				</mat-form-field>
+			</td>
+		</tr>
+	</table>
+	<mat-form-field color="accent" class="full-width">
+		<mat-label>Dieta</mat-label>
+		<textarea matInput [formControl]="dietFC" required></textarea>
+		<mat-error *ngIf="dietFC.hasError('required')">
+			Campo <strong>obbligatorio</strong>
+		</mat-error>
+		<button
+			mat-button
+			*ngIf="dietFC.value"
+			matSuffix
+			mat-icon-button
+			aria-label="Clear"
+			(click)="dietFC.setValue(null)"
+		>
+			<mat-icon>close</mat-icon>
+		</button>
+	</mat-form-field>
+</form>
+<mat-card>
+	<mat-card-actions>
+		<button mat-raised-button (click)="confirm()">Conferma</button>
+	</mat-card-actions>
+</mat-card>
