@@ -5,9 +5,10 @@
 	<mat-card class="my-card mat-elevation-z2">
 		<app-fit-check></app-fit-check>
 	</mat-card>
-	<mat-card align="center" class="my-card mat-elevation-z0">
-		<div *ngFor="let trainingCheck of diary.trainingChecks">
-			<app-training-check [trainingCheck]></app-training-check>
-		</div>
+	<mat-card class="my-card mat-elevation-z2">
+		<!-- <div *ngFor="let trainingCheck of diary.trainingChecks" style="display: block">
+			<app-training-check [trainingCheck]="trainingCheck"></app-training-check>
+		</div> -->
+		<app-training-check></app-training-check>
 	</mat-card>
 </div>
