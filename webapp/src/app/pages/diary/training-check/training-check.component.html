@@ -1,5 +1,4 @@
-<form class="form" style="display: block">
-	<h3>Verifica Allenamento</h3>
+<form class="form">
 	<!-- date +  frequency training -->
 	<table class="full-width" cellspacing="0">
 		<tr>
@@ -18,18 +17,8 @@
 					<mat-error *ngIf="dateFC.hasError('required')">
 						Campo <strong>obbligatorio</strong>
 					</mat-error>
-					<button
-						mat-button
-						*ngIf="dateFC.value"
-						matSuffix
-						mat-icon-button
-						aria-label="Clear"
-						(click)="dateFC.setValue(null)"
-					>
-						<mat-icon>close</mat-icon>
-					</button>
 				</mat-form-field>
-				<mat-datepicker #pickerDateNow></mat-datepicker>
+				<mat-datepicker #pickerDateNow [disabled]="readonly"></mat-datepicker>
 			</td>
 			<td>
 				<mat-form-field color="accent" floatLabel="always">
@@ -40,6 +29,7 @@
 						min="1"
 						[formControl]="trainingFrequencyFC"
 						required
+						[readonly]="readonly"
 					/>
 					<span matSuffix>/ Settimana</span>
 				</mat-form-field>
@@ -49,7 +39,13 @@
 	<!-- goal -->
 	<mat-form-field class="full-width">
 		<mat-label>Obiettivo</mat-label>
-		<textarea name="goal" matInput [formControl]="goalFC" required></textarea>
+		<textarea
+			name="goal"
+			matInput
+			[formControl]="goalFC"
+			required
+			[readonly]="readonly"
+		></textarea>
 		<mat-error *ngIf="goalFC.hasError('required')">
 			Campo <strong>obbligatorio</strong>
 		</mat-error>
@@ -57,7 +53,13 @@
 	<!-- test -->
 	<mat-form-field class="full-width">
 		<mat-label>Test</mat-label>
-		<textarea name="goal" matInput [formControl]="testFC" required></textarea>
+		<textarea
+			name="goal"
+			matInput
+			[formControl]="testFC"
+			required
+			[readonly]="readonly"
+		></textarea>
 		<mat-error *ngIf="testFC.hasError('required')">
 			Campo <strong>obbligatorio</strong>
 		</mat-error>
@@ -70,6 +72,7 @@
 			matInput
 			[formControl]="goalConsiderationsFC"
 			required
+			[readonly]="readonly"
 		></textarea>
 		<mat-error *ngIf="goalConsiderationsFC.hasError('required')">
 			Campo <strong>obbligatorio</strong>
@@ -78,7 +81,13 @@
 	<!-- feelings -->
 	<mat-form-field class="full-width">
 		<mat-label>Come ti senti rispetto all'inizio</mat-label>
-		<textarea name="goalFeelings" matInput [formControl]="goalFeelingsFC" required></textarea>
+		<textarea
+			name="goalFeelings"
+			matInput
+			[formControl]="goalFeelingsFC"
+			required
+			[readonly]="readonly"
+		></textarea>
 		<mat-error *ngIf="goalFeelingsFC.hasError('required')">
 			Campo <strong>obbligatorio</strong>
 		</mat-error>
@@ -86,7 +95,13 @@
 	<!-- favorites -->
 	<mat-form-field class="full-width">
 		<mat-label>Cosa ti è piaciuto di più della scheda di allenamento</mat-label>
-		<textarea name="goalFavorites" matInput [formControl]="goalFavoritesFC" required></textarea>
+		<textarea
+			name="goalFavorites"
+			matInput
+			[formControl]="goalFavoritesFC"
+			required
+			[readonly]="readonly"
+		></textarea>
 		<mat-error *ngIf="goalFavoritesFC.hasError('required')">
 			Campo <strong>obbligatorio</strong>
 		</mat-error>
@@ -109,18 +124,8 @@
 					<mat-error *ngIf="nextTrainingCheckDateFC.hasError('required')">
 						Campo <strong>obbligatorio</strong>
 					</mat-error>
-					<button
-						mat-button
-						*ngIf="nextTrainingCheckDateFC.value"
-						matSuffix
-						mat-icon-button
-						aria-label="Clear"
-						(click)="nextTrainingCheckDateFC.setValue(null)"
-					>
-						<mat-icon>close</mat-icon>
-					</button>
 				</mat-form-field>
-				<mat-datepicker #pickerDateNext></mat-datepicker>
+				<mat-datepicker #pickerDateNext [disabled]="readonly"></mat-datepicker>
 			</td>
 			<td>
 				<!-- date next training workout -->
@@ -137,18 +142,8 @@
 					<mat-error *ngIf="nextTrainingWorkoutDateFC.hasError('required')">
 						Campo <strong>obbligatorio</strong>
 					</mat-error>
-					<button
-						mat-button
-						*ngIf="nextTrainingWorkoutDateFC.value"
-						matSuffix
-						mat-icon-button
-						aria-label="Clear"
-						(click)="nextTrainingWorkoutDateFC.setValue(null)"
-					>
-						<mat-icon>close</mat-icon>
-					</button>
 				</mat-form-field>
-				<mat-datepicker #pickerDateNextWorkout></mat-datepicker>
+				<mat-datepicker #pickerDateNextWorkout [disabled]="readonly"></mat-datepicker>
 			</td>
 		</tr>
 	</table>
@@ -165,6 +160,7 @@
 						type="number"
 						[formControl]="motivationFC"
 						required
+						[readonly]="readonly"
 					/>
 					<span matSuffix>/ 10</span>
 				</mat-form-field>
@@ -179,10 +175,32 @@
 						type="number"
 						[formControl]="satisfactionFC"
 						required
+						[readonly]="readonly"
 					/>
 					<span matSuffix>/ 10</span>
 				</mat-form-field>
 			</td>
 		</tr>
 	</table>
+	<button
+		*ngIf="!readonly"
+		color="accent"
+		mat-raised-button
+		(click)="confirm()"
+		[disabled]="
+			dateFC.invalid ||
+			trainingFrequencyFC.invalid ||
+			goalFC.invalid ||
+			testFC.invalid ||
+			goalConsiderationsFC.invalid ||
+			goalFeelingsFC.invalid ||
+			goalFavoritesFC.invalid ||
+			nextTrainingCheckDateFC.invalid ||
+			nextTrainingWorkoutDateFC.invalid ||
+			motivationFC.invalid ||
+			satisfactionFC.invalid
+		"
+	>
+		Conferma
+	</button>
 </form>

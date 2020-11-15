@@ -11,6 +11,8 @@ export class TrainingCheckComponent implements OnInit {
 	@Input() trainingCheck: TrainingCheck;
 	@Output() onNewTrainingCheck: EventEmitter<TrainingCheck> = new EventEmitter<TrainingCheck>();
 
+	readonly: boolean = false;
+
 	dateFC: FormControl = new FormControl('', [Validators.required]);
 	trainingFrequencyFC: FormControl = new FormControl('', [Validators.required]);
 
@@ -35,6 +37,7 @@ export class TrainingCheckComponent implements OnInit {
 	}
 
 	loadData() {
+		this.readonly = true;
 		this.dateFC.setValue(new Date(this.trainingCheck.date));
 		this.trainingFrequencyFC.setValue(this.trainingCheck.trainingFrequency.value);
 
@@ -46,16 +49,18 @@ export class TrainingCheckComponent implements OnInit {
 		this.goalFeelingsFC.setValue(this.trainingCheck.goalFeelings);
 		this.goalFavoritesFC.setValue(this.trainingCheck.goalFavorites);
 
-		this.nextTrainingCheckDateFC.setValue(this.trainingCheck.nextTrainingCheckDate);
-		this.nextTrainingWorkoutDateFC.setValue(this.trainingCheck.nextTrainingWorkoutDate);
+		this.nextTrainingCheckDateFC.setValue(new Date(this.trainingCheck.nextTrainingCheckDate));
+		this.nextTrainingWorkoutDateFC.setValue(
+			new Date(this.trainingCheck.nextTrainingWorkoutDate)
+		);
 
 		this.motivationFC.setValue(this.trainingCheck.motivation);
 		this.satisfactionFC.setValue(this.trainingCheck.satisfaction);
 	}
 
-	create(): void {
+	confirm(): void {
 		let trainingCheck: TrainingCheck = {
-			date: new Date(this.dateFC.value).toLocaleDateString(),
+			date: new Date(this.dateFC.value).toUTCString(),
 			trainingFrequency: {
 				value: this.trainingFrequencyFC.value,
 				period: Frequencies.week,
@@ -67,12 +72,8 @@ export class TrainingCheckComponent implements OnInit {
 			goalFeelings: this.goalFeelingsFC.value,
 			goalFavorites: this.goalFavoritesFC.value,
 
-			nextTrainingCheckDate: new Date(
-				this.nextTrainingCheckDateFC.value
-			).toLocaleDateString(),
-			nextTrainingWorkoutDate: new Date(
-				this.nextTrainingWorkoutDateFC.value
-			).toLocaleDateString(),
+			nextTrainingCheckDate: new Date(this.nextTrainingCheckDateFC.value).toUTCString(),
+			nextTrainingWorkoutDate: new Date(this.nextTrainingWorkoutDateFC.value).toUTCString(),
 
 			motivation: this.motivationFC.value,
 			satisfaction: this.satisfactionFC.value,

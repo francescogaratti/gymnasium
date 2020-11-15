@@ -72,7 +72,7 @@ export class ClientDataComponent implements OnInit {
 		let clientData: DiaryClientData = {
 			subscription: this.subscriptionFC.value,
 			club: this.clubFC.value,
-			dateStart: new Date(this.dateStartFC.value).toLocaleDateString(),
+			dateStart: new Date(this.dateStartFC.value).toUTCString(),
 			trainerId: this.selectedTrainer.uid,
 			trainerName: this.selectedTrainer.displayName,
 
@@ -103,7 +103,7 @@ export class ClientDataComponent implements OnInit {
 			},
 			keepGoal: this.keepGoal,
 
-			when: new Date(this.whenFC.value).toLocaleDateString(),
+			when: new Date(this.whenFC.value).toUTCString(),
 			trainingRange: {
 				start: this.trainingRangeStartFC.value,
 				finish: this.trainingRangeEndFC.value,

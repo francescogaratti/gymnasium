@@ -180,8 +180,8 @@ export const trainingChecks: TrainingCheck[] = [
 		goalFeelings: 'sentimenti',
 		goalFavorites: 'cosa ti è piaciuto di più',
 
-		nextTrainingCheckDate: '',
-		nextTrainingWorkoutDate: '',
+		nextTrainingCheckDate: '02-02-2002',
+		nextTrainingWorkoutDate: '03-03-2003',
 
 		motivation: 8,
 		satisfaction: 7,
