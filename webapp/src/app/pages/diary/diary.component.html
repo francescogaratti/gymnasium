@@ -1,32 +1,48 @@
-<mat-card class="my-card mat-elevation-z2" style="width: 700px">
-	<app-client-data (onNewClientData)="clientData = $event"></app-client-data>
-</mat-card>
-<mat-card class="my-card mat-elevation-z2" style="width: 700px">
-	<app-fit-check></app-fit-check>
-</mat-card>
-<mat-card class="my-card mat-elevation-z2" style="width: 700px" *ngIf="diary.trainingChecks">
-	<mat-card-title>Verifiche di Allenamento</mat-card-title>
-	<mat-card-content *ngIf="diary.trainingChecks.length > 0">
-		<mat-accordion class="example-headers-align" multi>
-			<mat-expansion-panel *ngFor="let trainingCheck of diary.trainingChecks; let i = index">
-				<mat-expansion-panel-header>
-					<mat-panel-title> Verifica Allenamento n° {{ i + 1 }} </mat-panel-title>
-					<mat-panel-description>
-						Data {{ trainingCheck.date | date: 'dd/MM/yyyy' }}
-					</mat-panel-description>
-				</mat-expansion-panel-header>
-				<app-training-check [trainingCheck]="trainingCheck"></app-training-check>
-			</mat-expansion-panel>
-		</mat-accordion>
-	</mat-card-content>
-	<mat-card-content *ngIf="diary.trainingChecks.length === 0">
-		Non ci sono ancora verifiche di allenamento
-	</mat-card-content>
-</mat-card>
+<mat-tab-group mat-align-tabs="center">
+	<mat-tab label="Dati Cliente">
+		<mat-card class="mat-elevation-z2" style="width: 700px">
+			<app-client-data (onNewClientData)="clientData = $event"></app-client-data>
+		</mat-card>
+	</mat-tab>
+	<mat-tab label="Fit Check Tecnico">
+		<mat-card class="mat-elevation-z2" style="width: 700px">
+			<app-fit-check></app-fit-check>
+		</mat-card>
+	</mat-tab>
+	<mat-tab label="Verifiche di Allenamento">
+		<mat-card
+			class="my-card mat-elevation-z2"
+			style="width: 700px"
+			*ngIf="diary.trainingChecks"
+		>
+			<mat-card-title>Verifiche di Allenamento</mat-card-title>
+			<mat-card-content *ngIf="diary.trainingChecks.length > 0">
+				<mat-accordion class="example-headers-align" multi>
+					<mat-expansion-panel
+						*ngFor="let trainingCheck of diary.trainingChecks; let i = index"
+					>
+						<mat-expansion-panel-header>
+							<mat-panel-title> Verifica Allenamento n° {{ i + 1 }} </mat-panel-title>
+							<mat-panel-description>
+								Data {{ trainingCheck.date | date: 'dd/MM/yyyy' }}
+							</mat-panel-description>
+						</mat-expansion-panel-header>
+						<app-training-check [trainingCheck]="trainingCheck"></app-training-check>
+					</mat-expansion-panel>
+				</mat-accordion>
+			</mat-card-content>
+			<mat-card-content *ngIf="diary.trainingChecks.length === 0">
+				Non ci sono ancora verifiche di allenamento
+			</mat-card-content>
+		</mat-card>
 
-<mat-card class="my-card mat-elevation-z2" style="width: 700px">
-	<mat-card-title>Nuova Verifica di Allenamento</mat-card-title>
-	<mat-card-content>
-		<app-training-check (onNewTrainingCheck)="onNewTrainingCheck($event)"></app-training-check>
-	</mat-card-content>
-</mat-card>
+		<mat-card class="my-card mat-elevation-z2" style="width: 700px">
+			<mat-card-title>Nuova Verifica di Allenamento</mat-card-title>
+			<mat-card-content>
+				<app-training-check
+					(onNewTrainingCheck)="onNewTrainingCheck($event)"
+				></app-training-check>
+			</mat-card-content>
+		</mat-card>
+	</mat-tab>
+</mat-tab-group>
