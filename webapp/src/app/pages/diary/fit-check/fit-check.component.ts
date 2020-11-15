@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { FitCheck } from '@models/diary';
 
@@ -8,6 +8,7 @@ import { FitCheck } from '@models/diary';
 	styleUrls: ['./fit-check.component.sass'],
 })
 export class FitCheckComponent implements OnInit {
+	@Input() fitCheck: FitCheck = null;
 	@Output() onNewFitCheck: EventEmitter<FitCheck> = new EventEmitter<FitCheck>();
 
 	healthStatusFC: FormControl = new FormControl('', [Validators.required]);
@@ -20,7 +21,19 @@ export class FitCheckComponent implements OnInit {
 
 	constructor() {}
 
-	ngOnInit(): void {}
+	ngOnInit(): void {
+		if (this.fitCheck) this.loadData();
+	}
+
+	loadData() {
+		this.healthStatusFC.setValue(this.fitCheck.healthStatus);
+		this.heightFC.setValue(this.fitCheck.height);
+		this.weightFC.setValue(this.fitCheck.weight);
+		this.smoker = this.fitCheck.smoker;
+		this.injuriesFC.setValue(this.fitCheck.injuries);
+		this.drugsFC.setValue(this.fitCheck.drugs);
+		this.dietFC.setValue(this.fitCheck.diet);
+	}
 
 	confirm(): void {
 		let fitCheck: FitCheck = {
@@ -32,7 +45,8 @@ export class FitCheckComponent implements OnInit {
 			drugs: this.drugsFC.value,
 			diet: this.dietFC.value,
 		};
-		console.info('fit check', fitCheck);
-		this.onNewFitCheck.emit(fitCheck);
+		this.fitCheck = fitCheck;
+		console.info('fit check', this.fitCheck);
+		this.onNewFitCheck.emit(this.fitCheck);
 	}
 }

@@ -1,12 +1,47 @@
-<mat-tab-group mat-align-tabs="center">
-	<mat-tab label="Dati Cliente">
+<app-user-select
+	[center]="true"
+	[name]="'Seleziona un Cliente'"
+	[users]="clients"
+	(onSelectUser)="onSelectClient($event)"
+></app-user-select>
+<!-- fallback when no diary found -->
+<mat-card class="full-width mat-elevation-z0" align="center" *ngIf="selectedClient && !diary">
+	<mat-card-subtitle
+		>Sembra che non ci siano ancora diari associati a questo cliente. <br />
+		Se si vuole crearne uno ora, clicchi su <strong>Crea Nuovo Diario</strong>
+	</mat-card-subtitle>
+	<mat-card-actions>
+		<button mat-raised-button color="accent" (click)="createNewDiary()">
+			Crea Nuovo Diario
+		</button>
+	</mat-card-actions>
+</mat-card>
+<!-- only if the client has been chosen and a diary is present -->
+<mat-tab-group mat-align-tabs="center" *ngIf="selectedClient && diary">
+	<mat-tab label="Dati Cliente" align="center">
 		<mat-card class="mat-elevation-z2" style="width: 700px">
-			<app-client-data (onNewClientData)="clientData = $event"></app-client-data>
+			<mat-card-title>Dati Cliente</mat-card-title>
+			<mat-card-subtitle
+				>Questa sezione contiene tutti i dati di base del cliente e la descrizione accurata
+				del suo obiettivo.</mat-card-subtitle
+			>
+			<app-client-data
+				[clientData]="diary.clientData"
+				(onNewClientData)="onNewClientData($event)"
+			></app-client-data>
 		</mat-card>
 	</mat-tab>
 	<mat-tab label="Fit Check Tecnico">
 		<mat-card class="mat-elevation-z2" style="width: 700px">
-			<app-fit-check></app-fit-check>
+			<mat-card-title>Fit Check Tecnico</mat-card-title>
+			<mat-card-subtitle
+				>Questa sezione contiene i dati per tracciare la condizione di salute fisica del
+				cliente.</mat-card-subtitle
+			>
+			<app-fit-check
+				[fitCheck]="diary.fitCheck"
+				(onNewFitCheck)="onNewFitCheck($event)"
+			></app-fit-check>
 		</mat-card>
 	</mat-tab>
 	<mat-tab label="Verifiche di Allenamento">
@@ -16,13 +51,17 @@
 			*ngIf="diary.trainingChecks"
 		>
 			<mat-card-title>Verifiche di Allenamento</mat-card-title>
+			<mat-card-subtitle
+				>Lista di tutte le precedenti verifiche di allenamento
+				effettuate.</mat-card-subtitle
+			>
 			<mat-card-content *ngIf="diary.trainingChecks.length > 0">
 				<mat-accordion class="example-headers-align" multi>
 					<mat-expansion-panel
 						*ngFor="let trainingCheck of diary.trainingChecks; let i = index"
 					>
 						<mat-expansion-panel-header>
-							<mat-panel-title> Verifica Allenamento n° {{ i + 1 }} </mat-panel-title>
+							<mat-panel-title> Verifica Allenamento n°{{ i + 1 }} </mat-panel-title>
 							<mat-panel-description>
 								Data {{ trainingCheck.date | date: 'dd/MM/yyyy' }}
 							</mat-panel-description>
@@ -38,6 +77,10 @@
 
 		<mat-card class="my-card mat-elevation-z2" style="width: 700px">
 			<mat-card-title>Nuova Verifica di Allenamento</mat-card-title>
+			<mat-card-subtitle
+				>Crea una nuova verifica di allenamento: compila i campi richiesti e
+				conferma.</mat-card-subtitle
+			>
 			<mat-card-content>
 				<app-training-check
 					(onNewTrainingCheck)="onNewTrainingCheck($event)"

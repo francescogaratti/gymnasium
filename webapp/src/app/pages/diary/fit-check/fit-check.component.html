@@ -1,4 +1,3 @@
-<h3>Fit Check Tecnico</h3>
 <form class="form">
 	<mat-form-field color="accent" class="full-width">
 		<mat-label>Condizioni di salute</mat-label>
@@ -128,9 +127,18 @@
 			<mat-icon>close</mat-icon>
 		</button>
 	</mat-form-field>
+	<button
+		mat-raised-button
+		(click)="confirm()"
+		[disabled]="
+			healthStatusFC.invalid ||
+			heightFC.invalid ||
+			weightFC.invalid ||
+			injuriesFC.invalid ||
+			drugsFC.invalid ||
+			dietFC.invalid
+		"
+	>
+		Conferma
+	</button>
 </form>
-<mat-card>
-	<mat-card-actions>
-		<button mat-raised-button (click)="confirm()">Conferma</button>
-	</mat-card-actions>
-</mat-card>

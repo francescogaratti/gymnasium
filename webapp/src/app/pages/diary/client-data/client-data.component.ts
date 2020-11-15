@@ -1,9 +1,8 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Frequencies, Periods, TimeRanges, DiaryClientData } from '@models/diary';
-import { Client, Trainer, User } from '@models/user';
+import { Client, Trainer } from '@models/user';
 import { ClientService } from '@services/client.service';
-import { DiaryService } from '@services/diary.service';
 import { TrainerService } from '@services/trainer.service';
 
 @Component({
@@ -15,12 +14,12 @@ export class ClientDataComponent implements OnInit {
 	Periods = Periods;
 	Frequencies = Frequencies;
 	TimeRanges = TimeRanges;
-
+	@Input() clientData: DiaryClientData = null;
 	@Output() onNewClientData: EventEmitter<DiaryClientData> = new EventEmitter<DiaryClientData>();
 
 	clients: Client[] = [];
 	trainers: Trainer[] = [];
-	selectedClient: Client = null;
+	// selectedClient: Client = null;
 	selectedTrainer: Trainer = null;
 
 	/** from controls */
@@ -54,18 +53,51 @@ export class ClientDataComponent implements OnInit {
 
 	constructor(
 		private clientService: ClientService,
-		private trainerService: TrainerService,
-		private diaryService: DiaryService
+		private trainerService: TrainerService // private diaryService: DiaryService
 	) {
 		this.clientService.readClients().then(clients => (this.clients = clients));
-		this.trainerService.readTrainers().then(trainers => (this.trainers = trainers));
+		// this.trainerService.readTrainers().then(trainers => (this.trainers = trainers));
 	}
 
 	values(obj: any) {
 		return Object.values(obj);
 	}
 
-	ngOnInit(): void {}
+	ngOnInit(): void {
+		if (this.clientData) this.loadData();
+	}
+
+	loadData() {
+		// todo: load the trainer
+
+		this.subscriptionFC.setValue(this.clientData.subscription);
+		this.clubFC.setValue(this.clientData.club);
+		this.dateStartFC.setValue(new Date(this.clientData.dateStart));
+
+		this.jobTypeFC.setValue(this.clientData.jobType);
+		this.alreadyAttended = this.clientData.alreadyAttended;
+
+		this.experiencesFC.setValue(this.clientData.experiences);
+		this.durationValueFC.setValue(this.clientData.duration.value);
+		this.durationPeriodFC.setValue(this.clientData.duration.period);
+		this.frequencyValueFC.setValue(this.clientData.frequency.value);
+		this.frequencyPeriodFC.setValue(this.clientData.frequency.period);
+
+		this.achieved = this.clientData.achieved;
+		this.achievedNotesFC.setValue(this.clientData.achievedNotes);
+
+		this.goalFC.setValue(this.clientData.goal);
+
+		this.timeToAchieveValueFC.setValue(this.clientData.timeToAchieve.value);
+		this.timeToAchievePeriodFC.setValue(this.clientData.timeToAchieve.period);
+		this.keepGoal = this.clientData.keepGoal;
+
+		this.whenFC.setValue(new Date(this.clientData.when));
+		this.trainingRangeStartFC.setValue(this.clientData.trainingRange.start);
+		this.trainingRangeEndFC.setValue(this.clientData.trainingRange.finish);
+		this.trainingFrequencyValueFC.setValue(this.clientData.trainingFrequency.value);
+		this.trainingFrequencyPeriodFC.setValue(this.clientData.trainingFrequency.period);
+	}
 
 	// todo: create new diary client data
 	confirm(): void {
@@ -76,8 +108,8 @@ export class ClientDataComponent implements OnInit {
 			trainerId: this.selectedTrainer.uid,
 			trainerName: this.selectedTrainer.displayName,
 
-			clientId: this.selectedClient.uid,
-			clientName: this.selectedClient.displayName,
+			// clientId: this.selectedClient.uid,
+			// clientName: this.selectedClient.displayName,
 
 			jobType: this.jobTypeFC.value,
 			alreadyAttended: this.alreadyAttended,

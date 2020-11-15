@@ -1,11 +1,4 @@
-<h3>Dati Cliente</h3>
 <form class="form">
-	<app-user-select
-		class="field-large"
-		[name]="'Cliente'"
-		[users]="clients"
-		(onSelectUser)="selectedClient = $event"
-	></app-user-select>
 	<!-- subscription +  club + date start + trainer -->
 	<fieldset>
 		<legend>Tu e il Gymnasium</legend>
@@ -406,36 +399,31 @@
 			</tr>
 		</table>
 	</fieldset>
+	<button
+		mat-raised-button
+		(click)="confirm()"
+		[disabled]="
+			!selectedTrainer ||
+			subscriptionFC.invalid ||
+			clubFC.invalid ||
+			dateStartFC.invalid ||
+			jobTypeFC.invalid ||
+			experiencesFC.invalid ||
+			durationValueFC.invalid ||
+			durationPeriodFC.invalid ||
+			frequencyValueFC.invalid ||
+			frequencyPeriodFC.invalid ||
+			achievedNotesFC.invalid ||
+			goalFC.invalid ||
+			timeToAchieveValueFC.invalid ||
+			timeToAchievePeriodFC.invalid ||
+			whenFC.invalid ||
+			trainingRangeStartFC.invalid ||
+			trainingRangeEndFC.invalid ||
+			trainingFrequencyValueFC.invalid ||
+			trainingFrequencyValueFC.invalid
+		"
+	>
+		Conferma
+	</button>
 </form>
-<mat-card>
-	<mat-card-actions>
-		<button
-			mat-raised-button
-			(click)="confirm()"
-			[disabled]="
-				!selectedClient ||
-				!selectedTrainer ||
-				subscriptionFC.invalid ||
-				clubFC.invalid ||
-				dateStartFC.invalid ||
-				jobTypeFC.invalid ||
-				experiencesFC.invalid ||
-				durationValueFC.invalid ||
-				durationPeriodFC.invalid ||
-				frequencyValueFC.invalid ||
-				frequencyPeriodFC.invalid ||
-				achievedNotesFC.invalid ||
-				goalFC.invalid ||
-				timeToAchieveValueFC.invalid ||
-				timeToAchievePeriodFC.invalid ||
-				whenFC.invalid ||
-				trainingRangeStartFC.invalid ||
-				trainingRangeEndFC.invalid ||
-				trainingFrequencyValueFC.invalid ||
-				trainingFrequencyValueFC.invalid
-			"
-		>
-			Conferma
-		</button>
-	</mat-card-actions>
-</mat-card>

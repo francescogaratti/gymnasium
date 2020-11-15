@@ -48,10 +48,8 @@ export interface DiaryClientData {
 	trainerId: string;
 	trainerName: string;
 
-	clientId: string;
-	clientName: string;
-	// birthDay: string;
-	// source:string; // ! no idea what this is
+	// clientId: string; // ! this field belongs to the parent interface
+	// clientName: string; // ! this field belongs to the parent interface
 
 	jobType: string; // todo: select from enum
 	alreadyAttended: boolean;
@@ -102,6 +100,8 @@ export interface TrainingCheck {
 
 export interface Diary {
 	uid: string;
+	clientId: string;
+	clientName: string;
 	clientData: DiaryClientData;
 	fitCheck: FitCheck;
 	trainingChecks: TrainingCheck[];
@@ -112,19 +112,16 @@ export interface Diary {
 }
 
 export const clientData: DiaryClientData = {
-	subscription: '',
-	club: '',
-	dateStart: '',
-	trainerId: '',
-	trainerName: '',
+	subscription: 'Annuale',
+	club: 'Test',
+	dateStart: '10-10-2010',
+	trainerId: '1234567890',
+	trainerName: 'Trainer Test',
 
-	clientId: '',
-	clientName: '',
-
-	jobType: '',
+	jobType: 'Test job',
 	alreadyAttended: false,
 
-	experiences: '', // ? select from list
+	experiences: 'No exp.', // ? select from list
 	duration: {
 		value: 3,
 		period: Periods.weeks,
@@ -135,9 +132,9 @@ export const clientData: DiaryClientData = {
 	},
 
 	achieved: false,
-	achievedNotes: '',
+	achievedNotes: 'Test note',
 
-	goal: '',
+	goal: 'Il mio obiettivo è avere obiettivi',
 
 	timeToAchieve: {
 		value: 3,
@@ -145,7 +142,7 @@ export const clientData: DiaryClientData = {
 	},
 	keepGoal: false,
 
-	when: '',
+	when: '03-03-2020',
 	trainingRange: {
 		start: '',
 		finish: '',
@@ -161,8 +158,8 @@ export const fitCheck: FitCheck = {
 	height: 181,
 	weight: 77,
 	smoker: false,
-	injuries: '',
-	drugs: '',
+	injuries: 'rotto un polso',
+	drugs: 'niente',
 	diet: 'mangio molte proteine e poca verdura',
 };
 
@@ -190,6 +187,8 @@ export const trainingChecks: TrainingCheck[] = [
 
 export const diary: Diary = {
 	uid: null,
+	clientId: '',
+	clientName: '',
 	clientData: clientData,
 	fitCheck: fitCheck,
 	trainingChecks: trainingChecks,
