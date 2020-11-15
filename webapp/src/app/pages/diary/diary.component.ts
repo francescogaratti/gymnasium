@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 import { diary, Diary, DiaryClientData, FitCheck, TrainingCheck } from '@models/diary';
-import { Client } from '@models/user';
+import { Client, Trainer } from '@models/user';
 import { ClientService } from '@services/client.service';
 import { DiaryService } from '@services/diary.service';
+import { TrainerService } from '@services/trainer.service';
 import { UtilsService } from '@services/utils.service';
 @Component({
 	selector: 'app-diary',
@@ -12,13 +14,19 @@ import { UtilsService } from '@services/utils.service';
 export class DiaryComponent implements OnInit {
 	diary: Diary = null;
 	clients: Client[] = [];
+	trainers: Trainer[] = [];
 	selectedClient: Client = null;
+	selectedConsultant: Trainer = null;
+
+	dateFC: FormControl = new FormControl('', [Validators.required]);
 	constructor(
 		private clientService: ClientService,
+		private trainerService: TrainerService,
 		private diaryService: DiaryService,
 		private utils: UtilsService
 	) {
 		this.clientService.readClients().then(clients => (this.clients = clients));
+		// this.trainerService.readTrainers().then(trainers => (this.trainers = trainers));
 	}
 
 	ngOnInit(): void {}
@@ -30,6 +38,12 @@ export class DiaryComponent implements OnInit {
 			.catch(err => console.error(err));
 		// ? set the client right here => avoid to show fallback message while querying the DB
 		this.selectedClient = client;
+	}
+
+	async onSelectConsultant(consultant: Trainer) {
+		this.selectedConsultant = consultant;
+		this.diary.consultantId = this.selectedConsultant.uid;
+		this.diary.consultantName = this.selectedConsultant.displayName;
 	}
 
 	onNewClientData(clientData: DiaryClientData) {
@@ -46,7 +60,6 @@ export class DiaryComponent implements OnInit {
 	}
 
 	createNewDiary() {
-		// this.diary = diary;
 		this.diary = {
 			uid: this.selectedClient.uid,
 			clientId: this.selectedClient.uid,
@@ -54,11 +67,12 @@ export class DiaryComponent implements OnInit {
 			clientData: null,
 			fitCheck: null,
 			trainingChecks: [],
-			date: '',
+			date: new Date().toUTCString(),
 			consultantId: '',
 			consultantName: '',
-			notes: null,
+			notes: '',
 		};
+		this.dateFC.setValue(new Date());
 		this.updateDiary(true);
 	}
 
