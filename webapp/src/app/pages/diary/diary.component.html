@@ -38,20 +38,36 @@
 				</mat-form-field>
 			</p>
 		</form>
-		<button
-			mat-raised-button
-			color="accent"
-			(click)="updateDiary()"
-			[disabled]="
-				!diary ||
-				!diary.clientData ||
-				!diary.fitCheck ||
-				!diary.clientId ||
-				!diary.consultantId
-			"
-		>
-			Aggiorna Diario
-		</button>
+		<mat-card-actions>
+			<button
+				mat-raised-button
+				color="accent"
+				(click)="updateDiary()"
+				[disabled]="
+					!diary ||
+					!diary.clientData ||
+					!diary.fitCheck ||
+					!diary.clientId ||
+					!diary.consultantId
+				"
+			>
+				Aggiorna Diario
+			</button>
+			<button
+				mat-stroked-button
+				color="accent"
+				(click)="downloadDiary()"
+				[disabled]="
+					!diary ||
+					!diary.clientData ||
+					!diary.fitCheck ||
+					!diary.clientId ||
+					!diary.consultantId
+				"
+			>
+				Download Diario
+			</button>
+		</mat-card-actions>
 	</mat-card>
 	<!-- only if the client has been chosen and a diary is present -->
 	<mat-tab-group mat-align-tabs="center">

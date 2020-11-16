@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import { Diary } from '@models/diary';
@@ -13,7 +14,7 @@ export class DiaryService {
 
 	asyncOperation: Subject<boolean> = new Subject<boolean>(); // signal to the progress bar
 
-	constructor(private afs: AngularFirestore) {}
+	constructor(private afs: AngularFirestore, private http: HttpClient) {}
 
 	// *** READ ***
 	/**
@@ -84,6 +85,41 @@ export class DiaryService {
 			.doc(diary.uid)
 			.set(deepCopy ? JSON.parse(JSON.stringify(diary)) : diary, { merge: true })
 			.then(() => true)
+			.catch(err => {
+				console.error(err);
+				return false;
+			});
+		this.asyncOperation.next(false);
+		return res;
+	}
+
+	async generateExcel(filename: string, diaryId: string): Promise<boolean> {
+		this.asyncOperation.next(true);
+		// some costants & params
+		const generateExcelURL: string =
+			'https://us-central1-ultra-gymnasium.cloudfunctions.net/excel-diary';
+		const requestOptions: Object = {
+			params: { diaryId: diaryId },
+			responseType: 'arrayBuffer',
+		};
+		// http request
+		let res: boolean = await this.http
+			.get<any>(generateExcelURL, requestOptions)
+			.toPromise()
+			.then((res: ArrayBuffer) => {
+				const link = document.createElement('a');
+				link.style.display = 'none';
+				document.body.appendChild(link);
+
+				const blob = new Blob([res]);
+				const objectURL = URL.createObjectURL(blob);
+
+				link.href = objectURL;
+				link.href = URL.createObjectURL(blob);
+				link.download = filename;
+				link.click();
+				return true;
+			})
 			.catch(err => {
 				console.error(err);
 				return false;
