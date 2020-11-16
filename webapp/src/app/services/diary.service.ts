@@ -97,7 +97,7 @@ export class DiaryService {
 		this.asyncOperation.next(true);
 		// some costants & params
 		const generateExcelURL: string =
-			'http://localhost:5001/ultra-gymnasium/us-central1/excel-diary';
+			'https://us-central1-ultra-gymnasium.cloudfunctions.net/excel-diary';
 		const requestOptions: Object = {
 			params: { diaryId: diaryId },
 			responseType: 'arrayBuffer',
