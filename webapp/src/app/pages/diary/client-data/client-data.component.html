@@ -85,8 +85,9 @@
 					<app-user-select
 						class="field-extra-large"
 						[name]="'Trainer'"
-						[users]="clients"
-						(onSelectUser)="selectedTrainer = $event"
+						[users]="trainers"
+						(onSelectUser)="onSelectTrainer($event)"
+						[selected]="selectedTrainer"
 					></app-user-select>
 				</td>
 			</tr>

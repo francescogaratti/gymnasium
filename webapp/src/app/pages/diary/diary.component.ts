@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
-import { diary, Diary, DiaryClientData, FitCheck, TrainingCheck } from '@models/diary';
+import { Diary, DiaryClientData, FitCheck, TrainingCheck } from '@models/diary';
 import { Client, Trainer } from '@models/user';
 import { ClientService } from '@services/client.service';
 import { DiaryService } from '@services/diary.service';
@@ -25,19 +24,22 @@ export class DiaryComponent implements OnInit {
 		private utils: UtilsService
 	) {
 		this.clientService.readClients().then(clients => (this.clients = clients));
-		// this.trainerService.readTrainers().then(trainers => (this.trainers = trainers));
 	}
 
 	ngOnInit(): void {}
 
 	async onSelectClient(client: Client) {
+		await this.trainerService
+			.readTrainers()
+			.then(trainers => (this.trainers = trainers ? trainers : []))
+			.catch(err => console.error(err));
 		await this.diaryService
 			.readUserDiary(client.uid)
 			.then((d: Diary) => (this.diary = d))
 			.catch(err => console.error(err));
-		// if (this.diary) this.findConsultant(); // todo: uncomment when trainers ready
 		// ? set the client right here => avoid to show fallback message while querying the DB
 		this.selectedClient = client;
+		this.findConsultant();
 	}
 
 	onSelectConsultant(consultant: Trainer) {

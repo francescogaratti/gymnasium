@@ -21,8 +21,9 @@
 		<form class="half-width" align="center">
 			<app-user-select
 				[name]="'Consulente'"
-				[users]="clients"
+				[users]="trainers"
 				(onSelectUser)="onSelectConsultant($event)"
+				[selected]="selectedConsultant"
 			></app-user-select>
 			<p>
 				<mat-form-field class="field-large" color="accent">

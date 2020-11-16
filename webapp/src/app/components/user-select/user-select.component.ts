@@ -11,12 +11,12 @@ import { map, startWith } from 'rxjs/operators';
 })
 export class UserSelectComponent implements OnInit {
 	@Input() name: string = 'Utente';
+	@Input() selected: User = null;
 	@Input() users: User[] = [];
 	@Input() center: boolean = false;
 
 	userFormControl: FormControl = new FormControl('', [Validators.required]);
 	filteredUsers: Observable<User[]>;
-	selectedUser: User = null;
 	@Output() onSelectUser: EventEmitter<User> = new EventEmitter<User>();
 
 	constructor() {
@@ -26,7 +26,9 @@ export class UserSelectComponent implements OnInit {
 		);
 	}
 
-	ngOnInit(): void {}
+	ngOnInit(): void {
+		if (this.selected) this.userFormControl.setValue(this.selected.displayName);
+	}
 
 	private _filterUsersByName(name: string): User[] {
 		return this.users.filter(
@@ -35,13 +37,13 @@ export class UserSelectComponent implements OnInit {
 	}
 
 	changeUser(): void {
-		this.selectedUser = null;
+		this.selected = null;
 		this.userFormControl.setValue(null);
-		this.onSelectUser.emit(this.selectedUser);
+		this.onSelectUser.emit(this.selected);
 	}
 
 	selectedValueChange(user: User): void {
-		this.selectedUser = user;
-		this.onSelectUser.emit(this.selectedUser);
+		this.selected = user;
+		this.onSelectUser.emit(this.selected);
 	}
 }

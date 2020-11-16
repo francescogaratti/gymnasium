@@ -12,7 +12,7 @@ export class TrainerService {
 	private trainer: Trainer;
 	// all the trainers
 	trainers$: Subject<Trainer[]> = new Subject<Trainer[]>();
-	private trainers: Trainer[] = [];
+	private trainers: Trainer[] = null;
 
 	asyncOperation: Subject<boolean> = new Subject<boolean>(); // signal to the progress bar
 

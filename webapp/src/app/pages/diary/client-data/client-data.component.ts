@@ -19,7 +19,6 @@ export class ClientDataComponent implements OnInit {
 
 	clients: Client[] = [];
 	trainers: Trainer[] = [];
-	// selectedClient: Client = null;
 	selectedTrainer: Trainer = null;
 
 	/** from controls */
@@ -56,7 +55,6 @@ export class ClientDataComponent implements OnInit {
 		private trainerService: TrainerService // private diaryService: DiaryService
 	) {
 		this.clientService.readClients().then(clients => (this.clients = clients));
-		// this.trainerService.readTrainers().then(trainers => (this.trainers = trainers));
 	}
 
 	values(obj: any) {
@@ -67,8 +65,13 @@ export class ClientDataComponent implements OnInit {
 		if (this.clientData) this.loadData();
 	}
 
-	loadData() {
-		// todo: load the trainer
+	async loadData() {
+		await this.trainerService.readTrainers().then(trainers => (this.trainers = trainers));
+		if (this.trainers && this.clientData.trainerId)
+			this.selectedTrainer = this.trainers.find(
+				(t: Trainer) => t.uid == this.clientData.trainerId
+			);
+		console.info(this.selectedTrainer);
 
 		this.subscriptionFC.setValue(this.clientData.subscription);
 		this.clubFC.setValue(this.clientData.club);
@@ -97,6 +100,10 @@ export class ClientDataComponent implements OnInit {
 		this.trainingRangeEndFC.setValue(this.clientData.trainingRange.finish);
 		this.trainingFrequencyValueFC.setValue(this.clientData.trainingFrequency.value);
 		this.trainingFrequencyPeriodFC.setValue(this.clientData.trainingFrequency.period);
+	}
+
+	onSelectTrainer(trainer: Trainer) {
+		this.selectedTrainer = trainer;
 	}
 
 	// todo: create new diary client data
