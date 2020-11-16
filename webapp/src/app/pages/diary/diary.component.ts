@@ -18,7 +18,6 @@ export class DiaryComponent implements OnInit {
 	selectedClient: Client = null;
 	selectedConsultant: Trainer = null;
 
-	dateFC: FormControl = new FormControl('', [Validators.required]);
 	constructor(
 		private clientService: ClientService,
 		private trainerService: TrainerService,
@@ -36,11 +35,12 @@ export class DiaryComponent implements OnInit {
 			.readUserDiary(client.uid)
 			.then((d: Diary) => (this.diary = d))
 			.catch(err => console.error(err));
+		// if (this.diary) this.findConsultant(); // todo: uncomment when trainers ready
 		// ? set the client right here => avoid to show fallback message while querying the DB
 		this.selectedClient = client;
 	}
 
-	async onSelectConsultant(consultant: Trainer) {
+	onSelectConsultant(consultant: Trainer) {
 		this.selectedConsultant = consultant;
 		this.diary.consultantId = this.selectedConsultant.uid;
 		this.diary.consultantName = this.selectedConsultant.displayName;
@@ -72,7 +72,6 @@ export class DiaryComponent implements OnInit {
 			consultantName: '',
 			notes: '',
 		};
-		this.dateFC.setValue(new Date());
 		this.updateDiary(true);
 	}
 
@@ -98,5 +97,13 @@ export class DiaryComponent implements OnInit {
 					'Riprovare per favore'
 				);
 			});
+	}
+
+	findConsultant() {
+		if (this.diary && this.diary.consultantId)
+			this.selectedConsultant = this.trainers.find(
+				(t: Trainer) => t.uid == this.diary.consultantId
+			);
+		else console.error('Consultant Id is not present');
 	}
 }
