@@ -4,6 +4,33 @@ export enum Periods {
 	months = 'Mesi',
 	years = 'Anni',
 }
+
+export enum Frequencies {
+	day = 'Giorno',
+	week = 'Settimana',
+	month = 'Mese',
+	year = 'Anno',
+}
+
+export const TimeRanges: string[] = [
+	'7:00',
+	'8:00',
+	'9:00',
+	'10:00',
+	'11:00',
+	'12:00',
+	'13:00',
+	'14:00',
+	'15:00',
+	'16:00',
+	'17:00',
+	'18:00',
+	'19:00',
+	'20:00',
+	'21:00',
+	'22:00',
+];
+
 export interface Frequency {
 	value: number;
 	period: string;
@@ -21,15 +48,13 @@ export interface DiaryClientData {
 	trainerId: string;
 	trainerName: string;
 
-	clientId: string;
-	clientName: string;
-	// birthDay: string;
-	// source:string; // ! no idea what this is
+	// clientId: string; // ! this field belongs to the parent interface
+	// clientName: string; // ! this field belongs to the parent interface
 
 	jobType: string; // todo: select from enum
 	alreadyAttended: boolean;
 
-	experiences: string[]; // ? select from list
+	experiences: string;
 	duration: Frequency;
 	frequency: Frequency;
 
@@ -51,10 +76,9 @@ export interface FitCheck {
 	height: number;
 	weight: number;
 	smoker: boolean;
-	injuries: string[];
-	drugs: string[];
+	injuries: string;
+	drugs: string;
 	diet: string;
-	notes: string;
 }
 
 export interface TrainingCheck {
@@ -75,28 +99,29 @@ export interface TrainingCheck {
 }
 
 export interface Diary {
+	uid: string;
+	clientId: string;
+	clientName: string;
 	clientData: DiaryClientData;
 	fitCheck: FitCheck;
 	trainingChecks: TrainingCheck[];
 	date: string;
 	consultantId: string;
 	consultantName: string;
+	notes: string;
 }
 
 export const clientData: DiaryClientData = {
-	subscription: '',
-	club: '',
-	dateStart: '',
-	trainerId: '',
-	trainerName: '',
+	subscription: 'Annuale',
+	club: 'Test',
+	dateStart: '10-10-2010',
+	trainerId: '1234567890',
+	trainerName: 'Trainer Test',
 
-	clientId: '',
-	clientName: '',
-
-	jobType: '',
+	jobType: 'Test job',
 	alreadyAttended: false,
 
-	experiences: [], // ? select from list
+	experiences: 'No exp.', // ? select from list
 	duration: {
 		value: 3,
 		period: Periods.weeks,
@@ -107,9 +132,9 @@ export const clientData: DiaryClientData = {
 	},
 
 	achieved: false,
-	achievedNotes: '',
+	achievedNotes: 'Test note',
 
-	goal: '',
+	goal: 'Il mio obiettivo è avere obiettivi',
 
 	timeToAchieve: {
 		value: 3,
@@ -117,7 +142,7 @@ export const clientData: DiaryClientData = {
 	},
 	keepGoal: false,
 
-	when: '',
+	when: '03-03-2020',
 	trainingRange: {
 		start: '',
 		finish: '',
@@ -133,10 +158,9 @@ export const fitCheck: FitCheck = {
 	height: 181,
 	weight: 77,
 	smoker: false,
-	injuries: [],
-	drugs: [],
+	injuries: 'rotto un polso',
+	drugs: 'niente',
 	diet: 'mangio molte proteine e poca verdura',
-	notes: 'note aggiuntive del trainer',
 };
 
 export const trainingChecks: TrainingCheck[] = [
@@ -153,8 +177,8 @@ export const trainingChecks: TrainingCheck[] = [
 		goalFeelings: 'sentimenti',
 		goalFavorites: 'cosa ti è piaciuto di più',
 
-		nextTrainingCheckDate: '',
-		nextTrainingWorkoutDate: '',
+		nextTrainingCheckDate: '02-02-2002',
+		nextTrainingWorkoutDate: '03-03-2003',
 
 		motivation: 8,
 		satisfaction: 7,
@@ -162,10 +186,14 @@ export const trainingChecks: TrainingCheck[] = [
 ];
 
 export const diary: Diary = {
+	uid: null,
+	clientId: '',
+	clientName: '',
 	clientData: clientData,
 	fitCheck: fitCheck,
 	trainingChecks: trainingChecks,
 	date: '01-01-2020',
 	consultantId: '0123456789',
 	consultantName: 'Andrea Meggiolaro',
+	notes: 'note aggiuntive del consulente',
 };

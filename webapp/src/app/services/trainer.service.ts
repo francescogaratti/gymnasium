@@ -18,7 +18,7 @@ export class TrainerService {
 
 	constructor(private afs: AngularFirestore) {}
 
-	public async readTrainer(id: string) {
+	public async readTrainer(id: string): Promise<Trainer> {
 		this.asyncOperation.next(true);
 		console.info('📘 - read trainer ' + id);
 		this.trainer = await this.afs
@@ -32,6 +32,7 @@ export class TrainerService {
 				return null;
 			});
 		this.asyncOperation.next(false);
+		return this.trainer;
 	}
 
 	public async readTrainers(): Promise<Trainer[]> {
@@ -68,6 +69,7 @@ export class TrainerService {
 				console.error(err);
 				return false;
 			});
+		this.trainer$.next(this.trainer);
 		this.asyncOperation.next(false);
 		return res;
 	}

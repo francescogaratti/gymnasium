@@ -12,6 +12,7 @@ import { map, startWith } from 'rxjs/operators';
 export class UserSelectComponent implements OnInit {
 	@Input() name: string = 'Utente';
 	@Input() users: User[] = [];
+	@Input() center: boolean = false;
 
 	userFormControl: FormControl = new FormControl('', [Validators.required]);
 	filteredUsers: Observable<User[]>;

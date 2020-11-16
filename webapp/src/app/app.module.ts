@@ -51,6 +51,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatTabsModule } from '@angular/material/tabs';
 
 import { HomeComponent } from './pages/home/home.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
@@ -145,6 +146,7 @@ import { UserSelectComponent } from './components/user-select/user-select.compon
 		MatExpansionModule,
 		MatSidenavModule,
 		MatSlideToggleModule,
+		MatTabsModule,
 	],
 	providers: [
 		MatDatepickerModule,
