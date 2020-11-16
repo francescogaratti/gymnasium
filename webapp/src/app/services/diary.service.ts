@@ -93,11 +93,11 @@ export class DiaryService {
 		return res;
 	}
 
-	async generateExcel(filename: string, diaryId: string): Promise<boolean> {
+	async downloadExcel(filename: string, diaryId: string): Promise<boolean> {
 		this.asyncOperation.next(true);
 		// some costants & params
 		const generateExcelURL: string =
-			'https://us-central1-ultra-gymnasium.cloudfunctions.net/excel-diary';
+			'http://localhost:5001/ultra-gymnasium/us-central1/excel-diary';
 		const requestOptions: Object = {
 			params: { diaryId: diaryId },
 			responseType: 'arrayBuffer',

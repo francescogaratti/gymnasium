@@ -103,9 +103,9 @@ export class DiaryComponent implements OnInit {
 
 	downloadDiary() {
 		// ? call the service for the download of the file
-		const filename: string = 'diario_' + this.diary.clientName.replace(' ', '_') + '.xlsx';
+		const filename: string = 'Diario_' + this.diary.clientName.replace(' ', '_') + '.xlsx';
 		this.diaryService
-			.generateExcel(filename, this.diary.uid)
+			.downloadExcel(filename, this.diary.uid)
 			.then((value: boolean) => {
 				if (value) this.utils.openSnackBar('Conversione in file Excel riuscita!', '📝📝');
 				else

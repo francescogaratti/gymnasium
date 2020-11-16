@@ -186,7 +186,7 @@ export const trainingChecks: TrainingCheck[] = [
 ];
 
 export const diary: Diary = {
-	uid: null,
+	uid: '',
 	clientId: '',
 	clientName: '',
 	clientData: clientData,
