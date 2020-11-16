@@ -81,9 +81,9 @@
 				</td>
 			</tr>
 			<tr>
-				<td colspan="3">
+				<td>
 					<app-user-select
-						class="field-extra-large"
+						*ngIf="trainers"
 						[name]="'Trainer'"
 						[users]="trainers"
 						(onSelectUser)="onSelectTrainer($event)"

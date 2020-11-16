@@ -18,7 +18,7 @@ export class ClientDataComponent implements OnInit {
 	@Output() onNewClientData: EventEmitter<DiaryClientData> = new EventEmitter<DiaryClientData>();
 
 	clients: Client[] = [];
-	trainers: Trainer[] = [];
+	trainers: Trainer[] = null;
 	selectedTrainer: Trainer = null;
 
 	/** from controls */
