@@ -16,12 +16,7 @@ export class TrainerService {
 
 	asyncOperation: Subject<boolean> = new Subject<boolean>(); // signal to the progress bar
 
-	constructor(private afs: AngularFirestore) {
-		// store the trainer here
-		this.trainer$.subscribe((trainer: Trainer) => (this.trainer = trainer));
-		// store all the trainers here
-		this.trainers$.subscribe((trainers: Trainer[]) => (this.trainers = trainers));
-	}
+	constructor(private afs: AngularFirestore) {}
 
 	public async readTrainer(id: string): Promise<Trainer> {
 		this.asyncOperation.next(true);
@@ -36,7 +31,6 @@ export class TrainerService {
 				console.error(err);
 				return null;
 			});
-		this.trainer$.next(this.trainer);
 		this.asyncOperation.next(false);
 		return this.trainer;
 	}
@@ -58,8 +52,25 @@ export class TrainerService {
 				console.error(err);
 				return [];
 			});
-		this.trainers$.next(this.trainers);
 		this.asyncOperation.next(false);
 		return this.trainers;
+	}
+
+	// *** POST ***
+	async updateTrainer(trainer: Trainer, deepCopy?: boolean): Promise<boolean> {
+		this.asyncOperation.next(true);
+		console.info('📗 - update trainer');
+		let res: boolean = await this.afs
+			.collection('trainers')
+			.doc(trainer.uid)
+			.set(deepCopy ? JSON.parse(JSON.stringify(trainer)) : trainer, { merge: true })
+			.then(() => true)
+			.catch(err => {
+				console.error(err);
+				return false;
+			});
+		this.trainer$.next(this.trainer);
+		this.asyncOperation.next(false);
+		return res;
 	}
 }

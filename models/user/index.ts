@@ -100,16 +100,23 @@ export class Client extends User {
 }
 
 export interface Employee extends User {
+	sex: boolean;
 	birthday: string;
+	birthCountry: string;
+	birthCity: string;
 	fiscalCode: string;
-	address: string;
-	city: string;
-	postalCode: string;
+	address: Address;
 	shifts: Shift[];
 }
 
 export interface Trainer extends Employee {
 	clients: any[];
+}
+
+export class Trainer extends User {
+	constructor(user?: User) {
+		super(user);
+	}
 }
 
 export interface Receptionist extends Employee {}

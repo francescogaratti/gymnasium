@@ -43,12 +43,19 @@
 						(onSelectionChange)="selectedValueChange(user)"
 					>
 						<img
+							*ngIf="user?.photoURL"
 							class="example-option-img"
 							aria-hidden
 							[src]="user.photoURL"
 							height="25"
 							style="border-radius: 100%"
 						/>
+						<i
+							*ngIf="!user?.photoURL"
+							class="material-icons md-48 example-option-img"
+							style="font-size: x-large"
+							>account_circle</i
+						>
 						<span>{{ user.displayName }}</span> |
 						<small>
 							<em>{{ user.email }} </em>

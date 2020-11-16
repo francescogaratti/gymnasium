@@ -29,6 +29,12 @@
 				height="25"
 				style="border-radius: 100%"
 			/>
+			<i
+				*ngIf="!user?.photoURL"
+				class="material-icons md-25 option-img"
+				style="font-size: x-large"
+				>account_circle</i
+			>
 			<span>{{ user.displayName }}</span> |
 			<small>
 				<em>{{ user.email }} </em>

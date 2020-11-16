@@ -218,7 +218,7 @@ export class NewClientComponent implements OnInit {
 		console.info('Adding new client: ', this.client);
 		if (this.my_input.files)
 			this.auth
-				.uploadImageToClient(this.my_input.files[0], this.client.uid)
+				.uploadImageToUser(this.my_input.files[0], this.client.uid)
 				.then(path => {
 					this.client.photoURL = path ? path : ''; // link to new photoURL
 					this.updateClient(this.client);
