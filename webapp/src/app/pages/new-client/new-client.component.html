@@ -71,7 +71,11 @@
 
 			<!-- *** CONTACT -->
 			<!-- photo -->
-			<app-upload-photo [title]="'Foto Profilo'" [src]="selected_user?.photoURL">
+			<app-upload-photo
+				[title]="'Foto Profilo'"
+				[src]="selected_user?.photoURL"
+				(onNewFile)="onNewImageFile($event)"
+			>
 			</app-upload-photo>
 			<!-- email -->
 			<mat-form-field class="example-full-width">

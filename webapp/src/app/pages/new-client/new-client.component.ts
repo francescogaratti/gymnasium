@@ -90,7 +90,7 @@ export class NewClientComponent implements OnInit {
 		this.photoFormControl,
 		this.emailFC,
 	];
-	my_input: HTMLInputElement = null;
+	imageFile: File = null;
 	constructor(
 		private auth: AuthService,
 		private utils: UtilsService,
@@ -178,8 +178,15 @@ export class NewClientComponent implements OnInit {
 		}
 	}
 
-	addClient(): void {
+	onNewImageFile(file: File) {
+		this.imageFile = file;
+	}
+
+	async addClient() {
 		this.selected_user.type = UserTypes.client;
+		// save the new typed name
+		this.selected_user.displayName =
+			this.nomeFormControl.value + ' ' + this.cognomeFormControl.value;
 		this.client = new Client(this.selected_user);
 		// anagraphics
 		this.client.displayName = this.nomeFormControl.value + ' ' + this.cognomeFormControl.value;
@@ -207,14 +214,13 @@ export class NewClientComponent implements OnInit {
 		this.client.email = this.emailFC.value;
 
 		console.info('Adding new client: ', this.client);
-		// todo: fix this
-		// this.auth
-		// 	.uploadImageToUser(this.my_input.files[0], this.client.uid)
-		// 	.then(path => {
-		// 		this.client.photoURL = path ? path : ''; // link to new photoURL
-		// 		this.updateClient(this.client);
-		// 	})
-		// 	.catch(err => console.error('uploadImageToClient', err));
+		if (this.imageFile)
+			await this.auth
+				.uploadImageToUser(this.imageFile, this.client.uid)
+				.then(path => {
+					this.client.photoURL = path ? path : ''; // link to new photoURL
+				})
+				.catch(err => console.error('uploadImageToClient', err));
 		this.updateClient(this.client);
 	}
 

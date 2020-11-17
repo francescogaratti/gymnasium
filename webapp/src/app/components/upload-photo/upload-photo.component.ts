@@ -1,4 +1,13 @@
-import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import {
+	AfterViewInit,
+	Component,
+	ElementRef,
+	EventEmitter,
+	Input,
+	OnInit,
+	Output,
+	ViewChild,
+} from '@angular/core';
 
 @Component({
 	selector: 'app-upload-photo',
@@ -9,6 +18,8 @@ export class UploadPhotoComponent implements OnInit, AfterViewInit {
 	@Input() title: string = 'Carica Foto';
 	@Input() src: string = null;
 	@Input() disabled: boolean = false;
+
+	@Output() onNewFile: EventEmitter<File> = new EventEmitter<File>();
 
 	@ViewChild('photo') photo: ElementRef;
 	input: HTMLInputElement = null;
@@ -37,6 +48,7 @@ export class UploadPhotoComponent implements OnInit, AfterViewInit {
 
 	getFiles() {
 		const file = this.input.files[0];
+		this.onNewFile.emit(file);
 		const url = URL.createObjectURL(file);
 		this.photo.nativeElement.src = url;
 		this.src = url;
