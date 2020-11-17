@@ -39,8 +39,6 @@ export class NewClientComponent implements OnInit {
 
 	/** input client */
 
-	userFormControl: FormControl = new FormControl('', [Validators.required]);
-
 	nomeFormControl: FormControl = new FormControl('', [Validators.required]);
 	cognomeFormControl: FormControl = new FormControl('', [Validators.required]);
 	birthdayFormControl: FormControl = new FormControl('', [Validators.required]);
@@ -70,7 +68,6 @@ export class NewClientComponent implements OnInit {
 	/** ****** */
 
 	formsControl: FormControl[] = [
-		this.userFormControl,
 		// anagraphics
 		this.nomeFormControl,
 		this.cognomeFormControl,
@@ -100,11 +97,6 @@ export class NewClientComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.resetClient();
-		this.filteredUsers = this.userFormControl.valueChanges.pipe(
-			startWith(''),
-			map(name => (name ? this._filterUsersByName(name) : this.users.slice()))
-		);
-
 		this.readUsersClients();
 	}
 
@@ -127,7 +119,6 @@ export class NewClientComponent implements OnInit {
 
 	toggleNotShowClients() {
 		this.notShowClients = !this.notShowClients;
-		this.userFormControl.setValue(null);
 	}
 
 	private _filterUsersByName(name: string): User[] {
@@ -143,18 +134,19 @@ export class NewClientComponent implements OnInit {
 			);
 	}
 
-	changeUser(): void {
-		this.selected_user = null;
-		this.userFormControl.setValue(null);
-		this.alreadyClient = false;
-	}
-
-	selectedValueChange(user: User) {
+	async onSelectClient(user: User) {
 		this.selected_user = user;
 		this.nomeFormControl.setValue(this.selected_user.displayName.split(' ')[0]);
 		this.cognomeFormControl.setValue(this.selected_user.displayName.split(' ')[1]);
 		this.emailFC.setValue(this.selected_user.email);
-		this.photoFormControl.setValue(this.selected_user.photoURL);
+		let path = await this.auth
+			.getFile(this.selected_user.photoPath)
+			.then(path => path)
+			.catch(err => null);
+		console.info(path);
+		this.photoFormControl.setValue(
+			this.selected_user.photoURL ? this.selected_user.photoURL : path
+		);
 		// check if it's already a client
 		let client = this.clients.find((c: Client) => c.uid == user.uid);
 		if (client) {
@@ -217,9 +209,12 @@ export class NewClientComponent implements OnInit {
 		if (this.imageFile)
 			await this.auth
 				.uploadImageToUser(this.imageFile, this.client.uid)
-				.then(path => {
-					this.client.photoURL = path ? path : ''; // link to new photoURL
-				})
+				.then(
+					path => {
+						this.client.photoPath = path ? path : '';
+						this.selected_user.photoPath = this.client.photoPath;
+					} // link to new photoURL
+				)
 				.catch(err => console.error('uploadImageToClient', err));
 		this.updateClient(this.client);
 	}

@@ -17,52 +17,12 @@
 				Nascondi già clienti
 			</mat-slide-toggle>
 			<!-- user -->
-			<mat-form-field class="example-full-width" color="accent">
-				<mat-label>Utente</mat-label>
-				<input
-					matInput
-					placeholder="Digita per filtrare..."
-					aria-label="User"
-					[matAutocomplete]="auto"
-					[formControl]="userFormControl"
-				/>
-				<button
-					mat-button
-					*ngIf="selected_user"
-					matSuffix
-					mat-icon-button
-					aria-label="Clear"
-					(click)="changeUser()"
-				>
-					<mat-icon color="accent">close</mat-icon>
-				</button>
-				<mat-autocomplete #auto="matAutocomplete">
-					<mat-option
-						*ngFor="let user of filteredUsers | async"
-						[value]="user.displayName"
-						(onSelectionChange)="selectedValueChange(user)"
-					>
-						<img
-							*ngIf="user?.photoURL"
-							class="example-option-img"
-							aria-hidden
-							[src]="user.photoURL"
-							height="25"
-							style="border-radius: 100%"
-						/>
-						<i
-							*ngIf="!user?.photoURL"
-							class="material-icons md-48 example-option-img"
-							style="font-size: x-large"
-							>account_circle</i
-						>
-						<span>{{ user.displayName }}</span> |
-						<small>
-							<em>{{ user.email }} </em>
-						</small>
-					</mat-option>
-				</mat-autocomplete>
-			</mat-form-field>
+			<app-user-select
+				[center]="true"
+				[name]="'Utente'"
+				[users]="users"
+				(onSelectUser)="onSelectClient($event)"
+			></app-user-select>
 			<!-- location -->
 			<mat-form-field class="example-full-width">
 				<mat-label>Sede</mat-label>
@@ -73,7 +33,11 @@
 			<!-- photo -->
 			<app-upload-photo
 				[title]="'Foto Profilo'"
-				[src]="selected_user?.photoURL"
+				[src]="
+					selected_user && selected_user.photoURL
+						? selected_user.photoURL
+						: photoFormControl.value
+				"
 				(onNewFile)="onNewImageFile($event)"
 			>
 			</app-upload-photo>
@@ -458,8 +422,7 @@
 			(click)="addClient()"
 			[disabled]="
 				alreadyClient ||
-				userFormControl.invalid ||
-				photoFormControl.invalid ||
+				(photoFormControl.invalid && !imageFile) ||
 				emailFC.invalid ||
 				nomeFormControl.invalid ||
 				cognomeFormControl.invalid ||

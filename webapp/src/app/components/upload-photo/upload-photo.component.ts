@@ -4,8 +4,10 @@ import {
 	ElementRef,
 	EventEmitter,
 	Input,
+	OnChanges,
 	OnInit,
 	Output,
+	SimpleChanges,
 	ViewChild,
 } from '@angular/core';
 
@@ -14,7 +16,7 @@ import {
 	templateUrl: './upload-photo.component.html',
 	styleUrls: ['./upload-photo.component.sass'],
 })
-export class UploadPhotoComponent implements OnInit, AfterViewInit {
+export class UploadPhotoComponent implements OnInit, AfterViewInit, OnChanges {
 	@Input() title: string = 'Carica Foto';
 	@Input() src: string = null;
 	@Input() disabled: boolean = false;
@@ -32,6 +34,12 @@ export class UploadPhotoComponent implements OnInit, AfterViewInit {
 
 	ngAfterViewInit(): void {
 		if (this.src) this.photo.nativeElement.src = this.src;
+	}
+
+	ngOnChanges(changes: SimpleChanges) {
+		// changes.prop contains the old and the new value...
+		if (changes && changes.src && this.photo && this.photo.nativeElement)
+			this.photo.nativeElement.src = this.src;
 	}
 
 	createInput(): void {

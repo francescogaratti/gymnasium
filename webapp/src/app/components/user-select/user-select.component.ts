@@ -22,7 +22,7 @@ export class UserSelectComponent implements OnInit {
 	constructor() {
 		this.filteredUsers = this.userFormControl.valueChanges.pipe(
 			startWith(''),
-			map(name => (name ? this._filterUsersByName(name) : this.users.slice()))
+			map(typing => (typing ? this._filterUsersByName(typing) : this.users.slice()))
 		);
 	}
 
@@ -31,9 +31,11 @@ export class UserSelectComponent implements OnInit {
 		console.info(this.selected);
 	}
 
-	private _filterUsersByName(name: string): User[] {
+	private _filterUsersByName(typing: string): User[] {
 		return this.users.filter(
-			(u: User) => u.displayName.toLocaleLowerCase().indexOf(name.toLocaleLowerCase()) !== -1
+			(u: User) =>
+				u.displayName?.toLocaleLowerCase().indexOf(typing.toLocaleLowerCase()) !== -1 ||
+				u.email.toLocaleLowerCase().indexOf(typing.toLocaleLowerCase()) !== -1
 		);
 	}
 
