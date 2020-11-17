@@ -71,44 +71,8 @@
 
 			<!-- *** CONTACT -->
 			<!-- photo -->
-			<p
-				style="
-					display: flex;
-					text-align: center;
-					align-items: center;
-					width: fit-content;
-					margin: 20px auto;
-				"
-			>
-				<img
-					id="photo-profile"
-					alt=""
-					style="
-						border-radius: 100%;
-						width: 100px;
-						height: 100px;
-						border: solid 2px white;
-					"
-					hidden="true"
-				/>
-				<button
-					mat-raised-button
-					*ngIf="!photoFormControl.value"
-					aria-label="Upload"
-					(click)="uploadPhoto()"
-				>
-					Foto profilo
-					<i class="material-icons-two-tone">add_a_photo</i>
-				</button>
-				<button
-					*ngIf="photoFormControl.value"
-					mat-icon-button
-					aria-label="Clear"
-					(click)="photoFormControl.setValue(null); removePhoto()"
-				>
-					<mat-icon>clear</mat-icon>
-				</button>
-			</p>
+			<app-upload-photo [title]="'Foto Profilo'" [src]="selected_user?.photoURL">
+			</app-upload-photo>
 			<!-- email -->
 			<mat-form-field class="example-full-width">
 				<mat-label>Email</mat-label>

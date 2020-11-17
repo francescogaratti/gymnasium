@@ -99,9 +99,6 @@ export class NewClientComponent implements OnInit {
 	) {}
 
 	ngOnInit(): void {
-		this.my_input = document.createElement('input');
-		this.my_input.onchange = () => this.getFiles();
-
 		this.resetClient();
 		this.filteredUsers = this.userFormControl.valueChanges.pipe(
 			startWith(''),
@@ -149,7 +146,6 @@ export class NewClientComponent implements OnInit {
 	changeUser(): void {
 		this.selected_user = null;
 		this.userFormControl.setValue(null);
-		this.removePhoto();
 		this.alreadyClient = false;
 	}
 
@@ -159,11 +155,6 @@ export class NewClientComponent implements OnInit {
 		this.cognomeFormControl.setValue(this.selected_user.displayName.split(' ')[1]);
 		this.emailFC.setValue(this.selected_user.email);
 		this.photoFormControl.setValue(this.selected_user.photoURL);
-		let photoProfile: HTMLImageElement = document.getElementById(
-			'photo-profile'
-		) as HTMLImageElement;
-		photoProfile.src = this.selected_user.photoURL;
-		photoProfile.hidden = false;
 		// check if it's already a client
 		let client = this.clients.find((c: Client) => c.uid == user.uid);
 		if (client) {
@@ -216,15 +207,15 @@ export class NewClientComponent implements OnInit {
 		this.client.email = this.emailFC.value;
 
 		console.info('Adding new client: ', this.client);
-		if (this.my_input.files)
-			this.auth
-				.uploadImageToUser(this.my_input.files[0], this.client.uid)
-				.then(path => {
-					this.client.photoURL = path ? path : ''; // link to new photoURL
-					this.updateClient(this.client);
-				})
-				.catch(err => console.error('uploadImageToClient', err));
-		else this.updateClient(this.client);
+		// todo: fix this
+		// this.auth
+		// 	.uploadImageToUser(this.my_input.files[0], this.client.uid)
+		// 	.then(path => {
+		// 		this.client.photoURL = path ? path : ''; // link to new photoURL
+		// 		this.updateClient(this.client);
+		// 	})
+		// 	.catch(err => console.error('uploadImageToClient', err));
+		this.updateClient(this.client);
 	}
 
 	async updateClient(client: Client): Promise<void> {
@@ -254,33 +245,32 @@ export class NewClientComponent implements OnInit {
 		this.pushNotifications = false;
 		this.mailNotifications = false;
 		this.formsControl.forEach((form: FormControl) => form.setValue(null));
-		this.removePhoto();
 	}
 
-	uploadPhoto() {
-		this.my_input.setAttribute('type', 'file');
-		this.my_input.click();
-	}
+	// uploadPhoto() {
+	// 	this.my_input.setAttribute('type', 'file');
+	// 	this.my_input.click();
+	// }
 
-	getFiles() {
-		const file = this.my_input.files[0];
-		const url = URL.createObjectURL(file);
-		this.photoFormControl.setValue(String(url));
-		let photoProfile: HTMLImageElement = document.getElementById(
-			'photo-profile'
-		) as HTMLImageElement;
-		photoProfile.src = url;
-		photoProfile.hidden = false;
-	}
+	// getFiles() {
+	// 	const file = this.my_input.files[0];
+	// 	const url = URL.createObjectURL(file);
+	// 	this.photoFormControl.setValue(String(url));
+	// 	let photoProfile: HTMLImageElement = document.getElementById(
+	// 		'photo-profile'
+	// 	) as HTMLImageElement;
+	// 	photoProfile.src = url;
+	// 	photoProfile.hidden = false;
+	// }
 
-	removePhoto() {
-		let photoProfile: HTMLImageElement = document.getElementById(
-			'photo-profile'
-		) as HTMLImageElement;
-		photoProfile.hidden = true;
-		photoProfile.src = '';
-		this.my_input.remove();
-		this.my_input = document.createElement('input');
-		this.my_input.onchange = () => this.getFiles();
-	}
+	// removePhoto() {
+	// 	let photoProfile: HTMLImageElement = document.getElementById(
+	// 		'photo-profile'
+	// 	) as HTMLImageElement;
+	// 	photoProfile.hidden = true;
+	// 	photoProfile.src = '';
+	// 	this.my_input.remove();
+	// 	this.my_input = document.createElement('input');
+	// 	this.my_input.onchange = () => this.getFiles();
+	// }
 }
