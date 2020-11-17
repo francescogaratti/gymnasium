@@ -123,7 +123,7 @@ function restToString(rest: Rest): string {
 	}
 }
 
-export const diary = functions.https.onRequest(
+export const convertDiary = functions.https.onRequest(
 	async (req: functions.https.Request, res: functions.Response<ArrayBuffer>) => {
 		const id: string = String(req.query['diaryId']);
 		if (!id) res.send(undefined);

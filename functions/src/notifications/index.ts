@@ -88,7 +88,7 @@ async function sendNotification(client: Client) {
 async function sendMail(client: Client, workout: DigitalWorkout) {
 	const wb = createWorkbook(workout);
 	const filename = workout.name + '.xlsx';
-	let excel_buffer: any = await wb.writeToBuffer().then((buffer: any) => buffer);
+	const excel_buffer: any = await wb.writeToBuffer().then((buffer: any) => buffer);
 
 	const mailOptions = {
 		from: 'Ultra Gymnasium ' + myEmail,
