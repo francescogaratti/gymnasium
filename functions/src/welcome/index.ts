@@ -21,6 +21,7 @@ export const welcomeMail = functions.auth.user().onCreate(async (u: functions.au
 		email: u.email ? u.email : '',
 		displayName: u.displayName ? u.displayName : '',
 		photoURL: u.photoURL ? u.photoURL : '',
+		photoPath: '', // ? this is needed when the user upload something to firebase storage
 		metadata: u.metadata,
 		tokenIds: [],
 		type: UserTypes.user,

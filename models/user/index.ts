@@ -49,6 +49,7 @@ export interface User {
 	email: string;
 	displayName: string;
 	photoURL: string;
+	photoPath: string;
 	metadata: Metadata;
 	tokenIds?: string[];
 	type?: string;
@@ -64,6 +65,7 @@ export class User implements User {
 		this.email = user && user.email ? user.email : '';
 		this.displayName = user && user.displayName ? user.displayName : '';
 		this.photoURL = user && user.photoURL ? user.photoURL : '';
+		this.photoPath = user && user.photoPath ? user.photoPath : '';
 		this.metadata =
 			user && user.metadata
 				? user.metadata

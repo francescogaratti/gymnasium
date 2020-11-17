@@ -259,7 +259,11 @@ function createDiaryWorkbook(diary: Diary) {
 		.style({ font: { bold: true } });
 	ws_info
 		.cell(row, 4)
-		.string(diary.clientData.duration.value + ' ' + diary.clientData.duration.period);
+		.string(
+			diary.clientData.duration
+				? diary.clientData.duration.value + ' ' + diary.clientData.duration.period
+				: ''
+		);
 	// frequency
 	ws_info
 		.cell(row, 5)
@@ -267,7 +271,11 @@ function createDiaryWorkbook(diary: Diary) {
 		.style({ font: { bold: true } });
 	ws_info
 		.cell(row, 6)
-		.string(diary.clientData.frequency.value + '/' + diary.clientData.frequency.period);
+		.string(
+			diary.clientData.frequency
+				? diary.clientData.frequency.value + '/' + diary.clientData.frequency.period
+				: ''
+		);
 
 	row++;
 
@@ -298,7 +306,11 @@ function createDiaryWorkbook(diary: Diary) {
 		.style({ font: { bold: true } });
 	ws_info
 		.cell(row, 2)
-		.string(diary.clientData.timeToAchieve.value + ' ' + diary.clientData.timeToAchieve.period);
+		.string(
+			diary.clientData.timeToAchieve
+				? diary.clientData.timeToAchieve.value + ' ' + diary.clientData.timeToAchieve.period
+				: ''
+		);
 	// keepGoal
 	ws_info
 		.cell(row, 3)
@@ -325,14 +337,20 @@ function createDiaryWorkbook(diary: Diary) {
 	ws_info
 		.cell(row, 4)
 		.string(
-			diary.clientData.trainingRange.start + ' - ' + diary.clientData.trainingRange.finish
+			diary.clientData.trainingRange
+				? diary.clientData.trainingRange.start +
+						' - ' +
+						diary.clientData.trainingRange.finish
+				: ''
 		);
 	// trainingFrequency
 	ws_info
 		.cell(row, 5)
 		.string('Quante volte alla settimana')
 		.style({ font: { bold: true } });
-	ws_info.cell(row, 6).string(diary.clientData.trainingFrequency.value);
+	ws_info
+		.cell(row, 6)
+		.string(diary.clientData.trainingFrequency ? diary.clientData.trainingFrequency.value : '');
 
 	// *** second worksheet => fit check
 	const ws_fit_check = wb.addWorksheet('Fit Check');
@@ -419,7 +437,9 @@ function createDiaryWorkbook(diary: Diary) {
 				.cell(row, 3)
 				.string('Quante volte ti alleni alla settimana')
 				.style({ font: { bold: true } });
-			ws_training_checks.cell(row, 4).number(check.trainingFrequency.value);
+			ws_training_checks
+				.cell(row, 4)
+				.number(check.trainingFrequency ? check.trainingFrequency.value : '');
 
 			row++;
 

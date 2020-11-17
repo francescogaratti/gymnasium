@@ -1,5 +1,8 @@
 <p id="upload-photo-p">
 	<img id="photo" #photo alt="" [hidden]="!src" />
+	<i *ngIf="!src" class="material-icons md-48 fallback-img" style="font-size: xxx-large"
+		>account_circle</i
+	>
 	<button mat-raised-button *ngIf="!src && !disabled" aria-label="Upload" (click)="uploadPhoto()">
 		{{ title }}
 		<i class="material-icons-two-tone">add_a_photo</i>

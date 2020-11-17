@@ -19,7 +19,7 @@
 	<mat-autocomplete #auto="matAutocomplete">
 		<mat-option
 			*ngFor="let user of filteredUsers | async"
-			[value]="user.displayName"
+			[value]="user.displayName ? user.displayName : user.email"
 			(onSelectionChange)="selectedValueChange(user)"
 		>
 			<img
