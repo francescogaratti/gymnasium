@@ -28,7 +28,7 @@ jobs:
               uses: actions/upload-artifact@v2
               with:
                   name: webapp-build
-                  path: dist/
+                  path: dist
     deploy:
         needs: build
 
@@ -40,10 +40,6 @@ jobs:
             # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
             - uses: actions/checkout@master
             - uses: actions/setup-node@master
-            - name: Download Artifact
-              uses: actions/download-artifact@v2
-              with:
-                  name: webapp-build
             - uses: w9jds/firebase-action@master
               with:
                   args: deploy --only hosting
