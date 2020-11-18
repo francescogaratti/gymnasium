@@ -24,13 +24,12 @@ jobs:
             - uses: actions/setup-node@master
             - run: cd webapp && npm install
             - run: cd webapp && npm run pwa
-            - name: create artifact
-                uses: actions/upload-artifact@v2
-                with:
-                    name: webapp-build
-                    path: ../dist/
+            - name: Upload a Build Artifact
+              uses: actions/upload-artifact@v2
+              with:
+                  name: webapp-build
+                  path: dist
     deploy:
-
         needs: build
 
         # The type of runner that the job will run on
@@ -41,10 +40,6 @@ jobs:
             # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
             - uses: actions/checkout@master
             - uses: actions/setup-node@master
-            - name: load artifact
-                uses: actions/upload-artifact@v2
-                with:
-                    name: webapp-build                    
             - uses: w9jds/firebase-action@master
               with:
                   args: deploy --only hosting

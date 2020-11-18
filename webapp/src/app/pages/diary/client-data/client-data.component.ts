@@ -61,12 +61,12 @@ export class ClientDataComponent implements OnInit {
 		return Object.values(obj);
 	}
 
-	ngOnInit(): void {
+	async ngOnInit() {
+		await this.trainerService.readTrainers().then(trainers => (this.trainers = trainers));
 		if (this.clientData) this.loadData();
 	}
 
 	async loadData() {
-		await this.trainerService.readTrainers().then(trainers => (this.trainers = trainers));
 		if (this.trainers && this.clientData.trainerId)
 			this.selectedTrainer = this.trainers.find(
 				(t: Trainer) => t.uid == this.clientData.trainerId

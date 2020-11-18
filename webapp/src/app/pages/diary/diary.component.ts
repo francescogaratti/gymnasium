@@ -84,7 +84,11 @@ export class DiaryComponent implements OnInit {
 				if (value)
 					this.utils.openSnackBar(
 						'Ottimo!',
-						'Ora ' + this.selectedClient.displayName + ' ha un Diario'
+						deepCopy
+							? 'Ora ' + this.selectedClient.displayName + ' ha un Diario'
+							: 'Il Diario di ' +
+									this.selectedClient.displayName +
+									' è stato aggiornato con successo!'
 					);
 				else
 					this.utils.openSnackBar(
@@ -125,6 +129,6 @@ export class DiaryComponent implements OnInit {
 			this.selectedConsultant = this.trainers.find(
 				(t: Trainer) => t.uid == this.diary.consultantId
 			);
-		else console.error('Consultant Id is not present');
+		else console.warn('Consultant Id is not present');
 	}
 }
