@@ -28,7 +28,6 @@ export class UserSelectComponent implements OnInit {
 
 	ngOnInit(): void {
 		if (this.selected) this.userFormControl.setValue(this.selected.displayName);
-		console.info(this.selected);
 	}
 
 	private _filterUsersByName(typing: string): User[] {
