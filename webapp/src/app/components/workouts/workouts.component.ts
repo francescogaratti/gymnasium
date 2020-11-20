@@ -16,10 +16,10 @@ export class WorkoutsComponent implements OnInit {
 		'name',
 		'trainer',
 		'startingDate',
-		'endingDate',
-		'delete',
+		// 'endingDate',
+		// 'delete',
 		'detail',
-		'export',
+		// 'export',
 	];
 
 	constructor(private auth: AuthService, private utils: UtilsService) {}

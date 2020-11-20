@@ -1,25 +1,22 @@
-<mat-card
-	*ngIf="workouts?.length > 0"
-	class="mat-elevation-z8"
->
+<mat-card *ngIf="workouts?.length > 0" class="mat-elevation-z5" id="card">
 	<mat-card-title>Allenamenti</mat-card-title>
 	<mat-card-content style="display: contents"
-		><table mat-table [dataSource]="workouts">
+		><table mat-table [dataSource]="workouts" id="workouts-table">
 			<!-- workout name -->
 			<ng-container matColumnDef="name">
-				<th mat-header-cell *matHeaderCellDef>Nome</th>
+				<th mat-header-cell *matHeaderCellDef>Nome Allenamento</th>
 				<td mat-cell *matCellDef="let w">{{ w.name }}</td>
 			</ng-container>
 			<!-- starting date -->
 			<ng-container matColumnDef="startingDate">
-				<th mat-header-cell *matHeaderCellDef>Inizio</th>
+				<th mat-header-cell *matHeaderCellDef>Data Inizio</th>
 				<td mat-cell *matCellDef="let w">
 					{{ w.startingDate ? (w.startingDate | date: 'dd/MM/yyyy') : '' }}
 				</td>
 			</ng-container>
 			<!-- ending date -->
 			<ng-container matColumnDef="endingDate">
-				<th mat-header-cell *matHeaderCellDef>Fine</th>
+				<th mat-header-cell *matHeaderCellDef>Data Fine</th>
 				<td mat-cell *matCellDef="let w">
 					{{ w.endingDate ? (w.endingDate | date: 'dd/MM/yyyy') : '' }}
 				</td>

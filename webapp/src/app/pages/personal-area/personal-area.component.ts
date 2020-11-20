@@ -20,4 +20,11 @@ export class PersonalAreaComponent implements OnInit {
 			this.client = client;
 		});
 	}
+
+	getClientWorkouts() {
+		this.auth
+			.readClientWorkouts(this.client)
+			.then((workouts: DigitalWorkout[]) => (this.workouts = workouts))
+			.catch(err => console.error(err));
+	}
 }
