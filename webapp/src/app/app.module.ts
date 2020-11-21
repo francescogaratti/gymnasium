@@ -79,6 +79,7 @@ import { ClientDataComponent } from './pages/diary/client-data/client-data.compo
 import { FitCheckComponent } from './pages/diary/fit-check/fit-check.component';
 import { TrainingCheckComponent } from './pages/diary/training-check/training-check.component';
 import { UserSelectComponent } from './components/user-select/user-select.component';
+import { DialogInfoComponent } from './components/dialog-info/dialog-info.component';
 
 @NgModule({
 	declarations: [
@@ -109,6 +110,7 @@ import { UserSelectComponent } from './components/user-select/user-select.compon
 		FitCheckComponent,
 		TrainingCheckComponent,
 		UserSelectComponent,
+		DialogInfoComponent,
 	],
 	imports: [
 		HttpClientModule,

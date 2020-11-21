@@ -1,8 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DigitalWorkout, Workout } from '@models/workout';
+import { Exercise } from '@models/exercise';
 import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogInfoComponent } from '@components/dialog-info/dialog-info.component';
 @Component({
 	selector: 'app-workout',
 	templateUrl: './workout.component.html',
@@ -14,7 +17,8 @@ export class WorkoutComponent implements OnInit {
 	constructor(
 		private activatedRoute: ActivatedRoute,
 		private auth: AuthService,
-		private utils: UtilsService
+		private utils: UtilsService,
+		public dialog: MatDialog
 	) {
 		this.id = this.activatedRoute.snapshot.queryParams['id'];
 	}
@@ -37,5 +41,16 @@ export class WorkoutComponent implements OnInit {
 				console.error(err);
 				this.utils.openSnackBar('Ops! Qualcosa è andato storto!', '💀💀💀');
 			});
+	}
+
+	openInfoNotes(exercise: Exercise) {
+		// const dialogRef =
+		this.dialog.open(DialogInfoComponent, {
+			width: '300px',
+			data: { title: exercise.name, messages: ['Note: ' + exercise.notes] },
+		});
+		// dialogRef.afterClosed().subscribe(result => {
+		// 	console.log('The dialog was closed');
+		// });
 	}
 }

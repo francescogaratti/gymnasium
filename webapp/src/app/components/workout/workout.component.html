@@ -1,94 +1,99 @@
 <mat-card *ngIf="workout" class="mat-elevation-z0">
-	<mat-card-title>
-		Allenamento: <em>{{ workout.name }}</em>
-	</mat-card-title>
 	<mat-card-actions>
 		<button mat-raised-button>Inizia Allenamento</button>
 		<button mat-raised-button (click)="downloadExcel(workout)">Download Excel</button>
 	</mat-card-actions>
 	<!-- list of workout sessions -->
-	<mat-accordion class="example-headers-align" multi>
-		<mat-expansion-panel *ngFor="let workout_session of workout.sessions">
-			<mat-expansion-panel-header>
-				<mat-panel-title>
-					{{ workout_session.name }}
-				</mat-panel-title>
-				<mat-panel-description>
-					{{ workout_session.notes ? workout_session.notes : '' }}
-				</mat-panel-description>
-			</mat-expansion-panel-header>
-			<form *ngFor="let exercise of workout_session.exercises">
-				<table class="example-full-width" cellspacing="0">
-					<tr>
-						<td>
-							<mat-form-field class="example-full-width">
-								<mat-label>Esercizio</mat-label>
-								<input
-									matInput
-									[value]="exercise.name"
+	<mat-tab-group mat-align-tabs="center">
+		<div *ngFor="let workout_session of workout.sessions">
+			<mat-tab [label]="workout_session.name">
+				<!-- workout session -->
+				<form>
+					<table
+						class="example-full-width"
+						cellspacing="0"
+						style="display: block; margin-top: 15px"
+					>
+						<tr
+							*ngFor="let exercise of workout_session.exercises"
+							style="text-align: center"
+						>
+							<td>
+								<mat-form-field class="field-large">
+									<mat-label>Esercizio</mat-label>
+									<input
+										matInput
+										[value]="exercise.name"
+										color="accent"
+										[readonly]="!exercise['edit']"
+									/>
+								</mat-form-field>
+							</td>
+							<td>
+								<mat-form-field
+									class="field-small"
 									color="accent"
-									[disabled]="!exercise['edit']"
-								/>
-							</mat-form-field>
-						</td>
-						<td>
-							<mat-form-field class="number" color="accent">
-								<mat-label>Sets</mat-label>
-								<input
-									matInput
-									type="number"
-									[value]="exercise.sets"
-									[disabled]="!exercise['edit']"
-								/>
-							</mat-form-field>
-						</td>
-						<td>
-							<mat-form-field class="number" color="accent">
-								<mat-label>Reps</mat-label>
-								<input
-									matInput
-									type="number"
-									[value]="exercise.reps"
-									[disabled]="!exercise['edit']"
-								/>
-							</mat-form-field>
-						</td>
-						<td>
-							<mat-form-field class="number" color="accent">
-								<mat-label>Min</mat-label>
-								<input
-									matInput
-									type="number"
-									[value]="exercise.rest.minutes"
-									[disabled]="!exercise['edit']"
-								/>
-							</mat-form-field>
-						</td>
-						<td>
-							<mat-form-field class="number" color="accent">
-								<mat-label>Sec</mat-label>
-								<input
-									matInput
-									type="number"
-									[value]="exercise.rest.seconds"
-									[disabled]="!exercise['edit']"
-								/>
-							</mat-form-field>
-						</td>
-						<td *ngIf="exercise.notes || exercise['edit']">
-							<mat-form-field class="example-full-width" color="accent">
-								<mat-label>Note</mat-label>
-								<input
-									matInput
-									[value]="exercise.notes"
+									style="text-align: center"
+								>
+									<mat-label>Sets</mat-label>
+									<input
+										matInput
+										type="text"
+										[value]="exercise.sets ? exercise.sets : '-'"
+										[readonly]="!exercise['edit']"
+									/>
+								</mat-form-field>
+							</td>
+							<td>
+								<mat-form-field
+									class="field-small"
 									color="accent"
-									[disabled]="!exercise['edit']"
-								/>
-							</mat-form-field>
-						</td>
-					</tr>
-				</table>
-			</form>
-		</mat-expansion-panel>
-	</mat-accordion>
+									style="text-align: center"
+								>
+									<mat-label>Reps</mat-label>
+									<input
+										matInput
+										type="text"
+										[value]="exercise.reps ? exercise.reps : '-'"
+										[readonly]="!exercise['edit']"
+									/>
+								</mat-form-field>
+							</td>
+							<td>
+								<mat-form-field
+									class="field-medium"
+									color="accent"
+									style="text-align: center"
+								>
+									<mat-label>Rest</mat-label>
+									<input
+										matInput
+										type="text"
+										[readonly]="!exercise['edit']"
+										[value]="
+											(exercise.rest.minutes
+												? exercise.rest.minutes + '\''
+												: '') +
+											(exercise.rest.seconds
+												? exercise.rest.seconds + '\'\''
+												: '')
+										"
+									/>
+								</mat-form-field>
+							</td>
+							<td *ngIf="exercise.notes">
+								<i
+									class="material-icons md-48"
+									[matTooltip]="exercise.notes"
+									style="cursor: pointer"
+									(click)="openInfoNotes(exercise)"
+									>more</i
+								>
+							</td>
+						</tr>
+					</table>
+				</form>
+			</mat-tab>
+		</div>
+	</mat-tab-group>
 </mat-card>
