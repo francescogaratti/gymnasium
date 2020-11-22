@@ -13,7 +13,6 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { LoginComponent } from './pages/login/login.component';
 
 import { environment } from '../environments/environment';
-console.info({ environment });
 
 /** @angular/material */
 import { MatToolbarModule } from '@angular/material/toolbar';
