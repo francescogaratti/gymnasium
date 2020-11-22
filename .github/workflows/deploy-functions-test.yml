@@ -22,7 +22,6 @@ jobs:
             # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
             - uses: actions/checkout@master
             - uses: actions/setup-node@master
-            - run: firebase use test
             - run: cd functions && npm install
             - run: cd functions && npm run build
             - uses: w9jds/firebase-action@master
