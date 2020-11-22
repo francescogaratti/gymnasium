@@ -3,6 +3,7 @@ require('firebase/database');
 require('firebase/firestore');
 
 const firebaseConfig = process.env.FIREBASE_CONFIG;
+
 if (firebaseConfig) firebase.initializeApp(JSON.parse(firebaseConfig));
 else console.error('No config available');
 

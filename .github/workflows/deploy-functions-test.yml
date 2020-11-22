@@ -30,3 +30,4 @@ jobs:
                   args: deploy --only functions --force
               env:
                   FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+                  PROJECT_ID: ultra-gymnasium-test
