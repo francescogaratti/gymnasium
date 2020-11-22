@@ -5,11 +5,10 @@ import * as firebase from 'firebase/app';
 import { auth } from 'firebase/app';
 import 'firebase/messaging';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 
 import * as firebaseui from 'firebaseui';
-
-import { AngularFireStorage } from '@angular/fire/storage';
 
 import { Subject } from 'rxjs';
 import { first } from 'rxjs/operators';
