@@ -23,7 +23,7 @@ jobs:
             - uses: actions/checkout@master
             - uses: actions/setup-node@master
             - run: cd webapp && npm install
-            - run: cd webapp && npm run pwa
+            - run: cd webapp && npm run pwa:test
             - uses: w9jds/firebase-action@master
               with:
                   args: deploy --only hosting
