@@ -1,29 +1,24 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 
+import * as firebase from 'firebase/app';
 import { auth } from 'firebase/app';
+import 'firebase/messaging';
 import { AngularFireAuth } from '@angular/fire/auth';
-import {
-	AngularFirestore,
-	AngularFirestoreDocument,
-	AngularFirestoreCollection,
-	DocumentReference,
-} from '@angular/fire/firestore';
+import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 
 import * as firebaseui from 'firebaseui';
 
-import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
-import { AngularFireFunctions } from '@angular/fire/functions';
-import { Router } from '@angular/router';
+import { AngularFireStorage } from '@angular/fire/storage';
 
-import { Observable, of, Subject } from 'rxjs';
-import { first, switchMap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { first } from 'rxjs/operators';
 
 import { User, Client, UserTypes } from '@models/user';
 // import { Client } from '@models/client';
 import { DigitalWorkout, StandardWorkout, Workout } from '@models/workout';
 import { HttpClient } from '@angular/common/http';
 import { ExerciseEntry } from '@models/exercise';
-import * as firebase from 'firebase';
 import { ClientService } from './client.service';
 import { TrainerService } from './trainer.service';
 import { AdminService } from './admin.service';
@@ -133,7 +128,7 @@ export class AuthService {
 		if (this.user) return this.user;
 		console.info('📘 - get user ' + id);
 		this.asyncOperation.next(true);
-		let user: User = await this.afs
+		this.user = await this.afs
 			.collection('users')
 			.doc(id)
 			.get()
@@ -143,10 +138,9 @@ export class AuthService {
 				console.error(err);
 				return null;
 			});
-		this.user = user;
 		this.user$.next(this.user);
 		this.asyncOperation.next(false);
-		return user;
+		return this.user;
 	}
 
 	public async readUsers(): Promise<User[]> {
@@ -445,8 +439,7 @@ export class AuthService {
 		firebase
 			.messaging()
 			.getToken({
-				vapidKey:
-					'BMqcZLLGiA35N58DuYCuSM5LzTu7omcbopC8VPEoeq0xJ7bgeVd_vT-I8S8hgligQcHnJ8e6uKorDIXQdQmEAOg',
+				vapidKey: environment.cloudMessagingKeyPair,
 			})
 			.then(async (currentToken: string) => {
 				if (currentToken) {
