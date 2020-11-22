@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "ultra-gymnasium"
+    "default": "ultra-gymnasium",
+    "test": "ultra-gymnasium-test"
   }
 }
