@@ -13,3 +13,5 @@ export * as excel from './create-excel';
 export * as welcome from './welcome';
 
 export * as notifications from './notifications';
+
+export * as pdf from './pdf';

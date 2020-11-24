@@ -21,6 +21,7 @@ import { ExerciseEntry } from '@models/exercise';
 import { ClientService } from './client.service';
 import { TrainerService } from './trainer.service';
 import { AdminService } from './admin.service';
+import { diary } from '@models/diary';
 
 // configuration for the ui
 const uiConfig = {
@@ -35,7 +36,8 @@ const uiConfig = {
 })
 export class AuthService {
 	adminUids: string[] = ['WRcrJKbtjpfe2nIQJpQWhkrwOdx2'];
-	ui: firebaseui.auth.AuthUI = new firebaseui.auth.AuthUI(auth()); // login firebase ui
+	ui: firebaseui.auth.AuthUI =
+		firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth()); // login firebase ui
 
 	// user$: Observable<User>; // future user
 	user$: Subject<User> = new Subject<User>(); // future user

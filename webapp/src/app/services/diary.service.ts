@@ -128,6 +128,41 @@ export class DiaryService {
 		return res;
 	}
 
+	async downloadPDF(filename: string, diaryId: string): Promise<boolean> {
+		this.asyncOperation.next(true);
+		// some costants & params
+		const generatePDFURL: string =
+			'http://localhost:5001/ultra-gymnasium-test/us-central1/pdf-generatePDF';
+		const requestOptions: Object = {
+			params: { diaryId: diaryId },
+			responseType: 'arrayBuffer',
+		};
+		// http request
+		let res: boolean = await this.http
+			.get<any>(generatePDFURL, requestOptions)
+			.toPromise()
+			.then((res: ArrayBuffer) => {
+				const link = document.createElement('a');
+				link.style.display = 'none';
+				document.body.appendChild(link);
+
+				const blob = new Blob([res]);
+				const objectURL = URL.createObjectURL(blob);
+
+				link.href = objectURL;
+				link.href = URL.createObjectURL(blob);
+				link.download = filename;
+				link.click();
+				return true;
+			})
+			.catch(err => {
+				console.error(err);
+				return false;
+			});
+		this.asyncOperation.next(false);
+		return res;
+	}
+
 	// *** DELETE ***
 
 	async deleteDiary(id: string): Promise<boolean> {

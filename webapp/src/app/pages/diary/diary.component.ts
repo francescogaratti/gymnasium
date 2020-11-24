@@ -124,6 +124,24 @@ export class DiaryComponent implements OnInit {
 			});
 	}
 
+	createPDF() {
+		const filename: string = 'Diario_' + this.diary.clientName.replace(' ', '_') + '.pdf';
+		this.diaryService
+			.downloadPDF('diario.pdf', this.diary.uid)
+			.then((value: boolean) => {
+				if (value) this.utils.openSnackBar('Conversione in file PDF riuscita!', '📝📝');
+				else
+					this.utils.openSnackBar(
+						'Si è verificato un errore durante la conversione del diario',
+						'Riprovare, per favore 🙏'
+					);
+			})
+			.catch(err => {
+				console.error(err);
+				this.utils.openSnackBar('Ops! Qualcosa è andato storto!', '💀💀💀');
+			});
+	}
+
 	findConsultant() {
 		if (this.diary && this.diary.consultantId)
 			this.selectedConsultant = this.trainers.find(
