@@ -34,10 +34,10 @@ export const generatePDF = functions.https.onRequest(
 		// Embed a font, set the font size, and render some text
 		doc.font('assets/fonts/FiraCode-Light.ttf')
 			.fontSize(20)
-			.text('Diario di ' + diary.clientName, 100, 100)
+			.text('Diario di ' + diary.clientName, 75, 100)
 			.fontSize(12)
-			.text('Questo è il tuo diario di allenamento in formato PDF', 20, 200)
-			.text('Si posso aggiungere molte righe facilmente tenendo un margine fisso', 20, 220);
+			.text('Questo è il tuo diario di allenamento in formato PDF', 75, 200)
+			.text('Si posso aggiungere molte righe facilmente tenendo un margine fisso', 75, 220);
 
 		doc.end();
 

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 // require dependencies
-import { AuthService } from '@services/auth.service.js';
 import { DiaryService } from '@services/diary.service';
 import { UtilsService } from '@services/utils.service.js';
 

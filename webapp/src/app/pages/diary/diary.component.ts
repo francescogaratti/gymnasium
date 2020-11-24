@@ -105,7 +105,7 @@ export class DiaryComponent implements OnInit {
 			});
 	}
 
-	downloadDiary() {
+	downloadDiaryExcel() {
 		// ? call the service for the download of the file
 		const filename: string = 'Diario_' + this.diary.clientName.replace(' ', '_') + '.xlsx';
 		this.diaryService
@@ -124,10 +124,10 @@ export class DiaryComponent implements OnInit {
 			});
 	}
 
-	createPDF() {
+	downloadDiaryPDF() {
 		const filename: string = 'Diario_' + this.diary.clientName.replace(' ', '_') + '.pdf';
 		this.diaryService
-			.downloadPDF('diario.pdf', this.diary.uid)
+			.downloadPDF(filename, this.diary.uid)
 			.then((value: boolean) => {
 				if (value) this.utils.openSnackBar('Conversione in file PDF riuscita!', '📝📝');
 				else

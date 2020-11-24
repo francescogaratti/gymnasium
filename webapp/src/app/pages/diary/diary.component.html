@@ -56,7 +56,7 @@
 			<button
 				mat-stroked-button
 				color="accent"
-				(click)="downloadDiary()"
+				(click)="downloadDiaryExcel()"
 				[disabled]="
 					!diary ||
 					!diary.clientData ||
@@ -65,7 +65,21 @@
 					!diary.consultantId
 				"
 			>
-				Download Diario
+				Download Diario Excel
+			</button>
+			<button
+				mat-stroked-button
+				color="accent"
+				(click)="downloadDiaryPDF()"
+				[disabled]="
+					!diary ||
+					!diary.clientData ||
+					!diary.fitCheck ||
+					!diary.clientId ||
+					!diary.consultantId
+				"
+			>
+				Download Diario PDF
 			</button>
 		</mat-card-actions>
 	</mat-card>
