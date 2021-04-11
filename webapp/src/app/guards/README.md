@@ -1,13 +1,18 @@
 # Guards
+
 ## Roles
+
 There are several roles in a gym:
-- _admin_ : full control (programmer)
-- _manager_ : full control **business flow** ( gym owner or partner )
-- _employee_ :
-  - _receptionist_
- - _client_
-   - _vip client_
+
+-   _admin_ : full control (programmer)
+-   _manager_ : full control **business flow** ( gym owner or partner )
+-   _employee_ :
+    -   _receptionist_
+-   _user_
+    -   _vip user_
+
 ## Hierarchy
+
 ```
 - admin
     - manager
@@ -16,49 +21,65 @@ There are several roles in a gym:
         - senior receptionist
             - receptionist
         - professionists (nail-artist, chiropratic, ...)
-    - vip client
-        - client
+    - vip user
+        - user
 ```
 
 ## Page access
+
 ### Admin
+
 All
+
 ### Manager
-- new client
-- new trainer
-- new receptionist
-- new professionist
-- clients
-- trainers
+
+-   new user
+-   new trainer
+-   new receptionist
+-   new professionist
+-   users
+-   trainers
+
 ### Senior Trainer
-- trainer plan 
-- new workout
-- new exercise
-- workouts
-- my workouts
-- my clients
+
+-   trainer plan
+-   new workout
+-   new exercise
+-   workouts
+-   my workouts
+-   my users
+
 ### Trainer
-- new workout
-- new exercise
-- my clients
-- my workouts
+
+-   new workout
+-   new exercise
+-   my users
+-   my workouts
+
 ### Senior receptionist
-- book
-- client
-- new client
+
+-   book
+-   user
+-   new user
+
 ### Receptionist
-- book
-- clients
-- new client
+
+-   book
+-   users
+-   new user
+
 ### Professionist
-- book
-- pro area
-### Vip Client
-- vip area
-- personal area
-- book
-### Client
-- personal area
-- book
 
+-   book
+-   pro area
 
+### Vip User
+
+-   vip area
+-   personal area
+-   book
+
+### User
+
+-   personal area
+-   book

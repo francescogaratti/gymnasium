@@ -16,8 +16,8 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 import { MatAccordion } from '@angular/material/expansion';
-import { Client } from '@models/user';
-import { ClientService } from '@services/client.service';
+import { User } from '@models/user';
+import { UserService } from '@services/user.service';
 
 @Component({
 	selector: 'app-new-workout',
@@ -43,9 +43,9 @@ export class NewWorkoutComponent implements OnInit {
 
 	excelFormControl: FormControl = new FormControl('', [Validators.required]);
 
-	clients: Client[] = [];
-	clientCtrl = new FormControl();
-	selected_client: Client = null;
+	users: User[] = [];
+	userCtrl = new FormControl();
+	selected_user: User = null;
 	URL: string = null;
 
 	templates: DigitalWorkout[] = [standard, starterUomo, starterDonna];
@@ -53,7 +53,7 @@ export class NewWorkoutComponent implements OnInit {
 
 	my_input: HTMLInputElement = null;
 
-	filteredClients: Observable<Client[]>;
+	filteredUsers: Observable<User[]>;
 
 	formsControl: FormControl[] = [
 		this.esercizioFormControl,
@@ -70,30 +70,29 @@ export class NewWorkoutComponent implements OnInit {
 		private auth: AuthService,
 		private utils: UtilsService,
 		public router: Router,
-		private clientService: ClientService
+		private userService: UserService
 	) {
-		this.filteredClients = this.clientCtrl.valueChanges.pipe(
+		this.filteredUsers = this.userCtrl.valueChanges.pipe(
 			startWith(''),
-			map(name => (name ? this._filterClientsByName(name) : this.clients.slice()))
+			map(name => (name ? this._filterUsersByName(name) : this.users.slice()))
 		);
-		// this.clientService.clients$.subscribe((clients: Client[]) => (this.clients = clients));
+		// this.userService.users$.subscribe((users: User[]) => (this.users = users));
 	}
 
-	private _filterClientsByName(name: string): Client[] {
-		return this.clients.filter(
-			(c: Client) =>
-				c.displayName.toLocaleLowerCase().indexOf(name.toLocaleLowerCase()) !== -1
+	private _filterUsersByName(name: string): User[] {
+		return this.users.filter(
+			(c: User) => c.displayName.toLocaleLowerCase().indexOf(name.toLocaleLowerCase()) !== -1
 		);
 	}
 
-	changeClient(): void {
-		this.selected_client = null;
-		this.clientCtrl.setValue(null);
+	changeUser(): void {
+		this.selected_user = null;
+		this.userCtrl.setValue(null);
 	}
 
 	ngOnInit(): void {
 		this.refreshInput();
-		this.clientService.readClients().then(clients => (this.clients = clients));
+		this.userService.readUsers().then(users => (this.users = users));
 	}
 
 	addExercise(ws: WorkoutSession) {
@@ -141,7 +140,7 @@ export class NewWorkoutComponent implements OnInit {
 
 	createWorkout() {
 		console.info('Create Workout');
-		console.info('\tClient:', this.selected_client.displayName);
+		console.info('\tUser:', this.selected_user.displayName);
 		console.info('\tTrainer:', this.auth.user.displayName);
 		console.info('\tWorkout Name:', this.nameFormControl.value);
 		console.info('\tSessions');
@@ -150,8 +149,8 @@ export class NewWorkoutComponent implements OnInit {
 			id: null,
 			name: this.nameFormControl.value,
 			creationDate: new Date().toUTCString(),
-			clientId: this.selected_client.uid,
-			clientName: this.selected_client.displayName,
+			userId: this.selected_user.uid,
+			userName: this.selected_user.displayName,
 			trainerId: this.auth.user.uid,
 			trainerName: this.auth.user.displayName,
 			startingDate: new Date(this.startingDateFormControl.value).toUTCString(),
@@ -161,7 +160,7 @@ export class NewWorkoutComponent implements OnInit {
 		console.info({ workout });
 
 		this.auth
-			.newWorkout(workout, this.selected_client)
+			.newWorkout(workout, this.selected_user)
 			.then((value: boolean) => {
 				if (value)
 					this.utils.openSnackBar("L'allenamento è stato salvato correttamente", '💪😉');
@@ -201,17 +200,17 @@ export class NewWorkoutComponent implements OnInit {
 		exercise = this.before_changes_exercise;
 	}
 
-	selectedValueChange(client: Client) {
-		this.selected_client = client;
+	selectedValueChange(user: User) {
+		this.selected_user = user;
 		this.URL = null;
 		this.auth
-			.getFile(client.photoURL)
+			.getFile(user.photoURL)
 			.then(url => (url ? (this.URL = url) : ''))
-			.catch(() => (this.URL = this.selected_client.photoURL));
+			.catch(() => (this.URL = this.selected_user.photoURL));
 	}
 
-	detailClient(client: Client) {
-		this.router.navigateByUrl('client?id=' + client.uid);
+	detailUser(user: User) {
+		this.router.navigateByUrl('user?id=' + user.uid);
 	}
 
 	uploadWorkout() {

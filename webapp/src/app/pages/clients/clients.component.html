@@ -1,12 +1,12 @@
 <mat-card [class.mat-elevation-z0]="true" style="margin-top: 30px" class="example-full-width">
 	<mat-card-actions align="center">
-		<button mat-raised-button color="warn" (click)="showClients()">Mostra Clienti</button>
+		<button mat-raised-button color="warn" (click)="showUsers()">Mostra Useri</button>
 	</mat-card-actions>
 	<mat-card-content
 		><table
-			*ngIf="clients && clients.length > 0"
+			*ngIf="users && users.length > 0"
 			mat-table
-			[dataSource]="clients"
+			[dataSource]="users"
 			class="mat-elevation-z8 half-width"
 		>
 			<!-- Name Column -->

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { Client, User, UserTypes } from '@models/user';
+import { User, User, UserTypes } from '@models/user';
 import { DigitalWorkout } from '@models/workout';
 import { AuthService } from '@services/auth.service';
 
@@ -12,11 +12,11 @@ import { AuthService } from '@services/auth.service';
 export class InfoComponent implements OnInit {
 	UserTypes = UserTypes;
 	@Input() user: User = null;
-	@Input() client: Client = null;
+	@Input() user: User = null;
 	@Output() workouts: EventEmitter<DigitalWorkout[]> = new EventEmitter();
 
 	originalUser: User = null;
-	originalClient: Client = null;
+	originalUser: User = null;
 	pendingChanges: boolean = false;
 
 	/** form controls */
@@ -32,34 +32,34 @@ export class InfoComponent implements OnInit {
 	constructor(private auth: AuthService) {}
 
 	ngOnInit(): void {
-		delete this.client.workouts;
-		if (this.client) this.originalClient = JSON.parse(JSON.stringify(this.client));
+		delete this.user.workouts;
+		if (this.user) this.originalUser = JSON.parse(JSON.stringify(this.user));
 		// set the form controls
-		this.nameFC.setValue(this.client.displayName.split(' ')[0]);
-		this.surnameFC.setValue(this.client.displayName.split(' ')[1]);
-		// client attributes
-		this.sexFC.setValue(this.client.sex ? 'man' : 'woman');
-		this.birthdayFC.setValue(new Date(this.client.birthday));
+		this.nameFC.setValue(this.user.displayName.split(' ')[0]);
+		this.surnameFC.setValue(this.user.displayName.split(' ')[1]);
+		// user attributes
+		this.sexFC.setValue(this.user.sex ? 'man' : 'woman');
+		this.birthdayFC.setValue(new Date(this.user.birthday));
 	}
 
 	backup(): void {
-		this.client = JSON.parse(JSON.stringify(this.originalClient));
+		this.user = JSON.parse(JSON.stringify(this.originalUser));
 	}
 	cancel(): void {
 		this.pendingChanges = false;
-		this.client = JSON.parse(JSON.stringify(this.originalClient));
+		this.user = JSON.parse(JSON.stringify(this.originalUser));
 	}
 	save(): void {
 		this.pendingChanges = false;
-		this.originalClient = JSON.parse(JSON.stringify(this.client));
+		this.originalUser = JSON.parse(JSON.stringify(this.user));
 	}
 	modify(): void {
 		this.pendingChanges = true;
 	}
 
-	getClientWorkouts() {
+	getUserWorkouts() {
 		this.auth
-			.readClientWorkouts(this.client)
+			.readUserWorkouts(this.user)
 			.then((workouts: DigitalWorkout[]) => {
 				this.workouts.emit(workouts);
 			})

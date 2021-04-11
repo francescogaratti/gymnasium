@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
-import { Client } from '@models/user';
+import { User } from '@models/user';
 import { Subject } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root',
 })
-export class ClientService {
-	// actual client
-	client$: Subject<Client> = new Subject<Client>(); // future client
-	private client: Client = null;
-	// all the clients
-	clients$: Subject<Client[]> = new Subject<Client[]>();
-	private clients: Client[] = null;
+export class UserService {
+	// actual user
+	user$: Subject<User> = new Subject<User>(); // future user
+	private user: User = null;
+	// all the users
+	users$: Subject<User[]> = new Subject<User[]>();
+	private users: User[] = null;
 
 	asyncOperation: Subject<boolean> = new Subject<boolean>(); // signal to the progress bar
 
@@ -20,59 +20,55 @@ export class ClientService {
 
 	// *** READ ***
 
-	/**
-	 *
-	 * @param id client id
-	 */
-	public async readClient(id: string): Promise<Client> {
-		if (this.client) return this.client;
-		console.info('📘 - read client ' + id);
+	public async readUser(id: string): Promise<User> {
+		if (this.user) return this.user;
+		console.info('📘 - read user ' + id);
 		this.asyncOperation.next(true);
-		this.client = await this.afs
-			.collection('clients')
+		this.user = await this.afs
+			.collection('users')
 			.doc(id)
 			.get()
 			.toPromise()
-			.then(snapshot => snapshot.data() as Client)
+			.then(snapshot => snapshot.data() as User)
 			.catch(err => {
 				console.error(err);
 				return null;
 			});
-		this.client$.next(this.client);
+		this.user$.next(this.user);
 		this.asyncOperation.next(false);
-		return this.client;
+		return this.user;
 	}
 
-	public async readClients(): Promise<Client[]> {
-		if (this.clients) return this.clients;
-		console.info('📘 - read clients');
+	public async readUsers(): Promise<User[]> {
+		if (this.users) return this.users;
+		console.info('📘 - read users');
 		this.asyncOperation.next(true);
-		this.clients = await this.afs
-			.collection('clients')
+		this.users = await this.afs
+			.collection('users')
 			.get()
 			.toPromise()
 			.then(snapshot => {
-				let values: Client[] = [];
-				snapshot.forEach(doc => values.push(doc.data() as Client));
+				let values: User[] = [];
+				snapshot.forEach(doc => values.push(doc.data() as User));
 				return values;
 			})
 			.catch(err => {
 				console.error(err);
 				return [];
 			});
-		this.clients$.next(this.clients);
+		this.users$.next(this.users);
 		this.asyncOperation.next(false);
-		return this.clients;
+		return this.users;
 	}
 
 	// *** POST ***
 
-	async newClient(client: Client): Promise<string> {
+	async newUser(user: User): Promise<string> {
 		this.asyncOperation.next(true);
 		console.info('📗 - write');
 		let res: string = await this.afs
-			.collection('clients')
-			.add(client)
+			.collection('users')
+			.add(user)
 			.then(async (docRef: DocumentReference) => docRef.id)
 			.catch(err => {
 				console.error(err);
@@ -82,13 +78,13 @@ export class ClientService {
 		return res;
 	}
 
-	async updateClient(client: Client, deepCopy?: boolean): Promise<boolean> {
+	async updateUser(user: User, deepCopy?: boolean): Promise<boolean> {
 		this.asyncOperation.next(true);
-		console.info('📗 - update client');
+		console.info('📗 - update user');
 		let res: boolean = await this.afs
-			.collection('clients')
-			.doc(client.uid)
-			.set(deepCopy ? JSON.parse(JSON.stringify(client)) : client, { merge: true })
+			.collection('users')
+			.doc(user.uid)
+			.set(deepCopy ? JSON.parse(JSON.stringify(user)) : user, { merge: true })
 			.then(() => true)
 			.catch(err => {
 				console.error(err);
@@ -98,16 +94,16 @@ export class ClientService {
 		return res;
 	}
 
-	async newClientWorkout(client: Client, workoutId: string): Promise<boolean> {
+	async newUserWorkout(user: User, workoutId: string): Promise<boolean> {
 		this.asyncOperation.next(true);
 		let new_workout_ref: DocumentReference = this.afs.collection('workouts').doc(workoutId).ref;
-		if (client.workouts) client.workouts.push(new_workout_ref);
-		else client.workouts = [new_workout_ref];
+		if (user.workouts) user.workouts.push(new_workout_ref);
+		else user.workouts = [new_workout_ref];
 		console.info('📗 - append workout');
 		let res: boolean = await this.afs
-			.collection('clients')
-			.doc(client.uid)
-			.set({ workouts: client.workouts }, { merge: true })
+			.collection('users')
+			.doc(user.uid)
+			.set({ workouts: user.workouts }, { merge: true })
 			.then(() => true)
 			.catch(err => {
 				console.error(err);
@@ -119,11 +115,11 @@ export class ClientService {
 
 	// *** DELETE ***
 
-	async deleteClient(id: string): Promise<boolean> {
+	async deleteUser(id: string): Promise<boolean> {
 		this.asyncOperation.next(true);
 		console.info('📕 - delete');
 		let res: boolean = await this.afs
-			.collection('clients')
+			.collection('users')
 			.doc(id)
 			.delete()
 			.then(() => true)
@@ -137,15 +133,15 @@ export class ClientService {
 
 	// *** GETTER / SETTER ***
 
-	public getClient(): Client {
-		return this.client ? this.client : null;
+	public getUser(): User {
+		return this.user ? this.user : null;
 	}
 
-	public isClient(): boolean {
-		return this.client ? true : false;
+	public isUser(): boolean {
+		return this.user ? true : false;
 	}
 
-	public getClients(): Client[] {
-		return this.clients ? this.clients : [];
+	public getUsers(): User[] {
+		return this.users ? this.users : [];
 	}
 }

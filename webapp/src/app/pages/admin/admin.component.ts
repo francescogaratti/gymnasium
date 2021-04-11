@@ -60,7 +60,7 @@ export class AdminComponent implements OnInit {
 	}
 
 	deleteAdmin(): void {
-		this.selected_user.type = UserTypes.client;
+		this.selected_user.type = UserTypes.user;
 		this.auth.updateUser(this.selected_user);
 		this.adminService
 			.deleteAdmin(this.selected_user.uid)

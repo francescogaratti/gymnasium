@@ -1,60 +1,60 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Client } from '@models/user';
-import { ClientService } from '@services/client.service';
+import { User } from '@models/user';
+import { UserService } from '@services/user.service';
 import { UtilsService } from '@services/utils.service';
 
 @Component({
-	selector: 'app-clients',
-	templateUrl: './clients.component.html',
-	styleUrls: ['./clients.component.sass'],
+	selector: 'app-users',
+	templateUrl: './users.component.html',
+	styleUrls: ['./users.component.sass'],
 })
-export class ClientsComponent implements OnInit {
+export class UsersComponent implements OnInit {
 	displayedColumns: string[] = ['name', 'fiscalCode', 'delete', 'detail'];
-	clients: Client[] = [];
+	users: User[] = [];
 	constructor(
 		private utils: UtilsService,
 		public router: Router,
-		private clientService: ClientService
+		private userService: UserService
 	) {}
 
 	ngOnInit(): void {}
 
-	showClients() {
-		this.clientService.readClients().then((clients: Client[]) => {
-			this.clients = clients;
-			if (!this.clients || this.clients.length == 0)
+	showUsers() {
+		this.userService.readUsers().then((users: User[]) => {
+			this.users = users;
+			if (!this.users || this.users.length == 0)
 				this.utils.openSnackBar(
-					'Nessun cliente presente.',
-					'Per inserirne uno cliccare su "Nuovo Cliente"',
+					'Nessun usere presente.',
+					'Per inserirne uno cliccare su "Nuovo Usere"',
 					10000
 				);
 		});
 	}
 
-	remove(client: Client) {
-		this.clientService
-			.deleteClient(client.uid)
+	remove(user: User) {
+		this.userService
+			.deleteUser(user.uid)
 			.then(res => {
 				if (res) {
 					this.utils.openSnackBar(
-						'Il cliente ' + client.displayName + ' è stato correttamente rimosso',
+						'Il usere ' + user.displayName + ' è stato correttamente rimosso',
 						'👋👋'
 					);
-					this.showClients();
+					this.showUsers();
 				}
 			})
 			.catch(err => {
 				console.error(err);
 				this.utils.openSnackBar(
-					"Si è verificato un errore durante l'eliminazione del cliente " +
-						client.displayName,
+					"Si è verificato un errore durante l'eliminazione del usere " +
+						user.displayName,
 					'Si prega di riprovare.'
 				);
 			});
 	}
 
-	detail(client: Client) {
-		this.router.navigateByUrl('client?id=' + client.uid);
+	detail(user: User) {
+		this.router.navigateByUrl('user?id=' + user.uid);
 	}
 }

@@ -50,25 +50,17 @@ import { PersonalAreaComponent } from './pages/personal-area/personal-area.compo
 import { MenuComponent } from '@components/menu/menu.component';
 import { ProgressBarComponent } from '@components/progress-bar/progress-bar.component';
 import { CreateWorkoutRoutineComponent } from './pages/create-workout-routine/create-workout-routine.component';
-import { ClientComponent } from './pages/client/client.component';
-import { ClientsComponent } from './pages/clients/clients.component';
 import { NewWorkoutComponent } from './pages/new-workout/new-workout.component';
 import { ExercisesComponent } from './pages/exercises/exercises.component';
 import { WorkoutComponent } from '@components/workout/workout.component';
 import { HttpClientModule } from '@angular/common/http';
 import { NewClientComponent } from './pages/new-client/new-client.component';
-import { NewTrainerComponent } from './pages/new-trainer/new-trainer.component';
 import { NewExerciseComponent } from './pages/new-exercise/new-exercise.component';
-import { BookComponent } from './pages/book/book.component';
 import { AdminComponent } from './pages/admin/admin.component';
 import { MobileSidenavComponent } from './components/mobile-sidenav/mobile-sidenav.component';
 import { InfoComponent } from './components/info/info.component';
 import { UploadPhotoComponent } from './components/upload-photo/upload-photo.component';
 import { WorkoutsComponent } from './components/workouts/workouts.component';
-import { DiaryComponent } from './pages/diary/diary.component';
-import { ClientDataComponent } from './pages/diary/client-data/client-data.component';
-import { FitCheckComponent } from './pages/diary/fit-check/fit-check.component';
-import { TrainingCheckComponent } from './pages/diary/training-check/training-check.component';
 import { UserSelectComponent } from './components/user-select/user-select.component';
 import { DialogInfoComponent } from './components/dialog-info/dialog-info.component';
 import { TrainComponent } from './pages/train/train.component';
@@ -84,24 +76,16 @@ import { LiveWorkoutComponent } from './components/live-workout/live-workout.com
 		MenuComponent,
 		ProgressBarComponent,
 		CreateWorkoutRoutineComponent,
-		ClientComponent,
-		ClientsComponent,
 		NewWorkoutComponent,
 		ExercisesComponent,
 		WorkoutComponent,
 		NewClientComponent,
-		NewTrainerComponent,
 		NewExerciseComponent,
-		BookComponent,
 		AdminComponent,
 		MobileSidenavComponent,
 		InfoComponent,
 		UploadPhotoComponent,
 		WorkoutsComponent,
-		DiaryComponent,
-		ClientDataComponent,
-		FitCheckComponent,
-		TrainingCheckComponent,
 		UserSelectComponent,
 		DialogInfoComponent,
 		TrainComponent,

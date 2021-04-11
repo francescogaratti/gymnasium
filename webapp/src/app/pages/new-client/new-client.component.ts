@@ -1,13 +1,11 @@
 import { Component, OnChanges, OnInit, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, FormControl, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Client, User, UserTypes } from '@models/user';
-// import { Client } from '@models/client';
+import { User } from '@models/user';
 import { AuthService } from '@services/auth.service';
-import { ClientService } from '@services/client.service';
+import { UserService } from '@services/user.service';
 import { UtilsService } from '@services/utils.service';
 import { Observable } from 'rxjs/internal/Observable';
-import { map, startWith } from 'rxjs/operators';
 
 export function checkFiscalCode(nameRe: RegExp): ValidatorFn {
 	return (control: AbstractControl): { [key: string]: any } | null => {
@@ -19,25 +17,25 @@ export function checkFiscalCode(nameRe: RegExp): ValidatorFn {
 const fiscalCodePattern: string =
 	'(?:[\\dLMNP-V]{2}(?:[A-EHLMPR-T](?:[04LQ][1-9MNP-V]|[15MR][\\dLMNP-V]|[26NS][0-8LMNP-U])|[DHPS][37PT][0L]|[ACELMRT][37PT][01LM]|[AC-EHLMPR-T][26NS][9V])|(?:[02468LNQSU][048LQU]|[13579MPRTV][26NS])B[26NS][9V])(?:[A-MZ][1-9MNP-V][\\dLMNP-V]{2}|[A-M][0L](?:[1-9MNP-V][\\dLMNP-V]|[0L][1-9MNP-V]))';
 @Component({
-	selector: 'app-new-client',
-	templateUrl: './new-client.component.html',
-	styleUrls: ['./new-client.component.sass'],
+	selector: 'app-new-user',
+	templateUrl: './new-user.component.html',
+	styleUrls: ['./new-user.component.sass'],
 	encapsulation: ViewEncapsulation.None,
 })
 export class NewClientComponent implements OnInit {
-	client: Client = null;
+	user: User = null;
 	selected_user: User = null;
-	// all clients & users
-	clients: Client[] = [];
+	// all users & users
 	users: User[] = [];
-	usersNotClients: User[] = [];
+	clients: User[] = [];
+	usersNotUsers: User[] = [];
 
 	filteredUsers: Observable<User[]>;
 
-	notShowClients: boolean = false; // flag to toggle already clients visibility
-	alreadyClient: boolean = false;
+	notShowUsers: boolean = false; // flag to toggle already users visibility
+	alreadyUser: boolean = false;
 
-	/** input client */
+	/** input user */
 
 	nomeFormControl: FormControl = new FormControl('', [Validators.required]);
 	cognomeFormControl: FormControl = new FormControl('', [Validators.required]);
@@ -92,38 +90,38 @@ export class NewClientComponent implements OnInit {
 		private auth: AuthService,
 		private utils: UtilsService,
 		public router: Router,
-		private clientService: ClientService
+		private userService: UserService
 	) {}
 
 	ngOnInit(): void {
-		this.resetClient();
-		this.readUsersClients();
+		this.resetUser();
+		this.readUsersUsers();
 	}
 
-	async readUsersClients() {
+	async readUsersUsers() {
 		this.users = await this.auth.readUsers();
-		this.clients = await this.clientService.readClients();
-		this.usersNotClients = [];
+		this.users = await this.userService.readUsers();
+		this.usersNotUsers = [];
 		if (this.users && this.users.length > 0) {
-			if (this.clients && this.clients.length > 0)
+			if (this.users && this.users.length > 0)
 				this.users.forEach((u: User) => {
-					let found = this.clients.find((c: Client) => {
+					let found = this.users.find((c: User) => {
 						// console.info(c.uid, u.uid);
 						return c.uid == u.uid;
 					});
-					if (!found) this.usersNotClients.push(u);
+					if (!found) this.usersNotUsers.push(u);
 				});
-			else this.usersNotClients = JSON.parse(JSON.stringify(this.users));
+			else this.usersNotUsers = JSON.parse(JSON.stringify(this.users));
 		}
 	}
 
-	toggleNotShowClients() {
-		this.notShowClients = !this.notShowClients;
+	toggleNotShowUsers() {
+		this.notShowUsers = !this.notShowUsers;
 	}
 
 	private _filterUsersByName(name: string): User[] {
-		if (this.notShowClients)
-			return this.usersNotClients.filter(
+		if (this.notShowUsers)
+			return this.usersNotUsers.filter(
 				(u: User) =>
 					u.displayName.toLocaleLowerCase().indexOf(name.toLocaleLowerCase()) !== -1
 			);
@@ -134,7 +132,7 @@ export class NewClientComponent implements OnInit {
 			);
 	}
 
-	async onSelectClient(user: User) {
+	async onSelectUser(user: User) {
 		this.selected_user = user;
 		this.nomeFormControl.setValue(this.selected_user.displayName.split(' ')[0]);
 		this.cognomeFormControl.setValue(this.selected_user.displayName.split(' ')[1]);
@@ -147,26 +145,26 @@ export class NewClientComponent implements OnInit {
 		this.photoFormControl.setValue(
 			this.selected_user.photoURL ? this.selected_user.photoURL : path
 		);
-		// check if it's already a client
-		let client = this.clients.find((c: Client) => c.uid == user.uid);
-		if (client) {
-			this.alreadyClient = true;
+		// check if it's already a user
+		let existing_user = this.users.find((c: User) => c.uid == user.uid);
+		if (existing_user) {
+			this.alreadyUser = true;
 			// anagraphics
-			this.birthdayFormControl.setValue(new Date(client.birthday));
-			this.sexFormControl.setValue(client.sex ? 'man' : 'woman');
-			this.birthCountryFC.setValue(client.birthCountry);
-			this.birthCityFC.setValue(client.birthCity);
-			this.codiceFiscaleFormControl.setValue(client.fiscalCode);
+			this.birthdayFormControl.setValue(new Date(existing_user.birthday));
+			this.sexFormControl.setValue(existing_user.sex ? 'man' : 'woman');
+			this.birthCountryFC.setValue(existing_user.birthCountry);
+			this.birthCityFC.setValue(existing_user.birthCity);
+			this.codiceFiscaleFormControl.setValue(existing_user.fiscalCode);
 			// residence
-			this.stateFormControl.setValue(client.address.state);
-			this.provinceFormControl.setValue(client.address.province);
-			this.cityFormControl.setValue(client.address.city);
-			this.postalCodeFormControl.setValue(client.address.postalCode);
-			this.streetFormControl.setValue(client.address.street);
-			this.numberFC.setValue(client.address.number);
+			this.stateFormControl.setValue(existing_user.address.state);
+			this.provinceFormControl.setValue(existing_user.address.province);
+			this.cityFormControl.setValue(existing_user.address.city);
+			this.postalCodeFormControl.setValue(existing_user.address.postalCode);
+			this.streetFormControl.setValue(existing_user.address.street);
+			this.numberFC.setValue(existing_user.address.number);
 			// notifications
-			this.mailNotifications = client.notifications.mail;
-			this.pushNotifications = client.notifications.push;
+			this.mailNotifications = existing_user.notifications.mail;
+			this.pushNotifications = existing_user.notifications.push;
 		}
 	}
 
@@ -174,22 +172,21 @@ export class NewClientComponent implements OnInit {
 		this.imageFile = file;
 	}
 
-	async addClient() {
-		this.selected_user.type = UserTypes.client;
+	async addUser() {
 		// save the new typed name
 		this.selected_user.displayName =
 			this.nomeFormControl.value + ' ' + this.cognomeFormControl.value;
-		this.client = new Client(this.selected_user);
+		this.user = new User(this.selected_user);
 		// anagraphics
-		this.client.displayName = this.nomeFormControl.value + ' ' + this.cognomeFormControl.value;
-		this.client.birthday = new Date(this.birthdayFormControl.value).toUTCString();
-		this.client.sex = this.sexFormControl.value == 'man' ? true : false;
-		this.client.birthCountry = this.birthCountryFC.value;
-		this.client.birthCity = this.birthCityFC.value;
-		this.client.fiscalCode = this.codiceFiscaleFormControl.value;
+		this.user.displayName = this.nomeFormControl.value + ' ' + this.cognomeFormControl.value;
+		this.user.birthday = new Date(this.birthdayFormControl.value).toUTCString();
+		this.user.sex = this.sexFormControl.value == 'man' ? true : false;
+		this.user.birthCountry = this.birthCountryFC.value;
+		this.user.birthCity = this.birthCityFC.value;
+		this.user.fiscalCode = this.codiceFiscaleFormControl.value;
 
 		// residence information
-		this.client.address = {
+		this.user.address = {
 			state: this.stateFormControl.value,
 			province: this.provinceFormControl.value,
 			city: this.cityFormControl.value,
@@ -198,80 +195,53 @@ export class NewClientComponent implements OnInit {
 			number: this.numberFC.value,
 		};
 		// notifications
-		this.client.notifications = {
+		this.user.notifications = {
 			mail: this.mailNotifications,
 			push: this.pushNotifications,
 		};
 
-		this.client.email = this.emailFC.value;
+		this.user.email = this.emailFC.value;
 
-		console.info('Adding new client: ', this.client);
+		console.info('Adding new user: ', this.user);
 		if (this.imageFile)
 			await this.auth
-				.uploadImageToUser(this.imageFile, this.client.uid)
+				.uploadImageToUser(this.imageFile, this.user.uid)
 				.then(
 					path => {
-						this.client.photoPath = path ? path : '';
-						this.selected_user.photoPath = this.client.photoPath;
+						this.user.photoPath = path ? path : '';
+						this.selected_user.photoPath = this.user.photoPath;
 					} // link to new photoURL
 				)
-				.catch(err => console.error('uploadImageToClient', err));
-		this.updateClient(this.client);
+				.catch(err => console.error('uploadImageToUser', err));
+		this.updateUser(this.user);
 	}
 
-	async updateClient(client: Client): Promise<void> {
+	async updateUser(user: User): Promise<void> {
 		this.auth.updateUser(this.selected_user);
-		return this.clientService
-			.updateClient(client, true)
+		return this.userService
+			.updateUser(user, true)
 			.then((value: boolean) => {
 				if (value) {
 					this.utils.openSnackBar(
-						'Il cliente ' + client.displayName + ' è stato aggiunto con successo',
+						"L'utente " + user.displayName + ' è stato aggiunto con successo',
 						'😉'
 					);
-					this.resetClient();
+					this.resetUser();
 				} else
 					this.utils.openSnackBar(
-						'Attenzione, si è verificato un errore nel salvataggio del nuovo cliente',
+						'Attenzione, si è verificato un errore nel salvataggio del nuovo usere',
 						'Riprovare'
 					);
 			})
-			.catch(err => console.error('updateClient', err));
+			.catch(err => console.error('updateUser', err));
 	}
 
-	resetClient(): void {
-		this.alreadyClient = false;
+	resetUser(): void {
+		this.alreadyUser = false;
 		this.selected_user = null;
-		this.client = new Client();
+		this.user = new User();
 		this.pushNotifications = false;
 		this.mailNotifications = false;
 		this.formsControl.forEach((form: FormControl) => form.setValue(null));
 	}
-
-	// uploadPhoto() {
-	// 	this.my_input.setAttribute('type', 'file');
-	// 	this.my_input.click();
-	// }
-
-	// getFiles() {
-	// 	const file = this.my_input.files[0];
-	// 	const url = URL.createObjectURL(file);
-	// 	this.photoFormControl.setValue(String(url));
-	// 	let photoProfile: HTMLImageElement = document.getElementById(
-	// 		'photo-profile'
-	// 	) as HTMLImageElement;
-	// 	photoProfile.src = url;
-	// 	photoProfile.hidden = false;
-	// }
-
-	// removePhoto() {
-	// 	let photoProfile: HTMLImageElement = document.getElementById(
-	// 		'photo-profile'
-	// 	) as HTMLImageElement;
-	// 	photoProfile.hidden = true;
-	// 	photoProfile.src = '';
-	// 	this.my_input.remove();
-	// 	this.my_input = document.createElement('input');
-	// 	this.my_input.onchange = () => this.getFiles();
-	// }
 }

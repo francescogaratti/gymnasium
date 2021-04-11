@@ -1,7 +1,7 @@
-<mat-card *ngIf="client" align="center" class="mat-elevation-z0">
+<mat-card *ngIf="user" align="center" class="mat-elevation-z0">
 	<mat-tab-group mat-align-tabs="center">
 		<mat-tab label="Dati Personali">
-			<app-info id="info" [client]="client" (workouts)="workouts = $event"></app-info>
+			<app-info id="info" [user]="user" (workouts)="workouts = $event"></app-info>
 			<!-- workouts -->
 		</mat-tab>
 		<mat-tab label="I miei Allenamenti">
@@ -9,7 +9,7 @@
 				mat-raised-button
 				color="primary"
 				style="margin: 20px auto"
-				(click)="getClientWorkouts()"
+				(click)="getUserWorkouts()"
 			>
 				I miei Allenamenti
 			</button>

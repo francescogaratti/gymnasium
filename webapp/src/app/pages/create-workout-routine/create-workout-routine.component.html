@@ -8,19 +8,19 @@
 				<mat-icon>fitness_center</mat-icon>
 			</ng-template>
 			<form [formGroup]="workoutFormGroup">
-				<mat-step [stepControl]="client">
-					<ng-template matStepLabel>Client</ng-template>
+				<mat-step [stepControl]="user">
+					<ng-template matStepLabel>User</ng-template>
 					<mat-form-field>
-						<mat-label>Choose a client</mat-label>
-						<mat-select formControlName="client">
+						<mat-label>Choose a user</mat-label>
+						<mat-select formControlName="user">
 							<h3>
-								<mat-option *ngFor="let client of clients" [value]="client.uid">
-									{{ client.displayName | titlecase }}
+								<mat-option *ngFor="let user of users" [value]="user.uid">
+									{{ user.displayName | titlecase }}
 								</mat-option>
 							</h3>
 						</mat-select>
-						<mat-error *ngIf="client.invalid && client.touched"
-							>You must select a client</mat-error
+						<mat-error *ngIf="user.invalid && user.touched"
+							>You must select a user</mat-error
 						>
 					</mat-form-field>
 					<div>
@@ -28,8 +28,7 @@
 							mat-button
 							matStepperNext
 							[disabled]="
-								client.value == null ||
-								(client.invalid && (client.dirty || client.touched))
+								user.value == null || (user.invalid && (user.dirty || user.touched))
 							"
 							color="primary"
 							mat-raised-button
@@ -181,8 +180,8 @@
 				<mat-step>
 					<ng-template matStepLabel>Overview</ng-template>
 					<mat-form-field class="full-width">
-						<mat-label>👤 Client</mat-label>
-						<input matInput [value]="client.value?.displayName" disabled />
+						<mat-label>👤 User</mat-label>
+						<input matInput [value]="user.value?.displayName" disabled />
 					</mat-form-field>
 					<mat-form-field class="full-width">
 						<mat-label>📅 Starting Date</mat-label>

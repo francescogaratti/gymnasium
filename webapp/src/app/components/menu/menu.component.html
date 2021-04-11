@@ -73,7 +73,7 @@
 				Nuovo Istruttore
 				<i class="material-icons-two-tone">person_add</i>
 			</button> -->
-			<!-- new client -->
+			<!-- new user -->
 			<!-- <button
 				*ngIf="
 					user &&
@@ -83,10 +83,10 @@
 				"
 				color="primary"
 				mat-raised-button
-				(click)="router.navigateByUrl('new-client')"
+				(click)="router.navigateByUrl('new-user')"
 				class="menu-tab"
 			>
-				Nuovo Cliente
+				Nuovo Usere
 				<i class="material-icons-two-tone">person_add</i>
 			</button> -->
 			<!-- train -->
@@ -113,7 +113,7 @@
 			</button>
 			<!-- book -->
 			<!-- <button
-				*ngIf="user && (user.type == UserTypes.admin || user.type == UserTypes.client)"
+				*ngIf="user && (user.type == UserTypes.admin || user.type == UserTypes.user)"
 				color="primary"
 				mat-raised-button
 				(click)="router.navigateByUrl('book')"

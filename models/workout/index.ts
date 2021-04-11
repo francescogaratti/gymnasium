@@ -5,11 +5,8 @@ export interface Workout {
 
 	creationDate: string;
 
-	clientId: string;
-	clientName: string;
-
-	trainerId: string;
-	trainerName: string;
+	userId: string;
+	userName: string;
 
 	startingDate: string;
 	endingDate: string;
@@ -51,10 +48,8 @@ export const standard: DigitalWorkout = {
 	id: '',
 	name: 'Primo Allenamento Test',
 	creationDate: '01-01-2000',
-	clientId: '',
-	clientName: '',
-	trainerId: '',
-	trainerName: '',
+	userId: '',
+	userName: '',
 	startingDate: '01-01-2000',
 	endingDate: '01-01-2000',
 	sessions: [
@@ -196,10 +191,8 @@ export const starterUomo: DigitalWorkout = {
 	id: '',
 	name: 'Starter - Uomo',
 	creationDate: '',
-	clientId: '',
-	clientName: '',
-	trainerId: '',
-	trainerName: '',
+	userId: '',
+	userName: '',
 	startingDate: '',
 	endingDate: '',
 	sessions: [
@@ -312,10 +305,8 @@ export const starterDonna: DigitalWorkout = {
 	id: '',
 	name: 'Starter - Donna',
 	creationDate: '',
-	clientId: '',
-	clientName: '',
-	trainerId: '',
-	trainerName: '',
+	userId: '',
+	userName: '',
 	startingDate: '',
 	endingDate: '',
 	sessions: [

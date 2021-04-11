@@ -5,58 +5,58 @@
 		style="float: left; overflow: hidden; width: 30%; box-sizing: border-box"
 		class="example-full-width"
 	>
-		<mat-card-title>Scegli il Cliente</mat-card-title>
+		<mat-card-title>Scegli il Usere</mat-card-title>
 		<mat-card-content>
 			<form class="example-form" align="center">
-				<div *ngIf="selected_client && URL" align="center">
+				<div *ngIf="selected_user && URL" align="center">
 					<img
-						(click)="detailClient(selected_client)"
+						(click)="detailUser(selected_user)"
 						[src]="URL"
 						alt=""
 						style="border-radius: 100%; width: 100px; height: 100px; cursor: pointer"
 					/>
 					<!-- <p class="small">
-						<button mat-icon-button color="accent" (click)="changeClient()">
+						<button mat-icon-button color="accent" (click)="changeUser()">
 							<mat-icon style="cursor: pointer">edit</mat-icon>
 						</button>
 					</p> -->
 				</div>
 				<mat-form-field class="example-full-width" align="center">
-					<mat-label>Cliente</mat-label>
+					<mat-label>Usere</mat-label>
 					<input
 						matInput
 						placeholder="Digita per filtrare..."
-						aria-label="Client"
+						aria-label="User"
 						[matAutocomplete]="auto"
-						[formControl]="clientCtrl"
+						[formControl]="userCtrl"
 					/>
 					<button
 						mat-button
-						*ngIf="selected_client"
+						*ngIf="selected_user"
 						matSuffix
 						mat-icon-button
 						aria-label="Clear"
-						(click)="changeClient()"
+						(click)="changeUser()"
 					>
 						<mat-icon color="accent">close</mat-icon>
 					</button>
 					<mat-autocomplete #auto="matAutocomplete">
 						<mat-option
-							*ngFor="let client of filteredClients | async"
-							[value]="client.displayName"
-							(onSelectionChange)="selectedValueChange(client)"
+							*ngFor="let user of filteredUsers | async"
+							[value]="user.displayName"
+							(onSelectionChange)="selectedValueChange(user)"
 						>
 							<img
 								class="example-option-img"
 								aria-hidden
-								[src]="client.photoURL"
+								[src]="user.photoURL"
 								height="25"
 								style="border-radius: 100%"
 							/>
-							<span>{{ client.displayName }}</span> |
+							<span>{{ user.displayName }}</span> |
 							<small>
 								<em>
-									{{ client.email }}
+									{{ user.email }}
 								</em>
 							</small>
 						</mat-option>
@@ -447,7 +447,7 @@
 				color="primary"
 				(click)="createWorkout()"
 				[disabled]="
-					!selected_client ||
+					!selected_user ||
 					!workout_sessions ||
 					workout_sessions.length == 0 ||
 					nameFormControl.invalid ||

@@ -11,10 +11,10 @@ import {
 import { MatHorizontalStepper } from '@angular/material/stepper';
 import { AuthService } from '@services/auth.service';
 import { Workout, StandardWorkout } from '@models/workout';
-// import { Client, mocks as clients } from '@models/client';
+// import { User, mocks as users } from '@models/user';
 import { UtilsService } from '@services/utils.service';
-import { Client } from '@models/user';
-import { ClientService } from '@services/client.service';
+import { User } from '@models/user';
+import { UserService } from '@services/user.service';
 // import { UtilsService } from '@services/utils.service';
 // import { Settings } from '@models/settings';
 
@@ -38,7 +38,7 @@ function checkDate(utc: string, incomplete: Date): boolean {
 })
 export class CreateWorkoutRoutineComponent implements OnInit {
 	// workouts: Workout[] = [];
-	clients: Client[] = [];
+	users: User[] = [];
 	minDate: Date;
 	maxDate: Date;
 	workoutFormGroup: FormGroup;
@@ -49,25 +49,25 @@ export class CreateWorkoutRoutineComponent implements OnInit {
 		private fb: FormBuilder,
 		public auth: AuthService,
 		private utils: UtilsService,
-		private clientService: ClientService
+		private userService: UserService
 	) {
 		this.maxDate = new Date();
 		this.minDate = new Date();
-		this.clientService.clients$.subscribe((clients: Client[]) => (this.clients = clients));
+		this.userService.users$.subscribe((users: User[]) => (this.users = users));
 	}
 
 	ngOnInit(): void {
-		// this.clients = this.clientService.getClients();
+		// this.users = this.userService.getUsers();
 		this.workoutFormGroup = this.fb.group({
-			client: [null, [Validators.required]],
+			user: [null, [Validators.required]],
 			startingDate: [null, [Validators.required]],
 			endingDate: [null, [Validators.required]],
 			attachedFile: [null, [Validators.required]],
 			notes: null,
 		});
 	}
-	get client() {
-		return this.workoutFormGroup.get('client');
+	get user() {
+		return this.workoutFormGroup.get('user');
 	}
 	get startingDate() {
 		return this.workoutFormGroup.get('startingDate');
@@ -87,10 +87,8 @@ export class CreateWorkoutRoutineComponent implements OnInit {
 			id: null,
 			name: null,
 			creationDate: new Date().toUTCString(),
-			clientId: this.client.value,
-			clientName: this.client.value,
-			trainerId: null,
-			trainerName: null,
+			userId: this.user.value,
+			userName: this.user.value,
 			startingDate: new Date(this.startingDate.value).toUTCString(),
 			endingDate: new Date(this.endingDate.value).toUTCString(),
 			filePath: this.attachedFile.value.name,
@@ -100,11 +98,9 @@ export class CreateWorkoutRoutineComponent implements OnInit {
 			.newWorkoutOld(workout)
 			.then((id: string) => {
 				if (id) {
-					let client: Client = this.clients.find(
-						(client: Client) => workout.clientId == client.uid
-					);
-					this.clientService
-						.newClientWorkout(client, workout.id)
+					let user: User = this.users.find((user: User) => workout.userId == user.uid);
+					this.userService
+						.newUserWorkout(user, workout.id)
 						.then((value: boolean) => {
 							if (value) {
 								this.utils.openSnackBar(

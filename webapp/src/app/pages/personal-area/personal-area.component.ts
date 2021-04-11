@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Client } from '@models/user';
+import { User } from '@models/user';
 import { DigitalWorkout } from '@models/workout';
 import { AuthService } from '@services/auth.service';
-import { ClientService } from '@services/client.service';
+import { UserService } from '@services/user.service';
 
 @Component({
 	selector: 'app-personal-area',
@@ -10,20 +10,20 @@ import { ClientService } from '@services/client.service';
 	styleUrls: ['./personal-area.component.sass'],
 })
 export class PersonalAreaComponent implements OnInit {
-	client: Client = null;
+	user: User = null;
 	workouts: DigitalWorkout[] = [];
 	selectedWorkout: DigitalWorkout = null;
-	constructor(private auth: AuthService, private clientService: ClientService) {}
+	constructor(private auth: AuthService, private userService: UserService) {}
 
 	ngOnInit(): void {
-		this.clientService.readClient(this.auth.getUser().uid).then(client => {
-			this.client = client;
+		this.userService.readUser(this.auth.getUser().uid).then(user => {
+			this.user = user;
 		});
 	}
 
-	getClientWorkouts() {
+	getUserWorkouts() {
 		this.auth
-			.readClientWorkouts(this.client)
+			.readUserWorkouts(this.user)
 			.then((workouts: DigitalWorkout[]) => (this.workouts = workouts))
 			.catch(err => console.error(err));
 	}

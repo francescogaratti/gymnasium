@@ -1,20 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Client } from '@models/user';
-// import { Client } from '@models/client';
+import { User } from '@models/user';
+// import { User } from '@models/user';
 import { DigitalWorkout, StandardWorkout, Workout } from '@models/workout';
 import { AuthService } from '@services/auth.service';
-import { ClientService } from '@services/client.service';
+import { UserService } from '@services/user.service';
 import { UtilsService } from '@services/utils.service';
 
 @Component({
-	selector: 'app-client',
-	templateUrl: './client.component.html',
-	styleUrls: ['./client.component.sass'],
+	selector: 'app-user',
+	templateUrl: './user.component.html',
+	styleUrls: ['./user.component.sass'],
 })
-export class ClientComponent implements OnInit {
+export class UserComponent implements OnInit {
 	id: string;
-	client: Client = null;
+	user: User = null;
 	URL: string = null;
 	selected_workout: DigitalWorkout = null;
 	workoutsOld: StandardWorkout[] = [];
@@ -32,29 +32,29 @@ export class ClientComponent implements OnInit {
 		private activatedRoute: ActivatedRoute,
 		private auth: AuthService,
 		private utils: UtilsService,
-		private clientService: ClientService
+		private userService: UserService
 	) {
 		this.id = this.activatedRoute.snapshot.queryParams['id'];
-		this.clientService.client$.subscribe((client: Client) => {
-			this.client = client;
-			this.getImage(this.client.photoURL);
+		this.userService.user$.subscribe((user: User) => {
+			this.user = user;
+			this.getImage(this.user.photoURL);
 		});
 	}
 
 	ngOnInit(): void {
-		if (this.id) this.clientService.readClient(this.id);
+		if (this.id) this.userService.readUser(this.id);
 	}
 
-	getClientWorkoutsOld() {
+	getUserWorkoutsOld() {
 		this.auth
-			.readClientWorkoutsOld(this.client)
+			.readUserWorkoutsOld(this.user)
 			.then((workoutsOld: StandardWorkout[]) => (this.workoutsOld = workoutsOld))
 			.catch(err => console.error(err));
 	}
 
-	getClientWorkouts() {
+	getUserWorkouts() {
 		this.auth
-			.readClientWorkouts(this.client)
+			.readUserWorkouts(this.user)
 			.then((workouts: DigitalWorkout[]) => {
 				this.workouts = workouts;
 				if (!this.workouts || this.workouts.length == 0)
@@ -68,14 +68,14 @@ export class ClientComponent implements OnInit {
 
 	deleteWorkout(workout: DigitalWorkout) {
 		this.auth
-			.deleteWorkout(workout, this.client)
+			.deleteWorkout(workout, this.user)
 			.then((value: boolean) => {
 				if (value) {
 					this.utils.openSnackBar(
 						"L'allenamento è stato eliminato correttamente",
 						'💪😉'
 					);
-					this.getClientWorkouts();
+					this.getUserWorkouts();
 				} else
 					this.utils.openSnackBar(
 						"Si è verificato un errore durante l'eliminazione dell'allenamento",
@@ -96,7 +96,7 @@ export class ClientComponent implements OnInit {
 		this.auth
 			.getFile(path)
 			.then(url => (url ? (this.URL = url) : ''))
-			.catch(() => (this.URL = this.client.photoURL));
+			.catch(() => (this.URL = this.user.photoURL));
 	}
 
 	exportExcel(workout: DigitalWorkout) {

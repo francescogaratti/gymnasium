@@ -13,15 +13,11 @@ import * as firebaseui from 'firebaseui';
 import { Subject } from 'rxjs';
 import { first } from 'rxjs/operators';
 
-import { User, Client, UserTypes } from '@models/user';
-// import { Client } from '@models/client';
+import { User } from '@models/user';
 import { DigitalWorkout, StandardWorkout, Workout } from '@models/workout';
 import { HttpClient } from '@angular/common/http';
 import { ExerciseEntry } from '@models/exercise';
-import { ClientService } from './client.service';
-import { TrainerService } from './trainer.service';
-import { AdminService } from './admin.service';
-import { diary } from '@models/diary';
+import { UserService } from './user.service';
 
 // configuration for the ui
 const uiConfig = {
@@ -39,7 +35,6 @@ export class AuthService {
 	ui: firebaseui.auth.AuthUI =
 		firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth()); // login firebase ui
 
-	// user$: Observable<User>; // future user
 	user$: Subject<User> = new Subject<User>(); // future user
 	user: User = null;
 
@@ -53,29 +48,11 @@ export class AuthService {
 		private afs: AngularFirestore,
 		private afstr: AngularFireStorage,
 		private http: HttpClient,
-		private clientService: ClientService,
-		private trainerService: TrainerService,
-		private adminService: AdminService
+		private userService: UserService
 	) {
 		this.user$.subscribe(user => {
 			if (user) {
-				if (user && user.type) {
-					switch (user.type) {
-						case UserTypes.user:
-							break;
-						case UserTypes.client:
-							this.clientService.readClient(user.uid);
-							break;
-						case UserTypes.trainer:
-							this.trainerService.readTrainer(user.uid);
-							break;
-						case UserTypes.admin:
-							this.adminService.readAdmin(user.uid);
-							break;
-						default:
-							break;
-					}
-				}
+				this.userService.readUser(user.uid);
 				this.startMessaging(user);
 			}
 		});
@@ -90,8 +67,7 @@ export class AuthService {
 				.then(user => user)
 				.catch(() => null);
 		}
-		if (!type) return !!this.user;
-		return this.user && (this.user.type == UserTypes.admin || this.user.type == type);
+		return !!this.user;
 	}
 
 	isAdmin(uid: string): boolean {
@@ -190,7 +166,7 @@ export class AuthService {
 			.add(workout)
 			.then(async (docRef: DocumentReference) => {
 				workout.id = docRef.id;
-				// todo: add this workout to the client's workout
+				// todo: add this workout to the user's workout
 				let update_workout_res = await this.updateWorkoutOld(workout);
 				return update_workout_res ? workout.id : null;
 			})
@@ -234,11 +210,11 @@ export class AuthService {
 		return res;
 	}
 
-	public async readClientWorkoutsOld(client: Client): Promise<StandardWorkout[]> {
+	public async readUserWorkoutsOld(user: User): Promise<StandardWorkout[]> {
 		this.asyncOperation.next(true);
 		let workouts: StandardWorkout[] = await this.afs
-			.collection('clients')
-			.doc(client.uid)
+			.collection('users')
+			.doc(user.uid)
 			.get()
 			.toPromise()
 			.then(async snapshot => {
@@ -247,8 +223,8 @@ export class AuthService {
 				refs.forEach((ref: DocumentReference) =>
 					promises.push(ref.get().then(res => res.data() as StandardWorkout))
 				);
-				const shirts = await Promise.all(promises);
-				return shirts;
+				const workouts = await Promise.all(promises);
+				return workouts;
 			})
 			.catch(err => {
 				console.error(err);
@@ -258,7 +234,7 @@ export class AuthService {
 		return workouts;
 	}
 
-	async newWorkout(workout: DigitalWorkout, client: Client): Promise<boolean> {
+	async newWorkout(workout: DigitalWorkout, user: User): Promise<boolean> {
 		this.asyncOperation.next(true);
 		console.info('📗 - write');
 		let workoutId: string = await this.afs
@@ -273,19 +249,19 @@ export class AuthService {
 				console.error(err);
 				return null;
 			});
-		// ? now I have the workout ID ==> save into the client workouts list
-		let res: boolean = await this.clientService.newClientWorkout(client, workoutId);
+		// ? now I have the workout ID ==> save into the user workouts list
+		let res: boolean = await this.userService.newUserWorkout(user, workoutId);
 		this.asyncOperation.next(false);
 		return res;
 	}
 
-	// todo: extract workouts from client.workouts
-	public async readClientWorkouts(client: Client): Promise<DigitalWorkout[]> {
-		console.info('📘 - read client workouts');
+	// todo: extract workouts from user.workouts
+	public async readUserWorkouts(user: User): Promise<DigitalWorkout[]> {
+		console.info('📘 - read user workouts');
 		this.asyncOperation.next(true);
 		let workouts: DigitalWorkout[] = await this.afs
-			.collection('clients')
-			.doc(client.uid)
+			.collection('users')
+			.doc(user.uid)
 			.get()
 			.toPromise()
 			.then(async snapshot => {
@@ -306,7 +282,7 @@ export class AuthService {
 		return workouts;
 	}
 
-	async deleteWorkout(workout: Workout, client?: Client): Promise<boolean> {
+	async deleteWorkout(workout: Workout, user?: User): Promise<boolean> {
 		this.asyncOperation.next(true);
 		console.info('📕 - delete');
 		// delete from the workouts list
@@ -319,12 +295,12 @@ export class AuthService {
 				console.error(err);
 				return false;
 			});
-		// delete from clients list
+		// delete from users list
 		if (res) {
 			console.info('📘 - read');
 			let updated_workouts: DocumentReference[] = await this.afs
-				.collection('clients')
-				.doc(workout.clientId)
+				.collection('users')
+				.doc(workout.userId)
 				.get()
 				.toPromise()
 				.then(async snapshot => {
@@ -339,8 +315,8 @@ export class AuthService {
 					console.error(err);
 					return [];
 				});
-			client.workouts = updated_workouts;
-			res = await this.clientService.updateClient(client, false);
+			user.workouts = updated_workouts;
+			res = await this.userService.updateUser(user, false);
 		}
 		this.asyncOperation.next(false);
 		return res;

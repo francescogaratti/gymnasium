@@ -4,24 +4,24 @@
 	class="example-full-width"
 	align="center"
 >
-	<mat-card-title style="margin-bottom: 20px">Aggiungi un nuovo cliente</mat-card-title>
+	<mat-card-title style="margin-bottom: 20px">Aggiungi un nuovo usere</mat-card-title>
 	<mat-card-content>
 		<form class="example-form">
 			<mat-slide-toggle
 				class="example-full-width"
 				color="accent"
 				style="margin: 10px 0"
-				[checked]="notShowClients"
-				(toggleChange)="toggleNotShowClients()"
+				[checked]="notShowUsers"
+				(toggleChange)="toggleNotShowUsers()"
 			>
-				Nascondi già clienti
+				Nascondi già useri
 			</mat-slide-toggle>
 			<!-- user -->
 			<app-user-select
 				[center]="true"
 				[name]="'Utente'"
 				[users]="users"
-				(onSelectUser)="onSelectClient($event)"
+				(onSelectUser)="onSelectUser($event)"
 			></app-user-select>
 			<!-- location -->
 			<mat-form-field class="example-full-width">
@@ -415,13 +415,13 @@
 	</mat-card-content>
 
 	<mat-card-actions>
-		<button mat-raised-button color="warn" (click)="resetClient()">Reset</button>
+		<button mat-raised-button color="warn" (click)="resetUser()">Reset</button>
 		<button
 			mat-raised-button
 			color="primary"
-			(click)="addClient()"
+			(click)="addUser()"
 			[disabled]="
-				alreadyClient ||
+				alreadyUser ||
 				(photoFormControl.invalid && !imageFile) ||
 				emailFC.invalid ||
 				nomeFormControl.invalid ||
@@ -439,15 +439,15 @@
 				numberFC.invalid
 			"
 		>
-			Aggiungi Cliente
+			Aggiungi Usere
 		</button>
 		<button
-			*ngIf="alreadyClient"
+			*ngIf="alreadyUser"
 			mat-icon-button
-			matTooltip="Questo utente è già un cliente. Clicca per cancellare la selezione"
+			matTooltip="Questo utente è già un usere. Clicca per cancellare la selezione"
 			matTooltipPosition="right"
 			matTooltipHideDelay="1000"
-			(click)="resetClient()"
+			(click)="resetUser()"
 		>
 			<mat-icon>help</mat-icon>
 		</button>

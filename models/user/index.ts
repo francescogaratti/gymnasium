@@ -10,15 +10,6 @@ interface Metadata {
 	lastSignInTime: string;
 }
 
-export enum UserTypes {
-	user = 'User',
-	client = 'Client',
-	trainer = 'Trainer',
-	manager = 'Manager',
-	admin = 'Admin',
-	receptionist = 'Receptionist',
-}
-
 export interface Address {
 	state: string;
 	province: string;
@@ -26,12 +17,6 @@ export interface Address {
 	postalCode: string;
 	street: string;
 	number: string;
-}
-
-export interface Shift {
-	day: string;
-	start: string;
-	end: string;
 }
 
 /**
@@ -52,11 +37,18 @@ export interface User {
 	photoPath: string;
 	metadata: Metadata;
 	tokenIds?: string[];
-	type?: string;
 	notifications: {
 		mail: boolean;
 		push: boolean;
 	};
+	// advanced properties
+	sex: boolean;
+	birthday: string;
+	birthCountry: string;
+	birthCity: string;
+	fiscalCode: string;
+	address: Address;
+	workouts: any[];
 }
 
 export class User implements User {
@@ -74,7 +66,6 @@ export class User implements User {
 						lastSignInTime: '',
 				  };
 		this.tokenIds = user && user.tokenIds ? user.tokenIds : [];
-		this.type = user && user.type ? user.type : '';
 		this.notifications =
 			user && user.notifications
 				? user.notifications
@@ -82,59 +73,5 @@ export class User implements User {
 						mail: false,
 						push: false,
 				  };
-	}
-}
-
-export interface Client extends User {
-	sex: boolean;
-	birthday: string;
-	birthCountry: string;
-	birthCity: string;
-	fiscalCode: string;
-	address: Address;
-	workouts: any[];
-}
-
-export class Client extends User {
-	constructor(user?: User) {
-		super(user);
-	}
-}
-
-export interface Employee extends User {
-	sex: boolean;
-	birthday: string;
-	birthCountry: string;
-	birthCity: string;
-	fiscalCode: string;
-	address: Address;
-	shifts: Shift[];
-}
-
-export interface Trainer extends Employee {
-	clients: any[];
-}
-
-export class Trainer extends User {
-	constructor(user?: User) {
-		super(user);
-	}
-}
-
-export interface Receptionist extends Employee {}
-
-export interface Admin extends User {}
-
-export class Admin extends User {
-	constructor(user: User) {
-		super(user);
-	}
-}
-
-export interface Manager extends User {}
-
-export class Manager extends User {
-	constructor(user: User) {
-		super(user);
 	}
 }

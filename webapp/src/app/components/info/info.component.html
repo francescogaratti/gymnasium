@@ -4,7 +4,7 @@
 		<mat-card>
 			<app-upload-photo
 				[title]="'Foto Profilo'"
-				[src]="client.photoURL"
+				[src]="user.photoURL"
 				[disabled]="!pendingChanges"
 			>
 			</app-upload-photo>
@@ -43,24 +43,24 @@
 					<input
 						name="email"
 						matInput
-						[(ngModel)]="client.email"
+						[(ngModel)]="user.email"
 						[readonly]="!pendingChanges"
 					/>
 				</mat-form-field>
 			</form>
 		</mat-card>
-		<div ngSwitch="{{ client.type }}">
+		<div ngSwitch="{{ user.type }}">
 			<mat-card>
 				<mat-card-content>
-					<!-- client attributes -->
-					<form class="form" *ngSwitchCase="UserTypes.client">
+					<!-- user attributes -->
+					<form class="form" *ngSwitchCase="UserTypes.user">
 						<mat-form-field class="field-extra-extra-large">
 							<mat-label> Codice Fiscale </mat-label>
 							<input
 								name="fiscalCode"
 								type="text"
 								matInput
-								[(ngModel)]="client.fiscalCode"
+								[(ngModel)]="user.fiscalCode"
 								[readonly]="!pendingChanges"
 							/>
 						</mat-form-field>
@@ -115,7 +115,7 @@
 											name="state"
 											type="text"
 											matInput
-											[(ngModel)]="client.address.state"
+											[(ngModel)]="user.address.state"
 											[readonly]="!pendingChanges"
 											disabled
 										/>
@@ -128,7 +128,7 @@
 											name="province"
 											type="text"
 											matInput
-											[(ngModel)]="client.address.province"
+											[(ngModel)]="user.address.province"
 											[readonly]="!pendingChanges"
 											disabled
 										/>
@@ -145,7 +145,7 @@
 											name="city"
 											type="text"
 											matInput
-											[(ngModel)]="client.address.city"
+											[(ngModel)]="user.address.city"
 											[readonly]="!pendingChanges"
 										/>
 									</mat-form-field>
@@ -157,7 +157,7 @@
 											name="postalCode"
 											type="text"
 											matInput
-											[(ngModel)]="client.address.postalCode"
+											[(ngModel)]="user.address.postalCode"
 											[readonly]="!pendingChanges"
 										/>
 									</mat-form-field>
@@ -171,7 +171,7 @@
 											name="address"
 											type="text"
 											matInput
-											[(ngModel)]="client.address.street"
+											[(ngModel)]="user.address.street"
 											[readonly]="!pendingChanges"
 										/>
 									</mat-form-field>
@@ -183,7 +183,7 @@
 											name="number"
 											type="text"
 											matInput
-											[(ngModel)]="client.address.number"
+											[(ngModel)]="user.address.number"
 											[readonly]="!pendingChanges"
 										/>
 									</mat-form-field>
@@ -191,7 +191,7 @@
 							</tr>
 						</table>
 						<!-- workouts -->
-						<!-- <button mat-raised-button color="primary" (click)="getClientWorkouts()">
+						<!-- <button mat-raised-button color="primary" (click)="getUserWorkouts()">
 							I miei Allenamenti
 						</button> -->
 					</form>

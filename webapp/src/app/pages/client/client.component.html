@@ -1,23 +1,21 @@
-<mat-card *ngIf="client" align="center" class="mat-elevation-z0" style="box-sizing: border-box">
+<mat-card *ngIf="user" align="center" class="mat-elevation-z0" style="box-sizing: border-box">
 	<mat-card
 		class="mat-elevation-z8"
 		style="float: left; width: 40%; box-sizing: border-box; margin: 5px"
 	>
 		<mat-card-content>
-			<div *ngIf="client" align="center">
+			<div *ngIf="user" align="center">
 				<img
 					*ngIf="URL"
 					[src]="URL"
 					alt=""
 					style="border-radius: 100%; width: 100px; height: 100px"
 				/>
-				<h2>{{ client.displayName }}</h2>
+				<h2>{{ user.displayName }}</h2>
 			</div>
 		</mat-card-content>
 		<mat-card-actions>
-			<button mat-raised-button color="primary" (click)="getClientWorkouts()">
-				Workouts
-			</button>
+			<button mat-raised-button color="primary" (click)="getUserWorkouts()">Workouts</button>
 		</mat-card-actions>
 		<!-- workouts new -->
 		<mat-card

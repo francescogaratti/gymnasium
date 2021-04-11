@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Client } from '@models/user';
+import { User } from '@models/user';
 import { DigitalWorkout } from '@models/workout';
 import { AuthService } from '@services/auth.service';
-import { ClientService } from '@services/client.service';
+import { UserService } from '@services/user.service';
 
 @Component({
 	selector: 'app-train',
@@ -12,27 +12,27 @@ import { ClientService } from '@services/client.service';
 })
 export class TrainComponent implements OnInit {
 	id: string = null;
-	client: Client = null;
+	user: User = null;
 	workouts: DigitalWorkout[] = [];
 	selectedWorkout: DigitalWorkout = null;
 	constructor(
 		private activatedRoute: ActivatedRoute,
-		private clientService: ClientService,
+		private userService: UserService,
 		private auth: AuthService
 	) {
 		this.id = this.activatedRoute.snapshot.queryParams['id'];
 	}
 
 	ngOnInit(): void {
-		this.clientService.readClient(this.auth.getUser().uid).then(client => {
-			this.client = client;
-			this.getClientWorkouts();
+		this.userService.readUser(this.auth.getUser().uid).then(user => {
+			this.user = user;
+			this.getUserWorkouts();
 		});
 	}
 
-	getClientWorkouts() {
+	getUserWorkouts() {
 		this.auth
-			.readClientWorkouts(this.client)
+			.readUserWorkouts(this.user)
 			.then((workouts: DigitalWorkout[]) => {
 				this.workouts = workouts;
 				this.selectedWorkout = this.workouts.find(workout => workout.id == this.id);
