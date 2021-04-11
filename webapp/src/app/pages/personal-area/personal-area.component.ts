@@ -20,11 +20,4 @@ export class PersonalAreaComponent implements OnInit {
 			this.user = user;
 		});
 	}
-
-	getUserWorkouts() {
-		this.auth
-			.readUserWorkouts(this.user)
-			.then((workouts: DigitalWorkout[]) => (this.workouts = workouts))
-			.catch(err => console.error(err));
-	}
 }

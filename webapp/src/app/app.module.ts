@@ -58,7 +58,7 @@ import { NewExerciseComponent } from './pages/new-exercise/new-exercise.componen
 import { MobileSidenavComponent } from './components/mobile-sidenav/mobile-sidenav.component';
 import { InfoComponent } from './components/info/info.component';
 import { UploadPhotoComponent } from './components/upload-photo/upload-photo.component';
-import { WorkoutsComponent } from './components/workouts/workouts.component';
+import { WorkoutsComponent } from './pages/workouts/workouts.component';
 import { UserSelectComponent } from './components/user-select/user-select.component';
 import { DialogInfoComponent } from './components/dialog-info/dialog-info.component';
 import { TrainComponent } from './pages/train/train.component';

@@ -14,10 +14,10 @@
 				*ngIf="user"
 				color="primary"
 				mat-raised-button
-				(click)="router.navigateByUrl('train')"
+				(click)="router.navigateByUrl('workouts')"
 				class="menu-tab"
 			>
-				Train
+				Workouts
 				<i class="material-icons-two-tone">fitness_center</i>
 			</button>
 			<!-- new workout -->
@@ -27,16 +27,16 @@
 				(click)="router.navigateByUrl('new-workout')"
 				class="menu-tab"
 			>
-				Nuovo Allenamento
+				New Training Program
 				<i class="material-icons-two-tone">fitness_center</i>
 			</button>
 			<button
 				color="primary"
 				mat-raised-button
-				(click)="router.navigateByUrl('area-personale')"
+				(click)="router.navigateByUrl('personal-area')"
 				class="menu-tab"
 			>
-				Area Personale
+				Personal Area
 				<i class="material-icons-two-tone">account_circle</i>
 			</button>
 			<button mat-button (click)="auth.signOut()" class="menu-tab">

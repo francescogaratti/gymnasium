@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { User } from '@models/user';
 import { DigitalWorkout } from '@models/workout';
 import { AuthService } from '@services/auth.service';
+import { UserService } from '@services/user.service';
 import { UtilsService } from '@services/utils.service';
 
 @Component({
@@ -9,8 +11,9 @@ import { UtilsService } from '@services/utils.service';
 	styleUrls: ['./workouts.component.sass'],
 })
 export class WorkoutsComponent implements OnInit {
-	@Input() workouts: DigitalWorkout[] = [];
 	@Output() selectedWorkout: EventEmitter<DigitalWorkout> = new EventEmitter<DigitalWorkout>();
+	workouts: DigitalWorkout[] = [];
+	user: User = null;
 
 	columnsWorkouts: string[] = [
 		'name',
@@ -22,9 +25,25 @@ export class WorkoutsComponent implements OnInit {
 		// 'export',
 	];
 
-	constructor(private auth: AuthService, private utils: UtilsService) {}
+	constructor(
+		private auth: AuthService,
+		private utils: UtilsService,
+		private userService: UserService
+	) {
+		this.userService.readUser(this.auth.getUser().uid).then(user => {
+			this.user = user;
+			if (this.workouts.length == 0) this.getUserWorkouts();
+		});
+	}
 
 	ngOnInit(): void {}
+
+	getUserWorkouts() {
+		this.auth
+			.readUserWorkouts(this.user)
+			.then((workouts: DigitalWorkout[]) => (this.workouts = workouts))
+			.catch(err => console.error(err));
+	}
 
 	deleteWorkout(workout: DigitalWorkout) {
 		this.auth

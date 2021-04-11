@@ -9,6 +9,7 @@ import { NewWorkoutComponent } from '@pages/new-workout/new-workout.component';
 import { NotFoundComponent } from '@pages/not-found/not-found.component';
 import { PersonalAreaComponent } from '@pages/personal-area/personal-area.component';
 import { TrainComponent } from '@pages/train/train.component';
+import { WorkoutsComponent } from '@pages/workouts/workouts.component';
 
 const routes: Routes = [
 	{
@@ -25,6 +26,11 @@ const routes: Routes = [
 	{
 		path: 'new-exercise',
 		component: NewExerciseComponent,
+		canActivate: [AuthGuard],
+	},
+	{
+		path: 'workouts',
+		component: WorkoutsComponent,
 		canActivate: [AuthGuard],
 	},
 	{ path: 'personal-area', component: PersonalAreaComponent, canActivate: [AuthGuard] },

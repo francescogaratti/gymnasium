@@ -2,25 +2,12 @@
 	<mat-tab-group mat-align-tabs="center">
 		<mat-tab label="Dati Personali">
 			<app-info id="info" [user]="user" (workouts)="workouts = $event"></app-info>
-			<!-- workouts -->
 		</mat-tab>
 		<mat-tab label="I miei Allenamenti">
-			<button
-				mat-raised-button
-				color="primary"
-				style="margin: 20px auto"
-				(click)="getUserWorkouts()"
-			>
-				I miei Allenamenti
-			</button>
-			<app-workouts
-				id="workouts"
-				[workouts]="workouts"
-				(selectedWorkout)="selectedWorkout = $event"
-			></app-workouts>
+			<app-workouts id="workouts" (selectedWorkout)="selectedWorkout = $event"></app-workouts>
 		</mat-tab>
-		<mat-tab label="Allenamento" *ngIf="selectedWorkout">
-			<app-workout id="workout" [workout]="selectedWorkout"></app-workout>
+		<mat-tab label="Statistiche">
+			<h2>Coming soon 🔥</h2>
 		</mat-tab>
 	</mat-tab-group>
 </mat-card>
