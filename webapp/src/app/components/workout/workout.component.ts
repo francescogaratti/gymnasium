@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { DigitalWorkout, Workout } from '@models/workout';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DigitalWorkout } from '@models/workout';
 import { Exercise } from '@models/exercise';
 import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
@@ -18,7 +18,8 @@ export class WorkoutComponent implements OnInit {
 		private activatedRoute: ActivatedRoute,
 		private auth: AuthService,
 		private utils: UtilsService,
-		public dialog: MatDialog
+		public dialog: MatDialog,
+		private router: Router
 	) {
 		this.id = this.activatedRoute.snapshot.queryParams['id'];
 	}
@@ -52,5 +53,9 @@ export class WorkoutComponent implements OnInit {
 		// dialogRef.afterClosed().subscribe(result => {
 		// 	console.log('The dialog was closed');
 		// });
+	}
+
+	train(workout: DigitalWorkout) {
+		this.router.navigateByUrl('train?id=' + workout.id);
 	}
 }

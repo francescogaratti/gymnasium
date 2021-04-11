@@ -1,13 +1,48 @@
 <mat-card *ngIf="workout" class="mat-elevation-z0">
 	<mat-card-actions>
-		<button mat-raised-button (click)="train(workout)">Inizia Allenamento</button>
-		<button mat-raised-button (click)="downloadExcel(workout)">Download Excel</button>
+		<button mat-raised-button (click)="downloadExcel(workout)">
+			Download Excel
+			<i class="material-icons md-48">article</i>
+		</button>
 	</mat-card-actions>
 	<!-- list of workout sessions -->
 	<mat-tab-group mat-align-tabs="center">
 		<div *ngFor="let workout_session of workout.sessions">
-			<mat-tab [label]="workout_session.name">
+			<mat-tab
+				[label]="workout_session.name"
+				[disabled]="chosen_session && workout_session.name != chosen_session"
+			>
 				<!-- workout session -->
+				<div class="workout-session-actions">
+					<button
+						*ngIf="workout.state !== states.started"
+						mat-raised-button
+						(click)="start(workout_session)"
+					>
+						Start
+						<i class="material-icons md-48">play_arrow</i>
+					</button>
+					<button
+						*ngIf="workout.state == states.started"
+						mat-raised-button
+						(click)="pause()"
+					>
+						Pause
+						<i class="material-icons md-48">pause</i>
+					</button>
+					<button
+						*ngIf="workout.state && workout.state != states.stopped"
+						mat-raised-button
+						(click)="stop()"
+					>
+						Stop
+						<i class="material-icons md-48">stop</i>
+					</button>
+					<div *ngIf="time">
+						<i class="material-icons md-48">timer</i>
+						<p style="vertical-align: middle; display: inline-block">{{ time }} s</p>
+					</div>
+				</div>
 				<form>
 					<table
 						class="example-full-width"

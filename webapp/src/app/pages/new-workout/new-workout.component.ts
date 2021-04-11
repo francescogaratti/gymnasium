@@ -117,6 +117,7 @@ export class NewWorkoutComponent implements OnInit {
 			name: this.sessionFormControl.value,
 			exercises: [],
 			notes: null,
+			history: null,
 		};
 		this.workout_sessions.push(new_workout_session);
 		this.cleanForm();

@@ -1,4 +1,4 @@
-import { Exercise } from '../exercise';
+import { Exercise, LiveExercise } from '../exercise';
 export interface Workout {
 	id: string;
 	name: string;
@@ -19,14 +19,32 @@ export interface DigitalWorkout extends Workout {
 	sessions: WorkoutSession[];
 }
 
+export enum WorkoutStates {
+	started = 'started',
+	paused = 'paused',
+	stopped = 'stopped',
+}
+export interface LiveWorkout extends DigitalWorkout {
+	sessions: WorkoutSession[];
+	state: string;
+}
+
 export interface StandardWorkout extends Workout {
 	filePath: string;
+}
+
+export interface History {
+	length: number;
+	date: string;
+	notes: string;
+	exercises: LiveExercise[];
 }
 
 export interface WorkoutSession {
 	name: string;
 	exercises: Exercise[];
 	notes: string;
+	history: History[];
 }
 
 export const standard: DigitalWorkout = {
@@ -78,6 +96,7 @@ export const standard: DigitalWorkout = {
 				},
 			],
 			notes: 'Petto + Bicipiti',
+			history: [],
 		},
 		{
 			name: 'Allenamento B',
@@ -117,6 +136,7 @@ export const standard: DigitalWorkout = {
 				},
 			],
 			notes: 'Schiena + Tricipiti',
+			history: [],
 		},
 		{
 			name: 'Allenamento C',
@@ -167,6 +187,7 @@ export const standard: DigitalWorkout = {
 				},
 			],
 			notes: 'Gambe + Spalle',
+			history: [],
 		},
 	],
 };
@@ -231,6 +252,7 @@ export const starterUomo: DigitalWorkout = {
 				},
 			],
 			notes: 'Cardio + parte alta',
+			history: [],
 		},
 		{
 			name: 'Allenamento B',
@@ -281,6 +303,7 @@ export const starterUomo: DigitalWorkout = {
 				},
 			],
 			notes: 'Cardio + parte bassa',
+			history: [],
 		},
 	],
 };
@@ -334,6 +357,7 @@ export const starterDonna: DigitalWorkout = {
 				},
 			],
 			notes: 'Cardio + squat',
+			history: [],
 		},
 		{
 			name: 'Allenamento B',
@@ -384,6 +408,7 @@ export const starterDonna: DigitalWorkout = {
 				},
 			],
 			notes: 'Cardio + parte bassa',
+			history: [],
 		},
 	],
 };

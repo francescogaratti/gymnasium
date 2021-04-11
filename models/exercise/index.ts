@@ -12,6 +12,11 @@ export interface Exercise {
 	notes?: string | null;
 }
 
+export interface LiveExercise extends Exercise {
+	weight?: number | null;
+	length?: number | null;
+}
+
 export class Exercise implements Exercise {
 	constructor() {
 		this.id = null;

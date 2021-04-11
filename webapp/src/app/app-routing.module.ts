@@ -16,6 +16,7 @@ import { NewTrainerComponent } from '@pages/new-trainer/new-trainer.component';
 import { NewWorkoutComponent } from '@pages/new-workout/new-workout.component';
 import { NotFoundComponent } from '@pages/not-found/not-found.component';
 import { PersonalAreaComponent } from '@pages/personal-area/personal-area.component';
+import { TrainComponent } from '@pages/train/train.component';
 
 const routes: Routes = [
 	{
@@ -90,6 +91,14 @@ const routes: Routes = [
 		canActivate: [RoleGuard],
 		data: {
 			roles: [UserTypes.admin],
+		},
+	},
+	{
+		path: 'train',
+		component: TrainComponent,
+		canActivate: [RoleGuard],
+		data: {
+			roles: [],
 		},
 	},
 	{ path: '', redirectTo: 'home', pathMatch: 'full' },

@@ -21,7 +21,7 @@
 				<i class="material-icons-two-tone">admin_panel_settings</i>
 			</button>
 			<!-- diary -->
-			<button
+			<!-- <button
 				*ngIf="
 					user &&
 					(user.type == UserTypes.admin ||
@@ -36,7 +36,7 @@
 			>
 				Diario
 				<i class="material-icons-two-tone">book</i>
-			</button>
+			</button> -->
 			<!-- new trainer -->
 			<!-- <button
 				*ngIf="
@@ -54,7 +54,7 @@
 				<i class="material-icons-two-tone">person_add</i>
 			</button> -->
 			<!-- new client -->
-			<button
+			<!-- <button
 				*ngIf="
 					user &&
 					(user.type == UserTypes.admin ||
@@ -68,6 +68,17 @@
 			>
 				Nuovo Cliente
 				<i class="material-icons-two-tone">person_add</i>
+			</button> -->
+			<!-- train -->
+			<button
+				*ngIf="user"
+				color="primary"
+				mat-raised-button
+				(click)="router.navigateByUrl('train')"
+				class="menu-tab"
+			>
+				Train
+				<i class="material-icons-two-tone">fitness_center</i>
 			</button>
 			<!-- new workout -->
 			<button

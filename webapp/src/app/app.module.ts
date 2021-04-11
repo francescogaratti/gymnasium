@@ -71,6 +71,8 @@ import { FitCheckComponent } from './pages/diary/fit-check/fit-check.component';
 import { TrainingCheckComponent } from './pages/diary/training-check/training-check.component';
 import { UserSelectComponent } from './components/user-select/user-select.component';
 import { DialogInfoComponent } from './components/dialog-info/dialog-info.component';
+import { TrainComponent } from './pages/train/train.component';
+import { LiveWorkoutComponent } from './components/live-workout/live-workout.component';
 
 @NgModule({
 	declarations: [
@@ -102,6 +104,8 @@ import { DialogInfoComponent } from './components/dialog-info/dialog-info.compon
 		TrainingCheckComponent,
 		UserSelectComponent,
 		DialogInfoComponent,
+		TrainComponent,
+		LiveWorkoutComponent,
 	],
 	imports: [
 		HttpClientModule,
