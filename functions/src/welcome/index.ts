@@ -28,13 +28,6 @@ export const welcomeMail = functions.auth.user().onCreate(async (u: functions.au
 			push: false,
 			mail: false,
 		},
-		// advanced properties
-		sex: null,
-		birthday: null,
-		birthCountry: null,
-		birthCity: null,
-		fiscalCode: null,
-		address: null,
 		workouts: null,
 	};
 
