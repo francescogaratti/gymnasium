@@ -6,7 +6,7 @@
 		</button>
 	</mat-card-actions>
 	<!-- list of workout sessions -->
-	<mat-tab-group mat-align-tabs="center">
+	<mat-tab-group mat-stretch-tabs mat-align-tabs="center" class="example-stretched-tabs">
 		<div *ngFor="let workout_session of workout.sessions">
 			<mat-tab
 				[label]="workout_session.name"

@@ -10,15 +10,6 @@ interface Metadata {
 	lastSignInTime: string;
 }
 
-export interface Address {
-	state: string;
-	province: string;
-	city: string;
-	postalCode: string;
-	street: string;
-	number: string;
-}
-
 /**
  * @interface User
  * @description interface for the user data returned by `firebase auth`
@@ -27,6 +18,9 @@ export interface Address {
  * @param {displayName} string name of the user
  * @param {photoURL} string url of the profile picture of the user
  * @param {metadata} Metadata additonal information
+ * @param {tokenIds} string[] list of tokens for notifications
+ * @param {notifications} any preferences for notifications
+ * @param {workouts} Workout[] list of workouts
  * @author Davide Ghiotto
  */
 export interface User {
@@ -41,13 +35,6 @@ export interface User {
 		mail: boolean;
 		push: boolean;
 	};
-	// advanced properties
-	sex: boolean | null;
-	birthday: string | null;
-	birthCountry: string | null;
-	birthCity: string | null;
-	fiscalCode: string | null;
-	address: Address | null;
 	workouts: any[] | null;
 }
 
@@ -73,5 +60,6 @@ export class User implements User {
 						mail: false,
 						push: false,
 				  };
+		this.workouts = user && user.workouts ? user.workouts : [];
 	}
 }

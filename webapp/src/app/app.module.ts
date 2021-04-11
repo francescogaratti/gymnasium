@@ -54,7 +54,6 @@ import { NewWorkoutComponent } from './pages/new-workout/new-workout.component';
 import { ExercisesComponent } from './pages/exercises/exercises.component';
 import { WorkoutComponent } from '@components/workout/workout.component';
 import { HttpClientModule } from '@angular/common/http';
-import { NewClientComponent } from './pages/new-client/new-client.component';
 import { NewExerciseComponent } from './pages/new-exercise/new-exercise.component';
 import { MobileSidenavComponent } from './components/mobile-sidenav/mobile-sidenav.component';
 import { InfoComponent } from './components/info/info.component';
@@ -78,7 +77,6 @@ import { LiveWorkoutComponent } from './components/live-workout/live-workout.com
 		NewWorkoutComponent,
 		ExercisesComponent,
 		WorkoutComponent,
-		NewClientComponent,
 		NewExerciseComponent,
 		MobileSidenavComponent,
 		InfoComponent,

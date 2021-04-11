@@ -27,7 +27,7 @@ const routes: Routes = [
 		component: NewExerciseComponent,
 		canActivate: [AuthGuard],
 	},
-	{ path: 'area-personale', component: PersonalAreaComponent, canActivate: [AuthGuard] },
+	{ path: 'personal-area', component: PersonalAreaComponent, canActivate: [AuthGuard] },
 	{
 		path: 'train',
 		component: TrainComponent,

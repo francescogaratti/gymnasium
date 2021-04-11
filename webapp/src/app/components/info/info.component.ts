@@ -23,9 +23,6 @@ export class InfoComponent implements OnInit {
 	sexFC: FormControl = new FormControl('', [Validators.required]);
 	birthdayFC: FormControl = new FormControl('', [Validators.required]);
 
-	/** workouts */
-	// workouts: DigitalWorkout[] = [];
-
 	constructor(private auth: AuthService) {}
 
 	ngOnInit(): void {
@@ -34,9 +31,6 @@ export class InfoComponent implements OnInit {
 		// set the form controls
 		this.nameFC.setValue(this.user.displayName.split(' ')[0]);
 		this.surnameFC.setValue(this.user.displayName.split(' ')[1]);
-		// user attributes
-		this.sexFC.setValue(this.user.sex ? 'man' : 'woman');
-		this.birthdayFC.setValue(new Date(this.user.birthday));
 	}
 
 	backup(): void {

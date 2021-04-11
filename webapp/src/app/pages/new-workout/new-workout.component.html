@@ -2,72 +2,6 @@
 	<mat-card
 		[class.mat-elevation-z0]="true"
 		align="center"
-		style="float: left; overflow: hidden; width: 30%; box-sizing: border-box"
-		class="example-full-width"
-	>
-		<mat-card-title>Scegli il Usere</mat-card-title>
-		<mat-card-content>
-			<form class="example-form" align="center">
-				<div *ngIf="selected_user && URL" align="center">
-					<img
-						(click)="detailUser(selected_user)"
-						[src]="URL"
-						alt=""
-						style="border-radius: 100%; width: 100px; height: 100px; cursor: pointer"
-					/>
-					<!-- <p class="small">
-						<button mat-icon-button color="accent" (click)="changeUser()">
-							<mat-icon style="cursor: pointer">edit</mat-icon>
-						</button>
-					</p> -->
-				</div>
-				<mat-form-field class="example-full-width" align="center">
-					<mat-label>Usere</mat-label>
-					<input
-						matInput
-						placeholder="Digita per filtrare..."
-						aria-label="User"
-						[matAutocomplete]="auto"
-						[formControl]="userCtrl"
-					/>
-					<button
-						mat-button
-						*ngIf="selected_user"
-						matSuffix
-						mat-icon-button
-						aria-label="Clear"
-						(click)="changeUser()"
-					>
-						<mat-icon color="accent">close</mat-icon>
-					</button>
-					<mat-autocomplete #auto="matAutocomplete">
-						<mat-option
-							*ngFor="let user of filteredUsers | async"
-							[value]="user.displayName"
-							(onSelectionChange)="selectedValueChange(user)"
-						>
-							<img
-								class="example-option-img"
-								aria-hidden
-								[src]="user.photoURL"
-								height="25"
-								style="border-radius: 100%"
-							/>
-							<span>{{ user.displayName }}</span> |
-							<small>
-								<em>
-									{{ user.email }}
-								</em>
-							</small>
-						</mat-option>
-					</mat-autocomplete>
-				</mat-form-field>
-			</form>
-		</mat-card-content>
-	</mat-card>
-	<mat-card
-		[class.mat-elevation-z0]="true"
-		align="center"
 		style="float: left; overflow: hidden; width: 70%; box-sizing: border-box"
 		class="example-full-width"
 	>
@@ -447,7 +381,6 @@
 				color="primary"
 				(click)="createWorkout()"
 				[disabled]="
-					!selected_user ||
 					!workout_sessions ||
 					workout_sessions.length == 0 ||
 					nameFormControl.invalid ||
