@@ -4,7 +4,7 @@ import firebase = require('firebase');
 /** extra dependencies */
 import * as nodemailer from 'nodemailer';
 /** models */
-import { User, UserTypes } from '../../../models/user';
+import { User } from '../../../models/user';
 
 const myEmail = 'life4weeks@gmail.com';
 const transporter = nodemailer.createTransport({
@@ -24,11 +24,18 @@ export const welcomeMail = functions.auth.user().onCreate(async (u: functions.au
 		photoPath: '', // ? this is needed when the user upload something to firebase storage
 		metadata: u.metadata,
 		tokenIds: [],
-		type: UserTypes.user,
 		notifications: {
 			push: false,
 			mail: false,
 		},
+		// advanced properties
+		sex: null,
+		birthday: null,
+		birthCountry: null,
+		birthCity: null,
+		fiscalCode: null,
+		address: null,
+		workouts: null,
 	};
 
 	const mailOptions = {

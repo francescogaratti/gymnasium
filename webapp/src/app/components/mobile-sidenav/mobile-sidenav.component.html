@@ -9,66 +9,6 @@
 			</button>
 		</ng-template>
 		<ng-template #authenticated>
-			<!-- admin -->
-			<button
-				*ngIf="user && user.type == UserTypes.admin"
-				color="primary"
-				mat-raised-button
-				(click)="router.navigateByUrl('admin')"
-				class="menu-tab"
-			>
-				Admin
-				<i class="material-icons-two-tone">admin_panel_settings</i>
-			</button>
-			<!-- diary -->
-			<!-- <button
-				*ngIf="
-					user &&
-					(user.type == UserTypes.admin ||
-						user.type == UserTypes.trainer ||
-						user.type == UserTypes.receptionist ||
-						user.type == UserTypes.manager)
-				"
-				color="primary"
-				mat-raised-button
-				(click)="router.navigateByUrl('diario')"
-				class="menu-tab"
-			>
-				Diario
-				<i class="material-icons-two-tone">book</i>
-			</button> -->
-			<!-- new trainer -->
-			<!-- <button
-				*ngIf="
-					user &&
-					(user.type == UserTypes.admin ||
-						user.type == UserTypes.receptionist ||
-						user.type == UserTypes.manager)
-				"
-				color="primary"
-				mat-raised-button
-				(click)="router.navigateByUrl('new-trainer')"
-				class="menu-tab"
-			>
-				Nuovo Istruttore
-				<i class="material-icons-two-tone">person_add</i>
-			</button> -->
-			<!-- new user -->
-			<!-- <button
-				*ngIf="
-					user &&
-					(user.type == UserTypes.admin ||
-						user.type == UserTypes.receptionist ||
-						user.type == UserTypes.manager)
-				"
-				color="primary"
-				mat-raised-button
-				(click)="router.navigateByUrl('new-user')"
-				class="menu-tab"
-			>
-				Nuovo Usere
-				<i class="material-icons-two-tone">person_add</i>
-			</button> -->
 			<!-- train -->
 			<button
 				*ngIf="user"
@@ -82,7 +22,6 @@
 			</button>
 			<!-- new workout -->
 			<button
-				*ngIf="user && (user.type == UserTypes.admin || user.type == UserTypes.trainer)"
 				color="primary"
 				mat-raised-button
 				(click)="router.navigateByUrl('new-workout')"
@@ -91,17 +30,6 @@
 				Nuovo Allenamento
 				<i class="material-icons-two-tone">fitness_center</i>
 			</button>
-			<!-- book -->
-			<!-- <button
-				*ngIf="user && (user.type == UserTypes.admin || user.type == UserTypes.user)"
-				color="primary"
-				mat-raised-button
-				(click)="router.navigateByUrl('book')"
-				class="menu-tab"
-			>
-				Prenota
-				<i class="material-icons-two-tone">today</i>
-			</button> -->
 			<button
 				color="primary"
 				mat-raised-button
@@ -126,7 +54,7 @@
 			<span (click)="router.navigateByUrl('home')" style="cursor: pointer">
 				<h1>
 					{{ title }}
-					{{ user ? '| ' + user?.type + ' : ' + user.displayName : '' }}
+					{{ user ? '| ' + user.displayName : '' }}
 				</h1>
 			</span>
 			<span class="fill-remaining-space"></span>

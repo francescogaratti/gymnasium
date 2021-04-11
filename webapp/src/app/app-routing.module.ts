@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '@guards/auth.guard';
 import { LoggedGuard } from '@guards/logged.guard';
-import { AdminComponent } from '@pages/admin/admin.component';
 import { HomeComponent } from '@pages/home/home.component';
 import { LoginComponent } from '@pages/login/login.component';
 import { NewExerciseComponent } from '@pages/new-exercise/new-exercise.component';
@@ -29,11 +28,6 @@ const routes: Routes = [
 		canActivate: [AuthGuard],
 	},
 	{ path: 'area-personale', component: PersonalAreaComponent, canActivate: [AuthGuard] },
-	{
-		path: 'admin',
-		component: AdminComponent,
-		canActivate: [AuthGuard],
-	},
 	{
 		path: 'train',
 		component: TrainComponent,

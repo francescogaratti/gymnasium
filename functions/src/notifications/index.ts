@@ -1,11 +1,11 @@
 import * as functions from 'firebase-functions';
 import firebase = require('firebase');
 import * as admin from 'firebase-admin';
-import { Client } from '../../../models/user';
 import { DigitalWorkout } from '../../../models/workout';
 
 import * as nodemailer from 'nodemailer';
 import { createWorkbook } from '../create-excel';
+import { User } from '../../../models/user';
 
 admin.initializeApp();
 
@@ -22,38 +22,38 @@ export const SendNotificationNewWorkout = functions.firestore
 	.document('workouts/{workoutId}')
 	.onCreate(async (snap, context) => {
 		const workout: DigitalWorkout = snap.data() as DigitalWorkout;
-		const clientId: string = workout.clientId;
+		const clientId: string = workout.userId;
 		if (!clientId) return;
 
-		// get the client
-		const client: Client | null = await firebase
+		// get the user
+		const user: User | null = await firebase
 			.firestore()
 			.collection('clients')
 			.doc(clientId)
 			.get()
-			.then(snapshot => snapshot.data() as Client)
+			.then(snapshot => snapshot.data() as User)
 			.catch(err => {
 				console.error(err);
 				return null;
 			});
 
-		if (client && client.notifications) {
-			if (client.notifications.push)
+		if (user && user.notifications) {
+			if (user.notifications.push)
 				// web notification
-				sendNotification(client)
+				sendNotification(user)
 					.then(() => console.log('Notification sent'))
 					.catch((err: any) => console.error('Notification error', err));
-			if (client.notifications.mail)
+			if (user.notifications.mail)
 				// email with attachment
-				sendMail(client, workout)
+				sendMail(user, workout)
 					.then(() => console.log('Email sent'))
 					.catch((err: any) => console.error('Email error', err));
 		}
 	});
 
-async function sendNotification(client: Client) {
+async function sendNotification(user: User) {
 	// extract registration token
-	const registrationTokens: string[] = client.tokenIds ? client.tokenIds : [];
+	const registrationTokens: string[] = user.tokenIds ? user.tokenIds : [];
 
 	// if something went wrong == > exit
 	if (!registrationTokens || registrationTokens.length === 0) return;
@@ -85,14 +85,14 @@ async function sendNotification(client: Client) {
 		});
 }
 
-async function sendMail(client: Client, workout: DigitalWorkout) {
+async function sendMail(user: User, workout: DigitalWorkout) {
 	const wb = createWorkbook(workout);
 	const filename = workout.name + '.xlsx';
 	const excel_buffer: any = await wb.writeToBuffer().then((buffer: any) => buffer);
 
 	const mailOptions = {
 		from: 'Ultra Gymnasium ' + myEmail,
-		to: client.email,
+		to: user.email,
 		subject: 'Nuova Scheda 📝🔥',
 		html:
 			`
@@ -104,12 +104,8 @@ async function sendMail(client: Client, workout: DigitalWorkout) {
 				</h3>				
 				<p style="display: block;">
 					` +
-			client.displayName +
-			` 😄 <br> 
-					<strong>` +
-			workout.trainerName +
-			`</strong> ti ha preparato una nuova scheda!        
-					<br>
+			user.displayName +
+			` 😄 <br>
 					La puoi trovare insieme a tutte le altre schede scadute o passate nella tua <a href="https://ultra-gymnasium.web.app/area-personale/">area personale</a> del sito.
 				</p>
 				<p style="display: block;">

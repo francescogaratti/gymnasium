@@ -151,8 +151,6 @@ export class NewWorkoutComponent implements OnInit {
 			creationDate: new Date().toUTCString(),
 			userId: this.selected_user.uid,
 			userName: this.selected_user.displayName,
-			trainerId: this.auth.user.uid,
-			trainerName: this.auth.user.displayName,
 			startingDate: new Date(this.startingDateFormControl.value).toUTCString(),
 			endingDate: new Date(this.endingDateFormControl.value).toUTCString(),
 			sessions: this.workout_sessions,

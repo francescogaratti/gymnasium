@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { User, User, UserTypes } from '@models/user';
+import { User } from '@models/user';
 import { DigitalWorkout } from '@models/workout';
 import { AuthService } from '@services/auth.service';
 
@@ -10,12 +10,9 @@ import { AuthService } from '@services/auth.service';
 	styleUrls: ['./info.component.sass'],
 })
 export class InfoComponent implements OnInit {
-	UserTypes = UserTypes;
-	@Input() user: User = null;
 	@Input() user: User = null;
 	@Output() workouts: EventEmitter<DigitalWorkout[]> = new EventEmitter();
 
-	originalUser: User = null;
 	originalUser: User = null;
 	pendingChanges: boolean = false;
 

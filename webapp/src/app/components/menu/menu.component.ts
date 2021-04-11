@@ -11,7 +11,6 @@ import { UserService } from '@services/user.service';
 })
 export class MenuComponent implements OnInit {
 	title: string = 'Gymnasium';
-	type: string = 'Trainer';
 	user: User = null;
 	constructor(public router: Router, public auth: AuthService, public userService: UserService) {
 		this.auth.user$.subscribe(user => (this.user = user));

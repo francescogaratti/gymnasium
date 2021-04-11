@@ -42,13 +42,13 @@ export interface User {
 		push: boolean;
 	};
 	// advanced properties
-	sex: boolean;
-	birthday: string;
-	birthCountry: string;
-	birthCity: string;
-	fiscalCode: string;
-	address: Address;
-	workouts: any[];
+	sex: boolean | null;
+	birthday: string | null;
+	birthCountry: string | null;
+	birthCity: string | null;
+	fiscalCode: string | null;
+	address: Address | null;
+	workouts: any[] | null;
 }
 
 export class User implements User {

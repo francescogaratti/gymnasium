@@ -22,7 +22,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatInput, MatInputModule } from '@angular/material/input';
+import { MatInputModule } from '@angular/material/input';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -56,7 +56,6 @@ import { WorkoutComponent } from '@components/workout/workout.component';
 import { HttpClientModule } from '@angular/common/http';
 import { NewClientComponent } from './pages/new-client/new-client.component';
 import { NewExerciseComponent } from './pages/new-exercise/new-exercise.component';
-import { AdminComponent } from './pages/admin/admin.component';
 import { MobileSidenavComponent } from './components/mobile-sidenav/mobile-sidenav.component';
 import { InfoComponent } from './components/info/info.component';
 import { UploadPhotoComponent } from './components/upload-photo/upload-photo.component';
@@ -81,7 +80,6 @@ import { LiveWorkoutComponent } from './components/live-workout/live-workout.com
 		WorkoutComponent,
 		NewClientComponent,
 		NewExerciseComponent,
-		AdminComponent,
 		MobileSidenavComponent,
 		InfoComponent,
 		UploadPhotoComponent,
