@@ -17,7 +17,7 @@ app.get('/workouts', (req, res) => {
 			date: '13/04/2021',
 		},
 	];
-	res.send(JSON.parse(workouts));
+	res.send(workouts);
 });
 
 app.listen(PORT, () => {
