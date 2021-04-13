@@ -1,0 +1,12 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"noUnusedLocals": true,
+		"outDir": "lib",
+		"sourceMap": true,
+		"target": "esnext",
+		"lib": ["dom", "es2017"]
+	},
+	"compileOnSave": true,
+	"include": ["src", "assets"]
+}

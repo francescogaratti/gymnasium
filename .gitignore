@@ -67,3 +67,6 @@ node_modules/
 
 # dist
 dist
+
+# server/lib
+server/lib

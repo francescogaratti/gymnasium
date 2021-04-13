@@ -280,8 +280,9 @@ export class AuthService {
 	async generateExcel(filename: string, workoutId: string): Promise<boolean> {
 		this.asyncOperation.next(true);
 		// some costants & params
-		const generateExcelURL: string =
-			'https://us-central1-ultra-gymnasium.cloudfunctions.net/excel-generateExcel';
+		// const generateExcelURL: string =
+		// 	'https://us-central1-ultra-gymnasium.cloudfunctions.net/excel-generateExcel';
+		const generateExcelURL: string = 'http://localhost:5000/excel';
 		const requestOptions: Object = {
 			params: { workoutId: workoutId },
 			responseType: 'arrayBuffer',

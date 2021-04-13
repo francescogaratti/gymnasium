@@ -10,4 +10,4 @@ Gymnasium webapp
 
 ## Architecture
 
-Angular + Firebase
+Angular + Firebase + Heroku
