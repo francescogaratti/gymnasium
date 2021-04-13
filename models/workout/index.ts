@@ -1,4 +1,4 @@
-import { Exercise, LiveExercise } from '../exercise';
+import { Exercise, ExerciseRecord } from '../exercise';
 export interface Workout {
 	id: string;
 	name: string;
@@ -10,10 +10,9 @@ export interface Workout {
 
 	startingDate: string;
 	endingDate: string;
-}
 
-export interface DigitalWorkout extends Workout {
 	sessions: WorkoutSession[];
+	state?: string;
 }
 
 export enum WorkoutStates {
@@ -21,30 +20,57 @@ export enum WorkoutStates {
 	paused = 'paused',
 	stopped = 'stopped',
 }
-export interface LiveWorkout extends DigitalWorkout {
-	sessions: WorkoutSession[];
-	state: string;
-}
 
-export interface StandardWorkout extends Workout {
-	filePath: string;
-}
-
-export interface History {
+/**
+ * @interface SessionRecord
+ * @param length the duration in seconds of the workout session
+ * @param date the day when the workout session is done
+ * @param exercises list of exercises recorded
+ * @param notes notes (optional)
+ */
+export interface SessionRecord {
 	length: number;
 	date: string;
-	notes: string;
-	exercises: LiveExercise[];
+	exercises: ExerciseRecord[];
+	notes?: string;
 }
 
+export class SessionRecord implements SessionRecord {
+	constructor(session: WorkoutSession) {
+		this.length = 0;
+		this.date = new Date().toLocaleDateString();
+
+		this.exercises = [];
+		session.exercises.forEach(exercise => this.exercises.push(new ExerciseRecord(exercise)));
+
+		this.notes = null;
+	}
+}
+
+/**
+ * @interface WorkoutSession
+ * @param name identifier of the workout session
+ * @param exercises list of exercises for the session
+ * @param history
+ * @param notes notes (optional)
+ */
 export interface WorkoutSession {
 	name: string;
 	exercises: Exercise[];
-	notes: string;
-	history: History[];
+	records: SessionRecord[];
+	notes?: string;
 }
 
-export const standard: DigitalWorkout = {
+export class WorkoutSession implements WorkoutSession {
+	constructor() {
+		this.name = '';
+		this.exercises = [];
+		this.records = [];
+		this.notes = null;
+	}
+}
+
+export const standard: Workout = {
 	id: '',
 	name: 'Primo Allenamento Test',
 	creationDate: '01-01-2000',
@@ -66,6 +92,8 @@ export const standard: DigitalWorkout = {
 						seconds: 0,
 					},
 					notes: null,
+					time: null,
+					type: 'Weight',
 				},
 				{
 					id: null,
@@ -77,6 +105,8 @@ export const standard: DigitalWorkout = {
 						seconds: 30,
 					},
 					notes: 'controlla negative',
+					time: null,
+					type: 'Weight',
 				},
 				{
 					id: null,
@@ -88,10 +118,12 @@ export const standard: DigitalWorkout = {
 						seconds: 0,
 					},
 					notes: null,
+					time: null,
+					type: 'Weight',
 				},
 			],
 			notes: 'Petto + Bicipiti',
-			history: [],
+			records: [],
 		},
 		{
 			name: 'Allenamento B',
@@ -99,6 +131,7 @@ export const standard: DigitalWorkout = {
 				{
 					id: null,
 					name: 'Trazioni',
+					type: 'Weight',
 					sets: 5,
 					reps: 8,
 					rest: {
@@ -106,10 +139,12 @@ export const standard: DigitalWorkout = {
 						seconds: 0,
 					},
 					notes: null,
+					time: null,
 				},
 				{
 					id: null,
 					name: 'Pulley',
+					type: 'Weight',
 					sets: 3,
 					reps: 12,
 					rest: {
@@ -117,10 +152,12 @@ export const standard: DigitalWorkout = {
 						seconds: 30,
 					},
 					notes: null,
+					time: null,
 				},
 				{
 					id: null,
 					name: 'French press',
+					type: 'Weight',
 					sets: 5,
 					reps: 10,
 					rest: {
@@ -128,10 +165,11 @@ export const standard: DigitalWorkout = {
 						seconds: 0,
 					},
 					notes: null,
+					time: null,
 				},
 			],
 			notes: 'Schiena + Tricipiti',
-			history: [],
+			records: [],
 		},
 		{
 			name: 'Allenamento C',
@@ -139,6 +177,7 @@ export const standard: DigitalWorkout = {
 				{
 					id: null,
 					name: 'Squat',
+					type: 'Weight',
 					sets: 5,
 					reps: 8,
 					rest: {
@@ -146,10 +185,12 @@ export const standard: DigitalWorkout = {
 						seconds: 0,
 					},
 					notes: null,
+					time: null,
 				},
 				{
 					id: null,
 					name: 'Leg curl',
+					type: 'Weight',
 					sets: 3,
 					reps: 12,
 					rest: {
@@ -157,10 +198,12 @@ export const standard: DigitalWorkout = {
 						seconds: 30,
 					},
 					notes: null,
+					time: null,
 				},
 				{
 					id: null,
 					name: 'Military',
+					type: 'Weight',
 					sets: 5,
 					reps: 8,
 					rest: {
@@ -168,10 +211,12 @@ export const standard: DigitalWorkout = {
 						seconds: 0,
 					},
 					notes: null,
+					time: null,
 				},
 				{
 					id: null,
 					name: 'Alzate laterali',
+					type: 'Weight',
 					sets: 3,
 					reps: 12,
 					rest: {
@@ -179,15 +224,16 @@ export const standard: DigitalWorkout = {
 						seconds: 30,
 					},
 					notes: null,
+					time: null,
 				},
 			],
 			notes: 'Gambe + Spalle',
-			history: [],
+			records: [],
 		},
 	],
 };
 
-export const starterUomo: DigitalWorkout = {
+export const starterUomo: Workout = {
 	id: '',
 	name: 'Starter - Uomo',
 	creationDate: '',
@@ -202,8 +248,10 @@ export const starterUomo: DigitalWorkout = {
 				{
 					id: null,
 					name: 'Corsa',
+					type: 'Cardio',
 					sets: 0,
-					reps: 0,
+					time: 10,
+					reps: null,
 					rest: {
 						minutes: 2,
 						seconds: 0,
@@ -213,6 +261,7 @@ export const starterUomo: DigitalWorkout = {
 				{
 					id: null,
 					name: 'Addominali',
+					type: 'Weight',
 					sets: 10,
 					reps: 20,
 					rest: {
@@ -220,10 +269,12 @@ export const starterUomo: DigitalWorkout = {
 						seconds: 0,
 					},
 					notes: null,
+					time: null,
 				},
 				{
 					id: null,
 					name: 'Chest press',
+					type: 'Weight',
 					sets: 5,
 					reps: 12,
 					rest: {
@@ -231,10 +282,12 @@ export const starterUomo: DigitalWorkout = {
 						seconds: 0,
 					},
 					notes: null,
+					time: null,
 				},
 				{
 					id: null,
 					name: 'Lat machine',
+					type: 'Weight',
 					sets: 5,
 					reps: 12,
 					rest: {
@@ -242,10 +295,11 @@ export const starterUomo: DigitalWorkout = {
 						seconds: 0,
 					},
 					notes: null,
+					time: null,
 				},
 			],
 			notes: 'Cardio + parte alta',
-			history: [],
+			records: [],
 		},
 		{
 			name: 'Allenamento B',
@@ -253,17 +307,20 @@ export const starterUomo: DigitalWorkout = {
 				{
 					id: null,
 					name: 'Corsa',
+					type: 'Cardio',
 					sets: 0,
-					reps: 0,
+					reps: null,
 					rest: {
 						minutes: 2,
 						seconds: 0,
 					},
 					notes: null,
+					time: 10,
 				},
 				{
 					id: null,
 					name: 'Addominali',
+					type: 'Weight',
 					sets: 10,
 					reps: 20,
 					rest: {
@@ -271,10 +328,12 @@ export const starterUomo: DigitalWorkout = {
 						seconds: 0,
 					},
 					notes: null,
+					time: null,
 				},
 				{
 					id: null,
 					name: 'Leg extension',
+					type: 'Weight',
 					sets: 5,
 					reps: 12,
 					rest: {
@@ -282,10 +341,12 @@ export const starterUomo: DigitalWorkout = {
 						seconds: 0,
 					},
 					notes: null,
+					time: null,
 				},
 				{
 					id: null,
 					name: 'Leg curl',
+					type: 'Weight',
 					sets: 5,
 					reps: 12,
 					rest: {
@@ -293,15 +354,16 @@ export const starterUomo: DigitalWorkout = {
 						seconds: 0,
 					},
 					notes: null,
+					time: null,
 				},
 			],
 			notes: 'Cardio + parte bassa',
-			history: [],
+			records: [],
 		},
 	],
 };
 
-export const starterDonna: DigitalWorkout = {
+export const starterDonna: Workout = {
 	id: '',
 	name: 'Starter - Donna',
 	creationDate: '',
@@ -316,17 +378,20 @@ export const starterDonna: DigitalWorkout = {
 				{
 					id: null,
 					name: 'Corsa',
+					type: 'Cardio',
 					sets: 0,
-					reps: 0,
+					reps: null,
 					rest: {
 						minutes: 2,
 						seconds: 0,
 					},
 					notes: null,
+					time: 10,
 				},
 				{
 					id: null,
 					name: 'Addominali',
+					type: 'Weight',
 					sets: 10,
 					reps: 20,
 					rest: {
@@ -334,10 +399,12 @@ export const starterDonna: DigitalWorkout = {
 						seconds: 0,
 					},
 					notes: null,
+					time: null,
 				},
 				{
 					id: null,
 					name: 'Bag squat',
+					type: 'Weight',
 					sets: 5,
 					reps: 12,
 					rest: {
@@ -345,10 +412,11 @@ export const starterDonna: DigitalWorkout = {
 						seconds: 0,
 					},
 					notes: null,
+					time: null,
 				},
 			],
 			notes: 'Cardio + squat',
-			history: [],
+			records: [],
 		},
 		{
 			name: 'Allenamento B',
@@ -356,8 +424,10 @@ export const starterDonna: DigitalWorkout = {
 				{
 					id: null,
 					name: 'Corsa',
+					type: 'Cardio',
 					sets: 0,
-					reps: 0,
+					time: 10,
+					reps: null,
 					rest: {
 						minutes: 2,
 						seconds: 0,
@@ -367,7 +437,9 @@ export const starterDonna: DigitalWorkout = {
 				{
 					id: null,
 					name: 'Addominali',
+					type: 'Weight',
 					sets: 10,
+					time: null,
 					reps: 20,
 					rest: {
 						minutes: 2,
@@ -378,7 +450,9 @@ export const starterDonna: DigitalWorkout = {
 				{
 					id: null,
 					name: 'Leg extension',
+					type: 'Weight',
 					sets: 5,
+					time: null,
 					reps: 12,
 					rest: {
 						minutes: 2,
@@ -389,7 +463,9 @@ export const starterDonna: DigitalWorkout = {
 				{
 					id: null,
 					name: 'Leg curl',
+					type: 'Weight',
 					sets: 5,
+					time: null,
 					reps: 12,
 					rest: {
 						minutes: 2,
@@ -399,7 +475,7 @@ export const starterDonna: DigitalWorkout = {
 				},
 			],
 			notes: 'Cardio + parte bassa',
-			history: [],
+			records: [],
 		},
 	],
 };

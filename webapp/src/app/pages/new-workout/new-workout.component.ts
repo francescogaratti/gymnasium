@@ -2,13 +2,7 @@ import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Exercise } from '@models/exercise';
-import {
-	DigitalWorkout,
-	WorkoutSession,
-	standard,
-	starterUomo,
-	starterDonna,
-} from '@models/workout';
+import { Workout, WorkoutSession, standard, starterUomo, starterDonna } from '@models/workout';
 import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
 
@@ -43,8 +37,8 @@ export class NewWorkoutComponent implements OnInit {
 
 	URL: string = null;
 
-	templates: DigitalWorkout[] = [standard, starterUomo, starterDonna];
-	selected_template: DigitalWorkout = null;
+	templates: Workout[] = [standard, starterUomo, starterDonna];
+	selected_template: Workout = null;
 
 	my_input: HTMLInputElement = null;
 
@@ -72,6 +66,8 @@ export class NewWorkoutComponent implements OnInit {
 			id: null,
 			name: this.esercizioFormControl.value,
 			reps: this.repsFormControl.value,
+			type: null, // todo: fix this
+			time: null, // todo: fix this
 			sets: this.setsFormControl.value,
 			rest: {
 				minutes: this.restMinFormControl.value,
@@ -88,14 +84,14 @@ export class NewWorkoutComponent implements OnInit {
 			name: this.sessionFormControl.value,
 			exercises: [],
 			notes: null,
-			history: null,
+			records: null,
 		};
 		this.workout_sessions.push(new_workout_session);
 		this.cleanForm();
 		this.sessionFormControl.setValue('');
 	}
 
-	selectTemplateWorkout(template: DigitalWorkout) {
+	selectTemplateWorkout(template: Workout) {
 		this.selected_template = template;
 		this.workout_sessions = template.sessions;
 	}
@@ -116,7 +112,7 @@ export class NewWorkoutComponent implements OnInit {
 		console.info('\tWorkout Name:', this.nameFormControl.value);
 		console.info('\tSessions');
 		console.table(this.workout_sessions);
-		let workout: DigitalWorkout = {
+		let workout: Workout = {
 			id: null,
 			name: this.nameFormControl.value,
 			creationDate: new Date().toUTCString(),

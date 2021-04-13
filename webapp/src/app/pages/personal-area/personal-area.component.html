@@ -1,10 +1,10 @@
 <mat-card *ngIf="user" align="center" class="mat-elevation-z0">
 	<mat-tab-group mat-align-tabs="center">
 		<mat-tab label="Dati Personali">
-			<app-info id="info" [user]="user" (workouts)="workouts = $event"></app-info>
+			<app-info id="info" [user]="user"></app-info>
 		</mat-tab>
 		<mat-tab label="I miei Allenamenti">
-			<app-workouts id="workouts" (selectedWorkout)="selectedWorkout = $event"></app-workouts>
+			<app-workouts id="workouts"></app-workouts>
 		</mat-tab>
 		<mat-tab label="Statistiche">
 			<h2>Coming soon 🔥</h2>

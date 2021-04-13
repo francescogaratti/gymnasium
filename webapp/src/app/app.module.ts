@@ -8,7 +8,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
-import { AngularFireStorageModule } from '@angular/fire/storage';
+// import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { LoginComponent } from './pages/login/login.component';
 
@@ -49,12 +49,10 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { PersonalAreaComponent } from './pages/personal-area/personal-area.component';
 import { MenuComponent } from '@components/menu/menu.component';
 import { ProgressBarComponent } from '@components/progress-bar/progress-bar.component';
-import { CreateWorkoutRoutineComponent } from './pages/create-workout-routine/create-workout-routine.component';
 import { NewWorkoutComponent } from './pages/new-workout/new-workout.component';
 import { ExercisesComponent } from './pages/exercises/exercises.component';
 import { WorkoutComponent } from '@components/workout/workout.component';
 import { HttpClientModule } from '@angular/common/http';
-import { NewExerciseComponent } from './pages/new-exercise/new-exercise.component';
 import { MobileSidenavComponent } from './components/mobile-sidenav/mobile-sidenav.component';
 import { InfoComponent } from './components/info/info.component';
 import { UploadPhotoComponent } from './components/upload-photo/upload-photo.component';
@@ -73,11 +71,9 @@ import { LiveWorkoutComponent } from './components/live-workout/live-workout.com
 		PersonalAreaComponent,
 		MenuComponent,
 		ProgressBarComponent,
-		CreateWorkoutRoutineComponent,
 		NewWorkoutComponent,
 		ExercisesComponent,
 		WorkoutComponent,
-		NewExerciseComponent,
 		MobileSidenavComponent,
 		InfoComponent,
 		UploadPhotoComponent,

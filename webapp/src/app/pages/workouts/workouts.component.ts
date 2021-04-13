@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { User } from '@models/user';
-import { DigitalWorkout } from '@models/workout';
+import { Workout } from '@models/workout';
 import { AuthService } from '@services/auth.service';
 import { UserService } from '@services/user.service';
 import { UtilsService } from '@services/utils.service';
@@ -11,8 +11,7 @@ import { UtilsService } from '@services/utils.service';
 	styleUrls: ['./workouts.component.sass'],
 })
 export class WorkoutsComponent implements OnInit {
-	@Output() selectedWorkout: EventEmitter<DigitalWorkout> = new EventEmitter<DigitalWorkout>();
-	workouts: DigitalWorkout[] = [];
+	workouts: Workout[] = [];
 	user: User = null;
 
 	columnsWorkouts: string[] = [
@@ -41,11 +40,11 @@ export class WorkoutsComponent implements OnInit {
 	getUserWorkouts() {
 		this.auth
 			.readUserWorkouts(this.user)
-			.then((workouts: DigitalWorkout[]) => (this.workouts = workouts))
+			.then((workouts: Workout[]) => (this.workouts = workouts))
 			.catch(err => console.error(err));
 	}
 
-	deleteWorkout(workout: DigitalWorkout) {
+	deleteWorkout(workout: Workout) {
 		this.auth
 			.deleteWorkout(workout)
 			.then((value: boolean) => {
@@ -66,11 +65,7 @@ export class WorkoutsComponent implements OnInit {
 			});
 	}
 
-	selectWorkout(workout: DigitalWorkout) {
-		this.selectedWorkout.emit(workout);
-	}
-
-	exportExcel(workout: DigitalWorkout) {
+	exportExcel(workout: Workout) {
 		const filename: string = workout.name + '.xlsx';
 		this.auth
 			.generateExcel(filename, workout.id)

@@ -4,7 +4,6 @@ import { AuthGuard } from '@guards/auth.guard';
 import { LoggedGuard } from '@guards/logged.guard';
 import { HomeComponent } from '@pages/home/home.component';
 import { LoginComponent } from '@pages/login/login.component';
-import { NewExerciseComponent } from '@pages/new-exercise/new-exercise.component';
 import { NewWorkoutComponent } from '@pages/new-workout/new-workout.component';
 import { NotFoundComponent } from '@pages/not-found/not-found.component';
 import { PersonalAreaComponent } from '@pages/personal-area/personal-area.component';
@@ -21,11 +20,6 @@ const routes: Routes = [
 	{
 		path: 'new-workout',
 		component: NewWorkoutComponent,
-		canActivate: [AuthGuard],
-	},
-	{
-		path: 'new-exercise',
-		component: NewExerciseComponent,
 		canActivate: [AuthGuard],
 	},
 	{

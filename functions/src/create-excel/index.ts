@@ -4,7 +4,7 @@ import firebase = require('firebase');
 /** extra dependencies */
 // import 'excel4node';
 /** models */
-import { DigitalWorkout } from '../../../models/workout';
+import { Workout } from '../../../models/workout';
 import { Rest } from '../../../models/exercise';
 
 const xl = require('excel4node');
@@ -14,12 +14,12 @@ export const generateExcel = functions.https.onRequest(
 		const id: string = String(req.query['workoutId']);
 		if (!id) res.send(undefined);
 
-		const workout: DigitalWorkout | null = await firebase
+		const workout: Workout | null = await firebase
 			.firestore()
 			.collection('workouts')
 			.doc(id)
 			.get()
-			.then(snapshot => snapshot.data() as DigitalWorkout)
+			.then(snapshot => snapshot.data() as Workout)
 			.catch(err => {
 				console.error(err);
 				return null;
@@ -46,7 +46,7 @@ export const generateExcel = functions.https.onRequest(
 	}
 );
 
-export function createWorkbook(workout: DigitalWorkout) {
+export function createWorkbook(workout: Workout) {
 	const wb = new xl.Workbook();
 	const ws = wb.addWorksheet('Scheda di Allenamento');
 	const exerciseColumnNames = ['Esercizio', 'Sets', 'Reps', 'Rest', 'Note'];

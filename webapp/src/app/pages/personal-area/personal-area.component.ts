@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '@models/user';
-import { DigitalWorkout } from '@models/workout';
+import { Workout } from '@models/workout';
 import { AuthService } from '@services/auth.service';
 import { UserService } from '@services/user.service';
 
@@ -11,8 +11,8 @@ import { UserService } from '@services/user.service';
 })
 export class PersonalAreaComponent implements OnInit {
 	user: User = null;
-	workouts: DigitalWorkout[] = [];
-	selectedWorkout: DigitalWorkout = null;
+	workouts: Workout[] = [];
+	selectedWorkout: Workout = null;
 	constructor(private auth: AuthService, private userService: UserService) {}
 
 	ngOnInit(): void {

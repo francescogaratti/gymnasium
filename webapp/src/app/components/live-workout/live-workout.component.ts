@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { History, LiveWorkout, WorkoutSession, WorkoutStates } from '@models/workout';
-import { Exercise, LiveExercise } from '@models/exercise';
+import { Workout, WorkoutSession, WorkoutStates, SessionRecord } from '@models/workout';
+import { Exercise, ExerciseRecord } from '@models/exercise';
 import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -16,10 +16,10 @@ export class LiveWorkoutComponent implements OnInit {
 	id: string;
 	states = WorkoutStates;
 	chosen_session: string = null;
-	live_exercises: LiveExercise[] = [];
+	exercises_records: ExerciseRecord[] = [];
 	time: number = 0;
 	timer = null;
-	@Input() workout: LiveWorkout = null;
+	@Input() workout: Workout = null;
 	constructor(
 		private activatedRoute: ActivatedRoute,
 		private auth: AuthService,
@@ -31,7 +31,7 @@ export class LiveWorkoutComponent implements OnInit {
 
 	ngOnInit(): void {}
 
-	downloadExcel(workout: LiveWorkout) {
+	downloadExcel(workout: Workout) {
 		const filename: string = workout.name + '.xlsx';
 		this.auth
 			.generateExcel(filename, workout.id)
@@ -50,20 +50,16 @@ export class LiveWorkoutComponent implements OnInit {
 	}
 
 	openInfoNotes(exercise: Exercise) {
-		// const dialogRef =
 		this.dialog.open(DialogInfoComponent, {
 			width: '300px',
 			data: { title: exercise.name, messages: ['Note: ' + exercise.notes] },
 		});
-		// dialogRef.afterClosed().subscribe(result => {
-		// 	console.log('The dialog was closed');
-		// });
 	}
 
 	start(session: WorkoutSession) {
 		this.workout.state = WorkoutStates.started;
 		this.chosen_session = session.name;
-		this.live_exercises = JSON.parse(JSON.stringify(session.exercises));
+		this.exercises_records = JSON.parse(JSON.stringify(session.exercises));
 		this.timer = setInterval(() => (this.time += 1), 1000);
 	}
 
@@ -83,16 +79,17 @@ export class LiveWorkoutComponent implements OnInit {
 		let sessionIndex = this.workout.sessions.findIndex(
 			session => session.name == this.chosen_session
 		);
-		let history: History = {
+		// todo: use new SessionRecord(session)
+		let record: SessionRecord = {
 			date: new Date().toLocaleDateString(),
 			length: this.time,
 			notes: null,
-			exercises: this.live_exercises,
+			exercises: this.exercises_records,
 		};
 
-		if (!this.workout.sessions[sessionIndex].history)
-			this.workout.sessions[sessionIndex].history = [];
-		this.workout.sessions[sessionIndex].history.push(history);
+		if (!this.workout.sessions[sessionIndex].records)
+			this.workout.sessions[sessionIndex].records = [];
+		this.workout.sessions[sessionIndex].records.push(record);
 		console.info(this.workout);
 
 		// clean the chosen session

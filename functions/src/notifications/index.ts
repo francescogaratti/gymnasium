@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 import firebase = require('firebase');
 import * as admin from 'firebase-admin';
-import { DigitalWorkout } from '../../../models/workout';
+import { Workout } from '../../../models/workout';
 
 import * as nodemailer from 'nodemailer';
 import { createWorkbook } from '../create-excel';
@@ -21,7 +21,7 @@ const transporter = nodemailer.createTransport({
 export const SendNotificationNewWorkout = functions.firestore
 	.document('workouts/{workoutId}')
 	.onCreate(async (snap, context) => {
-		const workout: DigitalWorkout = snap.data() as DigitalWorkout;
+		const workout: Workout = snap.data() as Workout;
 		const clientId: string = workout.userId;
 		if (!clientId) return;
 
@@ -85,7 +85,7 @@ async function sendNotification(user: User) {
 		});
 }
 
-async function sendMail(user: User, workout: DigitalWorkout) {
+async function sendMail(user: User, workout: Workout) {
 	const wb = createWorkbook(workout);
 	const filename = workout.name + '.xlsx';
 	const excel_buffer: any = await wb.writeToBuffer().then((buffer: any) => buffer);

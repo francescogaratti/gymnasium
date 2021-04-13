@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { User } from '@models/user';
-import { DigitalWorkout } from '@models/workout';
+import { Workout } from '@models/workout';
 import { AuthService } from '@services/auth.service';
 import { UserService } from '@services/user.service';
 
@@ -13,8 +13,8 @@ import { UserService } from '@services/user.service';
 export class TrainComponent implements OnInit {
 	id: string = null;
 	user: User = null;
-	workouts: DigitalWorkout[] = [];
-	selectedWorkout: DigitalWorkout = null;
+	workouts: Workout[] = [];
+	selectedWorkout: Workout = null;
 	constructor(
 		private activatedRoute: ActivatedRoute,
 		private userService: UserService,
@@ -33,7 +33,7 @@ export class TrainComponent implements OnInit {
 	getUserWorkouts() {
 		this.auth
 			.readUserWorkouts(this.user)
-			.then((workouts: DigitalWorkout[]) => {
+			.then((workouts: Workout[]) => {
 				this.workouts = workouts;
 				this.selectedWorkout = this.workouts.find(workout => workout.id == this.id);
 			})

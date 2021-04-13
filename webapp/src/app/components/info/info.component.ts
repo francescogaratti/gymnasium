@@ -1,8 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { User } from '@models/user';
-import { DigitalWorkout } from '@models/workout';
-import { AuthService } from '@services/auth.service';
 
 @Component({
 	selector: 'app-info',
@@ -11,7 +9,6 @@ import { AuthService } from '@services/auth.service';
 })
 export class InfoComponent implements OnInit {
 	@Input() user: User = null;
-	@Output() workouts: EventEmitter<DigitalWorkout[]> = new EventEmitter();
 
 	originalUser: User = null;
 	pendingChanges: boolean = false;
@@ -20,13 +17,10 @@ export class InfoComponent implements OnInit {
 	photoFC: FormControl = new FormControl('', [Validators.required]);
 	nameFC: FormControl = new FormControl('', [Validators.required]);
 	surnameFC: FormControl = new FormControl('', [Validators.required]);
-	sexFC: FormControl = new FormControl('', [Validators.required]);
-	birthdayFC: FormControl = new FormControl('', [Validators.required]);
 
-	constructor(private auth: AuthService) {}
+	constructor() {}
 
 	ngOnInit(): void {
-		delete this.user.workouts;
 		if (this.user) this.originalUser = JSON.parse(JSON.stringify(this.user));
 		// set the form controls
 		this.nameFC.setValue(this.user.displayName.split(' ')[0]);
@@ -46,14 +40,5 @@ export class InfoComponent implements OnInit {
 	}
 	modify(): void {
 		this.pendingChanges = true;
-	}
-
-	getUserWorkouts() {
-		this.auth
-			.readUserWorkouts(this.user)
-			.then((workouts: DigitalWorkout[]) => {
-				this.workouts.emit(workouts);
-			})
-			.catch(err => console.error(err));
 	}
 }

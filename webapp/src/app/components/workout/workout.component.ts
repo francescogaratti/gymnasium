@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DigitalWorkout } from '@models/workout';
+import { Workout } from '@models/workout';
 import { Exercise } from '@models/exercise';
 import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
@@ -13,7 +13,7 @@ import { DialogInfoComponent } from '@components/dialog-info/dialog-info.compone
 })
 export class WorkoutComponent implements OnInit {
 	id: string;
-	@Input() workout: DigitalWorkout = null;
+	@Input() workout: Workout = null;
 	constructor(
 		private activatedRoute: ActivatedRoute,
 		private auth: AuthService,
@@ -26,7 +26,7 @@ export class WorkoutComponent implements OnInit {
 
 	ngOnInit(): void {}
 
-	downloadExcel(workout: DigitalWorkout) {
+	downloadExcel(workout: Workout) {
 		const filename: string = workout.name + '.xlsx';
 		this.auth
 			.generateExcel(filename, workout.id)
@@ -45,17 +45,13 @@ export class WorkoutComponent implements OnInit {
 	}
 
 	openInfoNotes(exercise: Exercise) {
-		// const dialogRef =
 		this.dialog.open(DialogInfoComponent, {
 			width: '300px',
 			data: { title: exercise.name, messages: ['Note: ' + exercise.notes] },
 		});
-		// dialogRef.afterClosed().subscribe(result => {
-		// 	console.log('The dialog was closed');
-		// });
 	}
 
-	train(workout: DigitalWorkout) {
+	train(workout: Workout) {
 		this.router.navigateByUrl('train?id=' + workout.id);
 	}
 }
