@@ -1,0 +1,25 @@
+{
+	"name": "ultra-gymnasium",
+	"version": "1.0.0",
+	"description": "Webapp for online gym",
+	"main": "index.js",
+	"scripts": {
+		"start": "cd server && node index.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/davide97g/gymnasium.git"
+	},
+	"author": "Davide Ghiotto",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/davide97g/gymnasium/issues"
+	},
+	"homepage": "https://github.com/davide97g/gymnasium#readme",
+	"dependencies": {
+		"express": "^4.17.1"
+	},
+	"engines": {
+		"node": "10.x"
+	}
+}
