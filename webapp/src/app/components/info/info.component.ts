@@ -21,6 +21,7 @@ export class InfoComponent implements OnInit {
 	constructor() {}
 
 	ngOnInit(): void {
+		delete this.user.workouts;
 		if (this.user) this.originalUser = JSON.parse(JSON.stringify(this.user));
 		// set the form controls
 		this.nameFC.setValue(this.user.displayName.split(' ')[0]);
