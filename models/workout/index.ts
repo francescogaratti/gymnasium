@@ -43,7 +43,7 @@ export class SessionRecord implements SessionRecord {
 		this.exercises = [];
 		session.exercises.forEach(exercise => this.exercises.push(new ExerciseRecord(exercise)));
 
-		this.notes = null;
+		// this.notes = null;
 	}
 }
 
@@ -66,7 +66,7 @@ export class WorkoutSession implements WorkoutSession {
 		this.name = '';
 		this.exercises = [];
 		this.records = [];
-		this.notes = null;
+		// this.notes = null;
 	}
 }
 
