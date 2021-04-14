@@ -2,6 +2,8 @@
 import * as nodemailer from 'nodemailer';
 /** models */
 import { User } from '../../../models/user';
+import { Workout } from '../../../models/workout';
+import { createWorkbook } from '../excel';
 
 const myEmail = 'dghiotto.dev@gmail.com'; // ! use .env variables
 const password = 'Ghi8dev<'; // todo: add password with .env notation
@@ -44,4 +46,53 @@ export function sendWelcomeMail(user: User) {
 		}
 	});
 	return;
+}
+
+export async function sendWorkoutMail(user: User, workout: Workout) {
+	const wb = createWorkbook(workout);
+	const filename = workout.name + '.xlsx';
+	const excel_buffer: any = await wb.writeToBuffer().then((buffer: any) => buffer);
+
+	const mailOptions = {
+		from: 'Ultra Gymnasium ' + myEmail,
+		to: user.email,
+		subject: 'New Training Program 📝🔥',
+		html:
+			`
+			<body>
+				<h3>
+					Your new training program <em>` +
+			workout.name +
+			`<em> is ready!
+				</h3>				
+				<p style="display: block;">
+					` +
+			user.displayName +
+			` 😄 <br>
+					You can find it with all the other past programs in your <a href="https://ultra-gymnasium.web.app/personal-area/">Personal Area</a>.
+				</p>
+				<p style="display: block;">
+					This is yours <a href="https://ultra-gymnasium.web.app/train?id=` +
+			workout.id +
+			`"> new program<a />.
+				</p>
+			</body>
+			`,
+		attachments: [
+			{
+				filename: filename,
+				content: excel_buffer,
+			},
+		],
+	};
+
+	transporter.sendMail(mailOptions, (err: any, info: any) => {
+		if (err) {
+			console.log('Error', err);
+			throw err;
+		} else {
+			console.info('Email sent', info);
+			return info;
+		}
+	});
 }

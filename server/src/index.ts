@@ -70,8 +70,8 @@ app.get('/excel', async (req, res) => {
 	});
 });
 
-app.get('/user/new', async (req, res) => {
-	let user: User = req.body;
+app.post('/user/new', async (req, res) => {
+	const user: User = req.body;
 	if (!user) res.send(undefined);
 
 	// variable for the status of different operations
@@ -97,10 +97,19 @@ app.get('/user/new', async (req, res) => {
 		.then(() => (results.database = '✔️'))
 		.catch(err => {
 			results.database = '❌';
-			console.info(err);
+			console.error(err);
 		});
 
 	res.send(results);
+});
+
+app.post('/workouts/new', async (req, res) => {
+	// todo: get from DB
+	const user: User = req.body['user'];
+	if (!user) res.send(undefined);
+	// todo: get from DB
+	const workout: Workout = req.body['workout'];
+	if (!workout) res.send(undefined);
 });
 
 app.listen(PORT, () => {
