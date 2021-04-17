@@ -6,6 +6,8 @@ import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogInfoComponent } from '@components/dialog-info/dialog-info.component';
+import { FormBuilder } from '@angular/forms';
+import { MatStepper } from '@angular/material/stepper';
 
 @Component({
 	selector: 'app-live-workout',
@@ -20,11 +22,13 @@ export class LiveWorkoutComponent implements OnInit {
 	time: number = 0;
 	timer = null;
 	@Input() workout: Workout = null;
+
 	constructor(
 		private activatedRoute: ActivatedRoute,
 		private auth: AuthService,
 		private utils: UtilsService,
-		public dialog: MatDialog
+		public dialog: MatDialog,
+		private _formBuilder: FormBuilder
 	) {
 		this.id = this.activatedRoute.snapshot.queryParams['id'];
 	}
@@ -59,7 +63,10 @@ export class LiveWorkoutComponent implements OnInit {
 	start(session: WorkoutSession) {
 		this.workout.state = WorkoutStates.started;
 		this.chosen_session = session.name;
-		this.exercises_records = JSON.parse(JSON.stringify(session.exercises));
+		this.exercises_records = [];
+		session.exercises.forEach((exercise: Exercise) =>
+			this.exercises_records.push(new ExerciseRecord(exercise))
+		);
 		this.timer = setInterval(() => (this.time += 1), 1000);
 	}
 
@@ -84,7 +91,7 @@ export class LiveWorkoutComponent implements OnInit {
 			date: new Date().toLocaleDateString(),
 			length: this.time,
 			notes: null,
-			exercises: this.exercises_records,
+			exercises: JSON.parse(JSON.stringify(this.exercises_records)),
 		};
 
 		if (!this.workout.sessions[sessionIndex].records)
@@ -95,8 +102,6 @@ export class LiveWorkoutComponent implements OnInit {
 		// clean the chosen session
 		this.chosen_session = null;
 
-		// here I can save the history of the workout
-
 		this.utils.openSnackBar(
 			'You completed the workout in ' +
 				(hours ? hours + 'h ' : '') +
@@ -105,6 +110,33 @@ export class LiveWorkoutComponent implements OnInit {
 				's',
 			'Good job!💪'
 		);
+
+		this.save(this.workout);
+
 		this.time = 0;
+	}
+
+	save(workout: Workout) {
+		this.auth
+			.updateWorkout(workout)
+			.then((value: boolean) => {
+				if (value) this.utils.openSnackBar('Workout Session Saved!', '💪');
+				else
+					this.utils.openSnackBar(
+						'There was an error during the saving of the workout session',
+						'Please, try again 🙏'
+					);
+			})
+			.catch(err => {
+				console.error(err);
+				this.utils.openSnackBar('Ops! Something went wrong!', '💀💀💀');
+			});
+	}
+
+	insertSet(input: HTMLInputElement, exercise: ExerciseRecord, stepper: MatStepper) {
+		exercise.weights.push(parseFloat(input.value));
+		exercise.currentSet += 1;
+		input.value = null;
+		if (exercise.currentSet == exercise.sets) stepper.next();
 	}
 }

@@ -43,7 +43,8 @@
 						<p style="vertical-align: middle; display: inline-block">{{ time }} s</p>
 					</div>
 				</div>
-				<form>
+				<!-- ? only for preview -->
+				<form *ngIf="workout.state != states.started">
 					<table
 						class="example-full-width"
 						cellspacing="0"
@@ -128,6 +129,61 @@
 						</tr>
 					</table>
 				</form>
+				<!-- ? vertical stepper -->
+				<div *ngIf="workout.state == states.started">
+					<h3>
+						<strong>{{ workout_session.name }}</strong>
+					</h3>
+					<mat-vertical-stepper [linear]="false" #stepper>
+						<mat-step *ngFor="let exercise of exercises_records">
+							<ng-template matStepLabel>{{ exercise.name }}</ng-template>
+							<form *ngIf="exercise.weights.length < exercise.sets">
+								<mat-form-field>
+									<mat-label
+										>Set {{ exercise.weights.length + 1 }}/{{
+											exercise.sets
+										}}</mat-label
+									>
+									<input
+										#inputset
+										matInput
+										[placeholder]="
+											exercise.type == 'Weight'
+												? 'Insert weight here'
+												: 'Insert time here'
+										"
+										type="number"
+									/>
+									<span matSuffix>kg</span>
+								</mat-form-field>
+								<mat-icon
+									*ngIf="inputset.value"
+									(click)="insertSet(inputset, exercise, stepper)"
+									style="padding: 10px; cursor: pointer"
+									>add_circle</mat-icon
+								>
+							</form>
+							<h4 *ngIf="exercise.weights.length == exercise.sets">
+								You completed this exercise
+							</h4>
+							<div>
+								<!-- ! back not visible for the first element -->
+								<button mat-button matStepperPrevious>Back</button>
+								<button mat-button matStepperNext>Next</button>
+							</div>
+						</mat-step>
+						<!-- ? last step to confirm the session -->
+						<mat-step>
+							<ng-template matStepLabel>Finish</ng-template>
+							<p>You have completed the workout session!</p>
+							<div>
+								<button mat-button matStepperPrevious>Back</button>
+								<!-- <button mat-button (click)="stepper.reset()">Reset</button> -->
+								<button mat-button (click)="stop()">Stop & Save</button>
+							</div>
+						</mat-step>
+					</mat-vertical-stepper>
+				</div>
 			</mat-tab>
 		</div>
 	</mat-tab-group>

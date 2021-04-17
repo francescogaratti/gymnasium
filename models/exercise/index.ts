@@ -39,6 +39,8 @@ export interface ExerciseRecord {
 	id: string | null; // unique id shared with "Exercise"
 	name: string | null; // description
 	type: string; // cardio / weight
+	sets: number | null; // number of sets
+	currentSet: number | null; // keeps track of the current set
 	weights: number[] | null; // one value for each set
 	durations: number[] | null; // one value for each set
 	notes?: string | null;
@@ -49,10 +51,13 @@ export class ExerciseRecord implements ExerciseRecord {
 		this.id = exercise.id;
 		this.name = exercise.name;
 		this.type = exercise.type;
+		this.sets = exercise.sets;
+		this.currentSet = 0;
 		this.weights = null;
 		this.durations = null;
 		if (this.type == ExerciseType.cardio) this.durations = [];
 		else this.weights = [];
+
 		this.notes = null;
 	}
 }

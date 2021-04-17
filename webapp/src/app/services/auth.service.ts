@@ -163,7 +163,7 @@ export class AuthService {
 		let res: boolean = await this.afs
 			.collection('workouts')
 			.doc(workout.id)
-			.set(workout, { merge: true })
+			.set(Object.assign({}, workout), { merge: true })
 			.then(() => true)
 			.catch(err => {
 				console.error(err);
