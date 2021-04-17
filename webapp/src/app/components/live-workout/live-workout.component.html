@@ -20,7 +20,7 @@
 						color="primary"
 						(click)="start(workout_session)"
 					>
-						Start
+						{{ !time ? 'Start' : 'Continue' }}
 						<i class="material-icons md-48">play_arrow</i>
 					</button>
 					<button
@@ -39,9 +39,15 @@
 						Stop
 						<i class="material-icons md-48">stop</i>
 					</button>
+					<button mat-raised-button color="accent" (click)="pause()">
+						Statistics
+						<i class="material-icons md-48">query_stats</i>
+					</button>
 					<div *ngIf="time">
-						<i class="material-icons md-48">timer</i>
-						<p style="vertical-align: middle; display: inline-block">{{ time }} s</p>
+						<mat-form-field>
+							<mat-label>Session Time</mat-label>
+							<input #inputset matInput [value]="time_formatted" type="time" />
+						</mat-form-field>
 					</div>
 				</div>
 				<!-- * workout preview / not editable -->
@@ -57,7 +63,7 @@
 						>
 							<td>
 								<mat-form-field class="field-large">
-									<mat-label>Esercizio</mat-label>
+									<mat-label>Exercise</mat-label>
 									<input
 										matInput
 										[value]="exercise.name"
@@ -124,7 +130,7 @@
 									[matTooltip]="exercise.notes"
 									style="cursor: pointer"
 									(click)="openInfoNotes(exercise)"
-									>more</i
+									>notes</i
 								>
 							</td>
 						</tr>
@@ -209,7 +215,9 @@
 							<p>You have completed the workout session!</p>
 							<div>
 								<button mat-button matStepperPrevious>Back</button>
-								<button mat-button (click)="stop()">Finish & Save</button>
+								<button mat-raised-button color="accent" (click)="stop()">
+									Finish & Save
+								</button>
 							</div>
 						</mat-step>
 						<!-- todo: fix this -->

@@ -19,6 +19,7 @@ export class LiveWorkoutComponent implements OnInit {
 	chosen_session: string = null;
 	exercises_records: ExerciseRecord[] = [];
 	time: number = 0;
+	time_formatted: string = '00:00:00';
 	timer = null;
 	@Input() workout: Workout = null;
 	resting: boolean = false;
@@ -67,7 +68,18 @@ export class LiveWorkoutComponent implements OnInit {
 		session.exercises.forEach((exercise: Exercise) =>
 			this.exercises_records.push(new ExerciseRecord(exercise))
 		);
-		this.timer = setInterval(() => (this.time += 1), 1000);
+		this.timer = setInterval(() => {
+			this.time += 1;
+			let hours = Math.floor(this.time / 3600);
+			let minutes = Math.floor(this.time / 60 - hours * 60);
+			let seconds = this.time - hours * 3600 - minutes * 60;
+			this.time_formatted =
+				(hours < 10 ? '0' + hours : hours) +
+				':' +
+				(minutes < 10 ? '0' + minutes : minutes) +
+				':' +
+				(seconds < 10 ? '0' + seconds : seconds);
+		}, 1000);
 	}
 
 	pause() {
