@@ -12,11 +12,12 @@
 				[label]="workout_session.name"
 				[disabled]="chosen_session && workout_session.name != chosen_session"
 			>
-				<!-- workout session -->
+				<!-- * workout session -->
 				<div class="workout-session-actions">
 					<button
 						*ngIf="workout.state !== states.started"
 						mat-raised-button
+						color="primary"
 						(click)="start(workout_session)"
 					>
 						Start
@@ -43,7 +44,7 @@
 						<p style="vertical-align: middle; display: inline-block">{{ time }} s</p>
 					</div>
 				</div>
-				<!-- ? only for preview -->
+				<!-- * workout preview / not editable -->
 				<form *ngIf="workout.state != states.started">
 					<table
 						class="example-full-width"
@@ -129,13 +130,16 @@
 						</tr>
 					</table>
 				</form>
-				<!-- ? vertical stepper -->
+				<!-- * vertical stepper with live exercises -->
 				<div *ngIf="workout.state == states.started">
 					<h3>
 						<strong>{{ workout_session.name }}</strong>
 					</h3>
 					<mat-vertical-stepper [linear]="false" #stepper>
-						<mat-step *ngFor="let exercise of exercises_records">
+						<mat-step
+							*ngFor="let exercise of exercises_records; let i = index"
+							state="exercise"
+						>
 							<ng-template matStepLabel>{{ exercise.name }}</ng-template>
 							<form *ngIf="exercise.weights.length < exercise.sets && !resting">
 								<mat-form-field>
@@ -163,9 +167,16 @@
 									>add_circle</mat-icon
 								>
 							</form>
-							<div *ngIf="resting">
-								Resting 😌😌
+							<div *ngIf="resting" style="margin-bottom: 30px">
+								<span>
+									Resting 😌😌
+									<button mat-button (click)="stopRest()" style="padding: 10px">
+										Skip Rest
+										<i class="material-icons md-48">stop</i>
+									</button>
+								</span>
 								<mat-progress-bar
+									style="width: 200px"
 									mode="determinate"
 									[value]="exercise_rest"
 								></mat-progress-bar>
@@ -174,21 +185,37 @@
 								You completed this exercise
 							</h4>
 							<div>
-								<!-- ! back not visible for the first element -->
-								<button mat-button matStepperPrevious>Back</button>
-								<button mat-button matStepperNext>Next</button>
+								<button
+									mat-button
+									matStepperPrevious
+									*ngIf="i"
+									[disabled]="resting"
+								>
+									Back
+								</button>
+								<button
+									mat-raised-button
+									color="primary"
+									matStepperNext
+									[disabled]="resting"
+								>
+									Next
+								</button>
 							</div>
 						</mat-step>
-						<!-- ? last step to confirm the session -->
+						<!-- * last step to confirm the session -->
 						<mat-step>
 							<ng-template matStepLabel>Finish</ng-template>
 							<p>You have completed the workout session!</p>
 							<div>
 								<button mat-button matStepperPrevious>Back</button>
-								<!-- <button mat-button (click)="stepper.reset()">Reset</button> -->
-								<button mat-button (click)="stop()">Stop & Save</button>
+								<button mat-button (click)="stop()">Finish & Save</button>
 							</div>
 						</mat-step>
+						<!-- todo: fix this -->
+						<ng-template matStepperIcon="exercise">
+							<mat-icon>fitness_center</mat-icon>
+						</ng-template>
 					</mat-vertical-stepper>
 				</div>
 			</mat-tab>

@@ -23,6 +23,7 @@ export class LiveWorkoutComponent implements OnInit {
 	@Input() workout: Workout = null;
 	resting: boolean = false;
 	exercise_rest: number = 0;
+	exercise_timer = null;
 	constructor(
 		private activatedRoute: ActivatedRoute,
 		private auth: AuthService,
@@ -144,14 +145,16 @@ export class LiveWorkoutComponent implements OnInit {
 	}
 
 	startRest(rest: Rest) {
+		this.exercise_rest = 0;
 		let total_rest: number = rest.minutes * 60 + rest.seconds;
-		total_rest = 15;
-		let exercise_timer = setInterval(() => {
+		this.exercise_timer = setInterval(() => {
 			if (this.exercise_rest < 100) this.exercise_rest += (1 / total_rest) * 100;
-			else {
-				clearInterval(exercise_timer);
-				this.resting = false;
-			}
+			else this.stopRest();
 		}, 1000);
+	}
+
+	stopRest() {
+		clearInterval(this.exercise_timer);
+		this.resting = false;
 	}
 }
