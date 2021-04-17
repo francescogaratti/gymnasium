@@ -63,11 +63,13 @@ export class LiveWorkoutComponent implements OnInit {
 
 	start(session: WorkoutSession) {
 		this.workout.state = WorkoutStates.started;
-		this.chosen_session = session.name;
-		this.exercises_records = [];
-		session.exercises.forEach((exercise: Exercise) =>
-			this.exercises_records.push(new ExerciseRecord(exercise))
-		);
+		if (!this.chosen_session) {
+			this.chosen_session = session.name;
+			this.exercises_records = [];
+			session.exercises.forEach((exercise: Exercise) =>
+				this.exercises_records.push(new ExerciseRecord(exercise))
+			);
+		}
 		this.timer = setInterval(() => {
 			this.time += 1;
 			let hours = Math.floor(this.time / 3600);
@@ -169,4 +171,6 @@ export class LiveWorkoutComponent implements OnInit {
 		clearInterval(this.exercise_timer);
 		this.resting = false;
 	}
+
+	showStats() {}
 }
