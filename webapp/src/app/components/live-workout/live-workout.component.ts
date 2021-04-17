@@ -1,12 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Workout, WorkoutSession, WorkoutStates, SessionRecord } from '@models/workout';
-import { Exercise, ExerciseRecord } from '@models/exercise';
+import { Exercise, ExerciseRecord, Rest } from '@models/exercise';
 import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogInfoComponent } from '@components/dialog-info/dialog-info.component';
-import { FormBuilder } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 
 @Component({
@@ -22,13 +21,13 @@ export class LiveWorkoutComponent implements OnInit {
 	time: number = 0;
 	timer = null;
 	@Input() workout: Workout = null;
-
+	resting: boolean = false;
+	exercise_rest: number = 0;
 	constructor(
 		private activatedRoute: ActivatedRoute,
 		private auth: AuthService,
 		private utils: UtilsService,
-		public dialog: MatDialog,
-		private _formBuilder: FormBuilder
+		public dialog: MatDialog
 	) {
 		this.id = this.activatedRoute.snapshot.queryParams['id'];
 	}
@@ -138,5 +137,21 @@ export class LiveWorkoutComponent implements OnInit {
 		exercise.currentSet += 1;
 		input.value = null;
 		if (exercise.currentSet == exercise.sets) stepper.next();
+		else {
+			this.resting = true;
+			this.startRest(exercise.rest);
+		}
+	}
+
+	startRest(rest: Rest) {
+		let total_rest: number = rest.minutes * 60 + rest.seconds;
+		total_rest = 15;
+		let exercise_timer = setInterval(() => {
+			if (this.exercise_rest < 100) this.exercise_rest += (1 / total_rest) * 100;
+			else {
+				clearInterval(exercise_timer);
+				this.resting = false;
+			}
+		}, 1000);
 	}
 }

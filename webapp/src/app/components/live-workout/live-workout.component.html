@@ -137,7 +137,7 @@
 					<mat-vertical-stepper [linear]="false" #stepper>
 						<mat-step *ngFor="let exercise of exercises_records">
 							<ng-template matStepLabel>{{ exercise.name }}</ng-template>
-							<form *ngIf="exercise.weights.length < exercise.sets">
+							<form *ngIf="exercise.weights.length < exercise.sets && !resting">
 								<mat-form-field>
 									<mat-label
 										>Set {{ exercise.weights.length + 1 }}/{{
@@ -163,6 +163,13 @@
 									>add_circle</mat-icon
 								>
 							</form>
+							<div *ngIf="resting">
+								Resting 😌😌
+								<mat-progress-bar
+									mode="determinate"
+									[value]="exercise_rest"
+								></mat-progress-bar>
+							</div>
 							<h4 *ngIf="exercise.weights.length == exercise.sets">
 								You completed this exercise
 							</h4>

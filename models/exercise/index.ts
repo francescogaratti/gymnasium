@@ -40,6 +40,7 @@ export interface ExerciseRecord {
 	name: string | null; // description
 	type: string; // cardio / weight
 	sets: number | null; // number of sets
+	rest: Rest;
 	currentSet: number | null; // keeps track of the current set
 	weights: number[] | null; // one value for each set
 	durations: number[] | null; // one value for each set
@@ -52,6 +53,7 @@ export class ExerciseRecord implements ExerciseRecord {
 		this.name = exercise.name;
 		this.type = exercise.type;
 		this.sets = exercise.sets;
+		this.rest = exercise.rest;
 		this.currentSet = 0;
 		this.weights = null;
 		this.durations = null;
