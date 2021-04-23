@@ -30,7 +30,11 @@ else {
 const express = require('express');
 const app = express();
 const cors = require('cors');
+const bodyParser = require('body-parser');
 const PORT = process.env.PORT || 5000;
+
+// create application/json parser
+var jsonParser = bodyParser.json();
 
 app.use(cors());
 
@@ -108,19 +112,18 @@ app.post('/user/new', async (req, res) => {
 
 app.post('/workouts/new', async (req, res) => {
 	// todo: get from DB
-	const user: User = req.body['user'];
+	const user: User = req.body.params['user'];
 	if (!user) res.send(undefined);
 	// todo: get from DB
-	const workout: Workout = req.body['workout'];
+	const workout: Workout = req.body.params['workout'];
 	if (!workout) res.send(undefined);
 });
 
-app.post('/workout/send', async (req, res) => {
-	const user: User = req.body['user'];
-	if (!user) res.send(undefined);
-	const workout: Workout = req.body['workout'];
-	if (!workout) res.send(undefined);
+app.post('/workout/send', jsonParser, async (req, res) => {
+	const user: User = JSON.parse(req.body.params['user']);
+	const workout: Workout = JSON.parse(req.body.params['workout']);
 	try {
+		console.info(user);
 		sendWorkoutMail(user, workout);
 	} catch (err) {
 		console.error(err);
