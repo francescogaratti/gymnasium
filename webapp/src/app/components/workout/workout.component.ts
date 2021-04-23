@@ -44,6 +44,23 @@ export class WorkoutComponent implements OnInit {
 			});
 	}
 
+	sendMail(workout: Workout) {
+		this.auth
+			.sendWorkout(workout)
+			.then((value: boolean) => {
+				if (value) this.utils.openSnackBar('Workout sent to mail correctly!', '📝📝');
+				else
+					this.utils.openSnackBar(
+						"Si è verificato un errore durante l'invio della mail.",
+						'Riprovare, per favore 🙏'
+					);
+			})
+			.catch(err => {
+				console.error(err);
+				this.utils.openSnackBar('Ops! Qualcosa è andato storto!', '💀💀💀');
+			});
+	}
+
 	openInfoNotes(exercise: Exercise) {
 		this.dialog.open(DialogInfoComponent, {
 			width: '300px',

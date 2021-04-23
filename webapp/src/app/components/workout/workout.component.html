@@ -2,6 +2,10 @@
 	<mat-card-actions>
 		<button mat-raised-button (click)="train(workout)">Inizia Allenamento</button>
 		<button mat-raised-button (click)="downloadExcel(workout)">Download Excel</button>
+		<button mat-raised-button color="primary" (click)="sendMail(workout)">
+			Send
+			<i class="material-icons">email</i>
+		</button>
 	</mat-card-actions>
 	<!-- list of workout sessions -->
 	<mat-tab-group mat-stretch-tabs mat-align-tabs="center" class="example-stretched-tabs">

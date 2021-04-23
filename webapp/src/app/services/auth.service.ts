@@ -30,6 +30,8 @@ const uiConfig = {
 	providedIn: 'root',
 })
 export class AuthService {
+	host: string = 'https://ultra-gymnasium.herokuapp.com/';
+	localhost: string = 'http://localhost:5000';
 	adminUids: string[] = ['WRcrJKbtjpfe2nIQJpQWhkrwOdx2'];
 	ui: firebaseui.auth.AuthUI =
 		firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth()); // login firebase ui
@@ -277,12 +279,35 @@ export class AuthService {
 		return res;
 	}
 
+	async sendWorkout(workout: Workout): Promise<boolean> {
+		this.asyncOperation.next(true);
+		this.user.workouts = null;
+		const body: Object = {
+			params: { user: JSON.stringify(this.user), workout: JSON.stringify(workout) },
+			responseType: 'arrayBuffer',
+		};
+
+		let res: boolean = await this.http
+			.post<any>(this.host + 'workout/send', body)
+			.toPromise()
+			.then((res: { sent: boolean; message: string }) => {
+				console.info(res.message);
+				return res.sent;
+			})
+			.catch(err => {
+				console.error(err);
+				return false;
+			});
+		this.asyncOperation.next(false);
+		return res;
+	}
+
 	async generateExcel(filename: string, workoutId: string): Promise<boolean> {
 		this.asyncOperation.next(true);
 		// some costants & params
 		// const generateExcelURL: string =
 		// 	'https://us-central1-ultra-gymnasium.cloudfunctions.net/excel-generateExcel';
-		const generateExcelURL: string = 'http://localhost:5000/excel'; // todo: change this with real host
+		const generateExcelURL: string = this.host + 'excel'; // todo: change this with real host
 		const requestOptions: Object = {
 			params: { workoutId: workoutId },
 			responseType: 'arrayBuffer',
