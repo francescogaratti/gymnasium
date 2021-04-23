@@ -5,8 +5,9 @@ import { User } from '../../../models/user';
 import { Workout } from '../../../models/workout';
 import { createWorkbook } from '../excel';
 
-const myEmail = process.env.EMAIL || 'dghiotto.dev@gmail.com'; // ! use .env variables
-const password = process.env.PASSWORD || 'Ghi8dev<'; // todo: add password with .env notation
+const myEmail = process.env.EMAIL || 'dghiotto.dev@gmail.com';
+const password = process.env.PASSWORD || 'Ghi8dev<';
+
 const transporter = nodemailer.createTransport({
 	service: 'gmail',
 	auth: {
