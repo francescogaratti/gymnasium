@@ -112,6 +112,11 @@ app.post('/workouts/new', async (req, res) => {
 	if (!workout) res.send(undefined);
 });
 
+app.post('/email/send', async (req, res) => {
+	console.info('Sending email...');
+	res.send(undefined);
+});
+
 app.listen(PORT, () => {
 	console.log(`ultra-gymnasium listening at http://localhost:${PORT}`);
 });
