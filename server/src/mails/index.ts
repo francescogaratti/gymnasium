@@ -95,4 +95,5 @@ export async function sendWorkoutMail(user: User, workout: Workout) {
 			return info;
 		}
 	});
+	return;
 }

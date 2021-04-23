@@ -4,7 +4,7 @@ require('firebase/firestore');
 import { Workout } from '../../models/workout';
 import { createWorkbook } from './excel';
 import { User } from '../../models/user';
-import { sendWelcomeMail } from './mails';
+import { sendWelcomeMail, sendWorkoutMail } from './mails';
 
 // automatically set the right firebase app
 const firebaseConfig = process.env.FIREBASE_CONFIG;
@@ -112,9 +112,19 @@ app.post('/workouts/new', async (req, res) => {
 	if (!workout) res.send(undefined);
 });
 
-app.post('/email/send', async (req, res) => {
-	console.info('Sending email...');
-	res.send(undefined);
+app.post('/workout/send', async (req, res) => {
+	const user: User = req.body['user'];
+	if (!user) res.send(undefined);
+	const workout: Workout = req.body['workout'];
+	if (!workout) res.send(undefined);
+	try {
+		sendWorkoutMail(user, workout);
+	} catch (err) {
+		console.error(err);
+		res.send({ sent: false, message: 'An error occurred while sending the workout' });
+	} finally {
+		res.send({ sent: true, message: 'Workout sent to ' + user.email });
+	}
 });
 
 app.listen(PORT, () => {
