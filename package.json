@@ -4,7 +4,9 @@
 	"description": "Webapp for online gym",
 	"main": "index.js",
 	"scripts": {
-		"start": "cd server && tsc && node lib/server/src/index.js"
+		"start": "node server/lib/server/src/index.js",
+		"build": "cd server && tsc",
+		"postinstall": "npm run build"
 	},
 	"repository": {
 		"type": "git",
