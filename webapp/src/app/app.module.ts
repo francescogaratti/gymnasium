@@ -62,6 +62,7 @@ import { DialogInfoComponent } from './components/dialog-info/dialog-info.compon
 import { TrainComponent } from './pages/train/train.component';
 import { LiveWorkoutComponent } from './components/live-workout/live-workout.component';
 import { SessionStatsComponent } from './components/session-stats/session-stats.component';
+import { ExerciseComponent } from './components/exercise/exercise.component';
 
 @NgModule({
 	declarations: [
@@ -84,6 +85,7 @@ import { SessionStatsComponent } from './components/session-stats/session-stats.
 		TrainComponent,
 		LiveWorkoutComponent,
 		SessionStatsComponent,
+		ExerciseComponent,
 	],
 	imports: [
 		HttpClientModule,

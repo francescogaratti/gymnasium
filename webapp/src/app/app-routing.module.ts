@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '@guards/auth.guard';
 import { LoggedGuard } from '@guards/logged.guard';
+import { ExercisesComponent } from '@pages/exercises/exercises.component';
 import { HomeComponent } from '@pages/home/home.component';
 import { LoginComponent } from '@pages/login/login.component';
 import { NewWorkoutComponent } from '@pages/new-workout/new-workout.component';
@@ -20,6 +21,11 @@ const routes: Routes = [
 	{
 		path: 'new-workout',
 		component: NewWorkoutComponent,
+		canActivate: [AuthGuard],
+	},
+	{
+		path: 'exercises',
+		component: ExercisesComponent,
 		canActivate: [AuthGuard],
 	},
 	{
