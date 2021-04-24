@@ -20,5 +20,5 @@ tsconfig.json
 
 ## Scripts
 
--   `npm run lint`
--   `npm run build`
+-   `npm run lint` (to do)
+-   `npm run dev`
