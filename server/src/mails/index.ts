@@ -7,12 +7,20 @@ import { createWorkbook } from '../excel';
 
 const email = process.env.DEV_EMAIL || 'dghiotto.dev@gmail.com';
 const password = process.env.DEV_PASSWORD || 'Ghi8dev<';
+const refresh_token =
+	process.env.REFRESH_TOKEN ||
+	'1//04Nf4GusHVNRzCgYIARAAGAQSNwF-L9IrXIy_ptZGcHGoQ9ypvX4gw0koYGbN1zo_ek_079sm61rHxezQwzIgbYam_1anAvpZDF8';
+const access_token =
+	process.env.ACCESS_TOKEN ||
+	'ya29.a0AfH6SMDdMDG47UvakqhKXyty_wfxBVqzK61ZI9Ky-YSFOdXZpFV2dTJNz2Xje_glgiLpiKZjkJm4-FrZik3Lp7JJNls6vkLtS47hIGt2Vion8Qw6KXZYwHT8JPXJzBMdVlADAwFMJ-Xyn8p0herL5Dzsm-_V';
 
 const transporter = nodemailer.createTransport({
 	service: 'gmail',
 	auth: {
 		user: email,
 		pass: password,
+		accessToken: access_token,
+		refreshToken: refresh_token,
 	},
 });
 
