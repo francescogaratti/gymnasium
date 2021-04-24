@@ -5,22 +5,39 @@ import { User } from '../../../models/user';
 import { Workout } from '../../../models/workout';
 import { createWorkbook } from '../excel';
 
+import { google } from 'googleapis';
+
+const OAuth2 = google.auth.OAuth2;
+
 const email = process.env.DEV_EMAIL || 'dghiotto.dev@gmail.com';
-const password = process.env.DEV_PASSWORD || 'Ghi8dev<';
-const refresh_token =
+const refreshToken =
 	process.env.REFRESH_TOKEN ||
 	'1//04Nf4GusHVNRzCgYIARAAGAQSNwF-L9IrXIy_ptZGcHGoQ9ypvX4gw0koYGbN1zo_ek_079sm61rHxezQwzIgbYam_1anAvpZDF8';
-const access_token =
-	process.env.ACCESS_TOKEN ||
-	'ya29.a0AfH6SMDdMDG47UvakqhKXyty_wfxBVqzK61ZI9Ky-YSFOdXZpFV2dTJNz2Xje_glgiLpiKZjkJm4-FrZik3Lp7JJNls6vkLtS47hIGt2Vion8Qw6KXZYwHT8JPXJzBMdVlADAwFMJ-Xyn8p0herL5Dzsm-_V';
+const clientId =
+	process.env.CLIENT_ID ||
+	'646764504675-2f5g0b0mtbirnjoi14fnqs6iouqg9gnl.apps.googleusercontent.com';
+const clientSecret = process.env.CLIENT_SECRET || 'rioujKwvKS5D9VGA5DwBd3Gm';
+
+const oauth2Client = new OAuth2(
+	clientId,
+	clientSecret, // Client Secret
+	'https://developers.google.com/oauthplayground' // Redirect URL
+);
+
+oauth2Client.setCredentials({
+	refresh_token: refreshToken,
+});
+
+// const accessToken = oauth2Client.getAccessToken();
 
 const transporter = nodemailer.createTransport({
 	service: 'gmail',
 	auth: {
+		type: 'OAuth2',
 		user: email,
-		pass: password,
-		accessToken: access_token,
-		refreshToken: refresh_token,
+		clientId: clientId,
+		clientSecret: clientSecret,
+		refreshToken: refreshToken,
 	},
 });
 
