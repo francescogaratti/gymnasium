@@ -31,7 +31,7 @@ const uiConfig = {
 })
 export class AuthService {
 	host: string = 'https://ultra-gymnasium.herokuapp.com/';
-	localhost: string = 'http://localhost:5000';
+	localhost: string = 'http://localhost:5000/';
 	adminUids: string[] = ['WRcrJKbtjpfe2nIQJpQWhkrwOdx2'];
 	ui: firebaseui.auth.AuthUI =
 		firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth()); // login firebase ui
