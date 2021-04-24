@@ -4,32 +4,14 @@ import * as nodemailer from 'nodemailer';
 import { User } from '../../../models/user';
 import { Workout } from '../../../models/workout';
 import { createWorkbook } from '../excel';
-
+/** dot env config */
 import * as dotenv from 'dotenv';
 dotenv.config();
-
-// import { google } from 'googleapis';
-
-// const OAuth2 = google.auth.OAuth2;
 
 const email = process.env.DEV_EMAIL;
 const refreshToken = process.env.REFRESH_TOKEN;
 const clientId = process.env.CLIENT_ID;
 const clientSecret = process.env.CLIENT_SECRET;
-
-console.info(email, '\n', refreshToken, '\n', clientId, '\n', clientSecret);
-
-// const oauth2Client = new OAuth2(
-// 	clientId,
-// 	clientSecret, // Client Secret
-// 	'https://developers.google.com/oauthplayground' // Redirect URL
-// );
-
-// oauth2Client.setCredentials({
-// 	refresh_token: refreshToken,
-// });
-
-// // const accessToken = oauth2Client.getAccessToken();
 
 const transporter = nodemailer.createTransport({
 	service: 'gmail',
