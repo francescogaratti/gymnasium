@@ -5,13 +5,13 @@ import { User } from '../../../models/user';
 import { Workout } from '../../../models/workout';
 import { createWorkbook } from '../excel';
 
-const myEmail = process.env.EMAIL || 'dghiotto.dev@gmail.com';
-const password = process.env.PASSWORD || 'Ghi8dev<';
+const email = process.env.DEV_EMAIL || 'dghiotto.dev@gmail.com';
+const password = process.env.DEV_PASSWORD || 'Ghi8dev<';
 
 const transporter = nodemailer.createTransport({
 	service: 'gmail',
 	auth: {
-		user: myEmail,
+		user: email,
 		pass: password,
 	},
 });
@@ -19,7 +19,7 @@ const transporter = nodemailer.createTransport({
 export function sendWelcomeMail(user: User) {
 	// options for the mail
 	const mailOptions = {
-		from: 'Ultra Gymnasium ' + myEmail,
+		from: 'Ultra Gymnasium ' + email,
 		to: user.email,
 		subject: 'Registration Ultra Gymnasium',
 		html:
@@ -55,7 +55,7 @@ export async function sendWorkoutMail(user: User, workout: Workout) {
 	const excel_buffer: any = await wb.writeToBuffer().then((buffer: any) => buffer);
 
 	const mailOptions = {
-		from: 'Ultra Gymnasium ' + myEmail,
+		from: 'Ultra Gymnasium ' + email,
 		to: user.email,
 		subject: 'New Training Program 📝🔥',
 		html:

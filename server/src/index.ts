@@ -123,7 +123,6 @@ app.post('/workout/send', jsonParser, async (req, res) => {
 	const user: User = JSON.parse(req.body.params['user']);
 	const workout: Workout = JSON.parse(req.body.params['workout']);
 	try {
-		console.info(user);
 		sendWorkoutMail(user, workout);
 	} catch (err) {
 		console.error(err);
