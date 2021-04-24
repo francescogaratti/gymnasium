@@ -1,10 +1,16 @@
 <mat-card *ngIf="workout" class="mat-elevation-z0">
 	<mat-card-actions>
-		<button mat-raised-button (click)="train(workout)">Inizia Allenamento</button>
-		<button mat-raised-button (click)="downloadExcel(workout)">Download Excel</button>
-		<button mat-raised-button color="primary" (click)="sendMail(workout)">
-			Send
-			<i class="material-icons">email</i>
+		<button mat-stroked-button (click)="train(workout)">
+			Start
+			<i class="material-icons-round">play_arrow</i>
+		</button>
+		<button mat-stroked-button color="primary" (click)="downloadExcel(workout)">
+			Download Excel
+			<i class="material-icons-round">file_download</i>
+		</button>
+		<button mat-stroked-button color="primary" (click)="sendMail(workout)">
+			Send Mail
+			<i class="material-icons-round">email</i>
 		</button>
 	</mat-card-actions>
 	<!-- list of workout sessions -->
