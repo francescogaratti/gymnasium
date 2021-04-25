@@ -9,16 +9,25 @@
 			</button>
 		</ng-template>
 		<ng-template #authenticated>
+			<!-- exercises -->
+			<button
+				color="primary"
+				mat-raised-button
+				(click)="router.navigateByUrl('exercises')"
+				class="menu-tab"
+			>
+				Exercises
+				<i class="material-icons-round">fact_check</i>
+			</button>
 			<!-- train -->
 			<button
-				*ngIf="user"
 				color="primary"
 				mat-raised-button
 				(click)="router.navigateByUrl('workouts')"
 				class="menu-tab"
 			>
 				Workouts
-				<i class="material-icons">fitness_center</i>
+				<i class="material-icons-round">fitness_center</i>
 			</button>
 			<!-- new workout -->
 			<button
@@ -28,7 +37,7 @@
 				class="menu-tab"
 			>
 				New Training Program
-				<i class="material-icons">fitness_center</i>
+				<i class="material-icons-round">add</i>
 			</button>
 			<button
 				color="primary"
@@ -39,8 +48,18 @@
 				Personal Area
 				<i class="material-icons">account_circle</i>
 			</button>
+			<!-- exercises -->
+			<button
+				color="primary"
+				mat-raised-button
+				(click)="router.navigateByUrl('weight-tracker')"
+				class="menu-tab"
+			>
+				Weight Tracker
+				<i class="material-icons-outlined">trending_down</i>
+			</button>
 			<button mat-button (click)="auth.signOut()" class="menu-tab">
-				<mat-icon>exit_to_app</mat-icon>
+				<i class="material-icons" style="color: white">exit_to_app</i>
 			</button>
 		</ng-template>
 	</mat-sidenav>

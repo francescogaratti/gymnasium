@@ -9,6 +9,7 @@ import { NewWorkoutComponent } from '@pages/new-workout/new-workout.component';
 import { NotFoundComponent } from '@pages/not-found/not-found.component';
 import { PersonalAreaComponent } from '@pages/personal-area/personal-area.component';
 import { TrainComponent } from '@pages/train/train.component';
+import { WeightTrackerComponent } from '@pages/weight-tracker/weight-tracker.component';
 import { WorkoutsComponent } from '@pages/workouts/workouts.component';
 
 const routes: Routes = [
@@ -37,6 +38,11 @@ const routes: Routes = [
 	{
 		path: 'train',
 		component: TrainComponent,
+		canActivate: [AuthGuard],
+	},
+	{
+		path: 'weight-tracker',
+		component: WeightTrackerComponent,
 		canActivate: [AuthGuard],
 	},
 	{ path: '', redirectTo: 'home', pathMatch: 'full' },

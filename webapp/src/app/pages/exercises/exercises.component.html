@@ -1,1 +1,45 @@
-<app-exercise *ngFor="let exercise of exercises" [exercise]="exercise"></app-exercise>
+<!-- <app-exercise *ngFor="let exercise of exercises" [exercise]="exercise"></app-exercise> -->
+<mat-card style="text-align: center">
+	<mat-card-content style="display: table; margin: auto">
+		<form>
+			<mat-form-field appearance="outline" style="display: block" color="accent">
+				<mat-label>Name</mat-label>
+				<input type="text" matInput [formControl]="nameFormControl" required />
+			</mat-form-field>
+			<mat-form-field appearance="outline" style="display: block" color="accent">
+				<mat-label>Description</mat-label>
+				<textarea matInput [formControl]="descriptionFormControl"></textarea>
+			</mat-form-field>
+			<mat-form-field appearance="outline" style="display: block">
+				<mat-label>Type</mat-label>
+				<mat-select [formControl]="typeFormControl" required>
+					<mat-option [value]="type" *ngFor="let type of types">{{
+						type | titlecase
+					}}</mat-option>
+				</mat-select>
+			</mat-form-field>
+			<mat-form-field appearance="outline" *ngIf="typeFormControl.value == 'weight'">
+				<mat-label>Category</mat-label>
+				<mat-select [formControl]="categoryFormControl" required>
+					<mat-option [value]="category" *ngFor="let category of categories">{{
+						category | titlecase
+					}}</mat-option>
+				</mat-select>
+			</mat-form-field>
+		</form>
+	</mat-card-content>
+
+	<mat-card-actions>
+		<button mat-raised-button color="accent" (click)="reset()">Reset</button>
+		<button
+			mat-raised-button
+			color="primary"
+			(click)="createExercise()"
+			[disabled]="
+				nameFormControl.invalid || typeFormControl.invalid || categoryFormControl.invalid
+			"
+		>
+			Create Exercise
+		</button>
+	</mat-card-actions>
+</mat-card>

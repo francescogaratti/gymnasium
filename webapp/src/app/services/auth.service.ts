@@ -17,6 +17,7 @@ import { User } from '@models/user';
 import { Workout } from '@models/workout';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from './user.service';
+import { ExerciseEntry } from '@models/exercise';
 
 // configuration for the ui
 const uiConfig = {
@@ -359,20 +360,36 @@ export class AuthService {
 	}
 
 	/** Exercises */
-	// async newExercise(ee: ExerciseEntry): Promise<string> {
-	// 	this.asyncOperation.next(true);
-	// 	console.info('📗 - write');
-	// 	let res: string = await this.afs
-	// 		.collection('exercises')
-	// 		.add(ee)
-	// 		.then(async (docRef: DocumentReference) => docRef.id)
-	// 		.catch(err => {
-	// 			console.error(err);
-	// 			return null;
-	// 		});
-	// 	this.asyncOperation.next(false);
-	// 	return res;
-	// }
+	async newExercise(ee: ExerciseEntry): Promise<string> {
+		this.asyncOperation.next(true);
+		console.info('📗 - write');
+		let res: string = await this.afs
+			.collection('exercises')
+			.add(Object.assign({}, ee))
+			.then(async (docRef: DocumentReference) => docRef.id)
+			.catch(err => {
+				console.error(err);
+				return null;
+			});
+		this.asyncOperation.next(false);
+		return res;
+	}
+
+	async updateExercise(ee: ExerciseEntry): Promise<boolean> {
+		this.asyncOperation.next(true);
+		console.info('📗 - update exercise');
+		let res: boolean = await this.afs
+			.collection('exercises')
+			.doc(ee.id)
+			.set(Object.assign({}, ee), { merge: true })
+			.then(() => true)
+			.catch(err => {
+				console.error(err);
+				return false;
+			});
+		this.asyncOperation.next(false);
+		return res;
+	}
 
 	/** messaging */
 	async startMessaging(user: User) {

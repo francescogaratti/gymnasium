@@ -19,10 +19,34 @@ export enum ExerciseCategories {
 	triceps = 'Triceps',
 }
 
-export interface Exercise {
-	id: string | null; // unique and shared between the same user
-	name: string | null;
+export interface ExerciseEntry {
+	id: string | null;
+	name: string;
 	type: string;
+	description?: string;
+	category?: string;
+	authorId?: string;
+}
+
+export class ExerciseEntry implements ExerciseEntry {
+	constructor(
+		id: string,
+		name: string,
+		type: string,
+		description?: string,
+		category?: string,
+		authorId?: string
+	) {
+		this.id = id;
+		this.name = name;
+		this.type = type;
+		this.description = description || null;
+		this.category = category || null;
+		this.authorId = authorId || null;
+	}
+}
+
+export interface Exercise extends ExerciseEntry {
 	sets: number | null;
 	rest: Rest;
 	sets_max?: boolean;
