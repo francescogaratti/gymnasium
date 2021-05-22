@@ -26,6 +26,7 @@ export interface ExerciseEntry {
 	description?: string;
 	category?: string;
 	authorId?: string;
+	compound?: boolean;
 }
 
 export class ExerciseEntry implements ExerciseEntry {
@@ -35,7 +36,8 @@ export class ExerciseEntry implements ExerciseEntry {
 		type: string,
 		description?: string,
 		category?: string,
-		authorId?: string
+		authorId?: string,
+		compound?: boolean
 	) {
 		this.id = id;
 		this.name = name;
@@ -43,6 +45,7 @@ export class ExerciseEntry implements ExerciseEntry {
 		this.description = description || null;
 		this.category = category || null;
 		this.authorId = authorId || null;
+		this.compound = compound || null;
 	}
 }
 

@@ -16,15 +16,17 @@ export class ExercisesComponent implements OnInit {
 	types: string[] = Object.keys(ExerciseType);
 	categories: string[] = Object.keys(ExerciseCategories);
 	nameFormControl: FormControl = new FormControl('', [Validators.required]);
-	descriptionFormControl: FormControl = new FormControl('', [Validators.required]);
+	descriptionFormControl: FormControl = new FormControl('', []);
 	typeFormControl: FormControl = new FormControl('', [Validators.required]);
 	categoryFormControl: FormControl = new FormControl('', [Validators.required]);
+	compoundFormControl: FormControl = new FormControl('', []);
 
 	formsControl: FormControl[] = [
 		this.nameFormControl,
 		this.descriptionFormControl,
 		this.typeFormControl,
 		this.categoryFormControl,
+		this.compoundFormControl,
 	];
 
 	constructor(private auth: AuthService, private utils: UtilsService) {}
@@ -36,19 +38,21 @@ export class ExercisesComponent implements OnInit {
 	}
 
 	createExercise() {
-		// todo : create exercise on DB
 		let name = this.nameFormControl.value;
 		let type = this.typeFormControl.value;
 		let description = this.descriptionFormControl.value;
 		let category = this.categoryFormControl.value;
+		let compound = this.compoundFormControl.value;
 		let authorId = this.auth.user.uid;
+
 		let newExerciseDefinition: ExerciseEntry = new ExerciseEntry(
 			null,
 			name,
 			type,
 			description,
 			category,
-			authorId
+			authorId,
+			compound
 		);
 		console.info(newExerciseDefinition);
 		// todo: check for same exercise based on name + description + type + category
