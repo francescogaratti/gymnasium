@@ -27,6 +27,7 @@ export interface ExerciseEntry {
 	category?: string;
 	authorId?: string;
 	compound?: boolean;
+	tags?: string[];
 }
 
 export class ExerciseEntry implements ExerciseEntry {
@@ -37,7 +38,8 @@ export class ExerciseEntry implements ExerciseEntry {
 		description?: string,
 		category?: string,
 		authorId?: string,
-		compound?: boolean
+		compound?: boolean,
+		tags?: string[]
 	) {
 		this.id = id;
 		this.name = name;
@@ -46,6 +48,7 @@ export class ExerciseEntry implements ExerciseEntry {
 		this.category = category || null;
 		this.authorId = authorId || null;
 		this.compound = compound || null;
+		this.tags = tags || null;
 	}
 }
 
@@ -106,6 +109,7 @@ export class Exercise implements Exercise {
 		this.reps = null;
 	}
 }
+
 
 export const mock: Exercise[] = [
 	{

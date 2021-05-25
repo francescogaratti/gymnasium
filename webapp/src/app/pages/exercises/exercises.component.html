@@ -27,6 +27,22 @@
 				</mat-select>
 			</mat-form-field>
 			<mat-slide-toggle [formControl]="compoundFormControl">Compound</mat-slide-toggle>
+            
+			<mat-form-field class="tags-list">
+				<mat-label>Tags</mat-label>
+				<mat-chip-list #chipList aria-label="tags">
+				  <mat-chip *ngFor="let tag of tags" [selectable]="selectable"
+						   [removable]="removable" (removed)="remove(tag)">
+					{{tag}}
+					<mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+				  </mat-chip>
+				  <input id="inputTag" placeholder="New tag..."
+						 [matChipInputFor]="chipList"
+						 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+						 (matChipInputTokenEnd)="add($event)">
+				</mat-chip-list>
+			  </mat-form-field>
+
 		</form>
 	</mat-card-content>
 
