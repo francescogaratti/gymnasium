@@ -13,7 +13,7 @@ import * as firebaseui from 'firebaseui';
 import { Subject } from 'rxjs';
 import { first } from 'rxjs/operators';
 
-import { User } from '@models/user';
+import { User, WeigthRecord } from '@models/user';
 import { Workout } from '@models/workout';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from './user.service';
@@ -390,6 +390,26 @@ export class AuthService {
 		this.asyncOperation.next(false);
 		return res;
 	}
+
+	/** Exercises */
+	async newWeightRecord(userId: string, record: WeigthRecord): Promise<boolean> {
+		this.asyncOperation.next(true);
+		console.info('📗 - write');
+		let res: boolean = await this.afs
+			.collection('users')
+			.doc(userId)
+			.collection('weights')
+			.add(Object.assign({}, record))
+			.then(() => true)
+			.catch(err => {
+				console.error(err);
+				return false;
+			});
+		this.asyncOperation.next(false);
+		return res;
+	}
+
+	// todo: get weights per user
 
 	/** messaging */
 	async startMessaging(user: User) {

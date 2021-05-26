@@ -63,3 +63,12 @@ export class User implements User {
 		this.workouts = user && user.workouts ? user.workouts : [];
 	}
 }
+
+export class WeigthRecord {
+	date: string;
+	weigth: number;
+	constructor(date: string, weigth: number) {
+		this.date = date;
+		this.weigth = weigth;
+	}
+}
