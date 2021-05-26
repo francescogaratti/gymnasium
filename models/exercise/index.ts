@@ -28,6 +28,7 @@ export interface ExerciseEntry {
 	authorId?: string;
 	compound?: boolean;
 	tags?: string[];
+	
 }
 
 export class ExerciseEntry implements ExerciseEntry {
@@ -152,3 +153,5 @@ export const mock: Exercise[] = [
 		time: null,
 	},
 ];
+
+
