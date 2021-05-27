@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { User, WeigthRecord } from '@models/user';
+import { User, WeightRecord } from '@models/user';
 import { FormControl, Validators } from '@angular/forms';
 import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
@@ -16,7 +16,18 @@ export class WeightTrackerComponent implements OnInit {
 
 	formsControl: FormControl[] = [this.dateFormControl, this.weigthFormControl];
 
-	constructor(private auth: AuthService, private utils: UtilsService) {}
+	weight_records: WeightRecord[] = [];
+
+	constructor(private auth: AuthService, private utils: UtilsService) {
+		this.getUserWeightRecords();
+	}
+
+	getUserWeightRecords() {
+		this.auth
+			.getUserWeightRecords(this.auth.user)
+			.then(weights => (this.weight_records = weights))
+			.catch(err => console.error(err));
+	}
 
 	ngOnInit(): void {}
 	reset() {
@@ -25,9 +36,9 @@ export class WeightTrackerComponent implements OnInit {
 
 	addRecord() {
 		let date = this.dateFormControl.value.toLocaleDateString();
-		let weigth = this.weigthFormControl.value;
+		let weight = this.weigthFormControl.value;
 
-		let newWeigthRecord = new WeigthRecord(date, weigth);
+		let newWeigthRecord = new WeightRecord(date, weight);
 		let uid = this.auth.user.uid;
 		console.log(uid, newWeigthRecord);
 
@@ -35,8 +46,10 @@ export class WeightTrackerComponent implements OnInit {
 		this.auth
 			.newWeightRecord(uid, newWeigthRecord)
 			.then((value: boolean) => {
-				if (value) this.utils.openSnackBar('Peso salvato correttamente', '💪😉');
-				else
+				if (value) {
+					this.utils.openSnackBar('Peso salvato correttamente', '💪😉');
+					this.getUserWeightRecords(); // ? this is called whenever we write a new weight record
+				} else
 					this.utils.openSnackBar(
 						'Si è verificato un errore durante il salvataggio del record del peso',
 						'Riprovare, per favore 🙏'

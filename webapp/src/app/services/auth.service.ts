@@ -13,7 +13,7 @@ import * as firebaseui from 'firebaseui';
 import { Subject } from 'rxjs';
 import { first } from 'rxjs/operators';
 
-import { User, WeigthRecord } from '@models/user';
+import { User, WeightRecord } from '@models/user';
 import { Workout } from '@models/workout';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from './user.service';
@@ -392,7 +392,7 @@ export class AuthService {
 	}
 
 	/** Exercises */
-	async newWeightRecord(userId: string, record: WeigthRecord): Promise<boolean> {
+	async newWeightRecord(userId: string, record: WeightRecord): Promise<boolean> {
 		this.asyncOperation.next(true);
 		console.info('📗 - write');
 		let res: boolean = await this.afs
@@ -410,6 +410,27 @@ export class AuthService {
 	}
 
 	// todo: get weights per user
+	public async getUserWeightRecords(user: User): Promise<WeightRecord[]> {
+		console.info('📘 - read user weight records');
+		this.asyncOperation.next(true);
+		let weightRecords: WeightRecord[] = await this.afs
+			.collection('users')
+			.doc(user.uid)
+			.collection('weights')
+			.get()
+			.toPromise()
+			.then(async snapshot => {
+				let weights = [];
+				snapshot.docs.forEach(doc => weights.push(doc.data() as WeightRecord));
+				return weights;
+			})
+			.catch(err => {
+				console.error(err);
+				return [];
+			});
+		this.asyncOperation.next(false);
+		return weightRecords;
+	}
 
 	/** messaging */
 	async startMessaging(user: User) {

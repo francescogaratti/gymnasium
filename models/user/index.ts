@@ -64,9 +64,12 @@ export class User implements User {
 	}
 }
 
-export class WeigthRecord {
+export interface WeightRecord {
 	date: string;
 	weigth: number;
+}
+
+export class WeightRecord implements WeightRecord {
 	constructor(date: string, weigth: number) {
 		this.date = date;
 		this.weigth = weigth;
