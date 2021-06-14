@@ -29,6 +29,7 @@ const REC_SCHEMA = {
 export class WeightTrackerComponent implements AfterViewInit{
 	user: User = null;
 	dateFormControl: FormControl = new FormControl('', [Validators.required]);
+	editDateFormControl: FormControl = new FormControl('');
 	weigthFormControl: FormControl = new FormControl('', [Validators.required]);
 
 	formsControl: FormControl[] = [this.dateFormControl, this.weigthFormControl];
@@ -85,13 +86,17 @@ export class WeightTrackerComponent implements AfterViewInit{
 	}
 
 	editRecord(element: WeightRecord) {
+		console.info("editing");
+        element["isEdit"] = true;	
+	}
+
+	saveRecord(element: WeightRecord) {
+	    console.info("saving");
         let i = wRecs.indexOf(element);
 		wRecs[i].date = element.date;
 		wRecs[i].weight = element.weight;
-		//this.before_changes_element = JSON.parse(JSON.stringify(element));
-		console.info(wRecs);
-		//element['edit'] = true;
-		
+		element["isEdit"] = false;
+		console.info(wRecs);	
 	}
 
 	

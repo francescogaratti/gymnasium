@@ -41,18 +41,41 @@
 	</form>
 </mat-card>
 
-<!-- <mat-card
+<!--table-->
+<mat-card>
  <table mat-table [dataSource]="dataSourceSort" matSort class="mat-elevation-z8">
 	
 	<ng-container matColumnDef="date">
 	  <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
-	  <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+	  <td mat-cell *matCellDef="let element"> 
+		<div *ngIf="!element.isEdit">
+			{{element.date | date: "dd/MM/yyyy"}} 
+		</div> 
+		<div *ngIf="element.isEdit">
+		<mat-form-field>
+		<mat-label>Choose a date</mat-label>
+		<input matInput [matDatepicker]="picker" [formControl]="editDateFormControl" [(ngModel)]="element.date">
+		<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+		<mat-datepicker #picker></mat-datepicker>
+	  </mat-form-field>
+	</div>
+	</td>
 	</ng-container>
   
 	
 	<ng-container matColumnDef="weight">
 	  <th mat-header-cell *matHeaderCellDef mat-sort-header> Weight </th>
-	  <td mat-cell *matCellDef="let element"> {{element.weight}}</td>
+	  <td mat-cell *matCellDef="let element"> 
+		<div *ngIf="!element.isEdit">
+			{{element.weight}} 
+		</div> 
+		<div *ngIf="element.isEdit">
+			<mat-form-field>
+			<mat-label>New weight</mat-label>
+			<input matInput type="number" [(ngModel)]="element.weight">
+		  </mat-form-field>
+		</div>	
+	  </td>
 	</ng-container>
 
 	<ng-container matColumnDef="delete">
@@ -66,84 +89,17 @@
 
 	  <ng-container matColumnDef="edit">
 		<th mat-header-cell *matHeaderCellDef ></th>
-		<td mat-cell *matCellDef="let element"> 
+		<td mat-cell *matCellDef="let element">
 			<mat-icon aria-hidden="false"
-			(click)="editRecord(element)"
-			>edit</mat-icon>
+			(click)="element.isEdit? saveRecord(element) : editRecord(element)"
+			>{{element.isEdit? "done" : "edit"}}</mat-icon>
 		</td>
 	  </ng-container>
 	
 	<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
 	<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
-</mat-card> -->
-
-<table mat-table [dataSource]="dataSource">
-    <ng-container [matColumnDef]="col" *ngFor="let col of displayedColumns">
-      <th mat-header-cell *matHeaderCellDef>
-        <span *ngIf="col !== 'delete' && col !== 'edit'">
-          {{col}}
-        </span>
-      </th>
-      <td mat-cell *matCellDef="let element">
-        <div *ngIf="!element.isEdit">
-          <div class="btn-edit" *ngIf="col === 'edit'; spanHeader" >
-				<mat-icon aria-hidden="false"
-				(click)="element.isEdit = !element.isEdit">edit</mat-icon>
-          </div>
-		  <div class="btn-edit" *ngIf="col === 'delete'; spanHeader" >
-				<mat-icon aria-hidden="false"
-				(click)="deleteRecord(element)">delete</mat-icon>	
-          </div>
-          <span #spanHeader>
-            {{element[col]}}
-          </span>
-        </div>
-        <div *ngIf="element.isEdit">
-          <!--div class="btn-edit" *ngIf="col === 'edit'; else dataField">
-            <button (click)="element.isEdit = !element.isEdit">Done</button>
-          </div> -->
-		<!--div class="ng-template" *ngIf="col !== 'edit' && col !== 'delete'; then dataField">
-        </div> -->
-
-	    <div class="btn-edit" *ngIf="col === 'edit'">
-			<button 
-			(click)="editRecord(element)"
-			(click)="element.isEdit = !element.isEdit">Done
-		    </button>
-		</div>
-		<div class="btn-edit" *ngIf="col === 'delete'">
-			<mat-icon aria-hidden="false"
-			(click)="deleteRecord(element)">delete</mat-icon>
-		</div>
-		<div class="btn-edit" *ngIf="col === 'date'">
-			<mat-form-field>
-				<mat-label>Choose a date</mat-label>
-				<input matInput [matDatepicker]="picker" [formControl]="dateFormControl" [(ngModel)]="element[col]">
-				<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-			  </mat-form-field>
-		</div>
-		<div class="btn-edit" *ngIf="col === 'weight'">
-			<mat-form-field>
-				<mat-label>New weight</mat-label>
-				<input [type]="dataSchema[col]" matInput [(ngModel)]="element[col]">
-			  </mat-form-field>	
-		</div>
-		
-          <!--ng-template #dataField>
-            <mat-form-field>
-              <mat-label>{{col}}</mat-label>
-              <input [type]="dataSchema[col]" matInput [(ngModel)]="element[col]">
-            </mat-form-field>
-          </ng-template> -->
-		</div>
-        
-      </td>
-    </ng-container>
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
+</mat-card> 
 
 
 
