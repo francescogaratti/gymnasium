@@ -420,7 +420,7 @@ export class AuthService {
 			.get()
 			.toPromise()
 			.then(async snapshot => {
-				let weights = [];
+				let weights: WeightRecord[] = [];
 				snapshot.docs.forEach(doc => weights.push(doc.data() as WeightRecord));
 				return weights;
 			})
