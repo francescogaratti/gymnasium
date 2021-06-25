@@ -399,8 +399,48 @@ export class AuthService {
 			.collection('users')
 			.doc(userId)
 			.collection('weights')
-			.add(Object.assign({}, record))
-			.then(() => true)
+			.add(Object.assign({}, record)) // ? id = undefined
+			.then(async (docRef: DocumentReference) => {
+				record.id = docRef.id; // ? set real id
+				return await this.updateWeightRecord(userId, record);
+			})
+			.catch(err => {
+				console.error(err);
+				return false;
+			});
+		this.asyncOperation.next(false);
+		return res;
+	}
+
+	async updateWeightRecord(userId: string, weight: WeightRecord): Promise<boolean> {
+		this.asyncOperation.next(true);
+		console.info('📗 - write');
+		let res: boolean = await this.afs
+			.collection('users')
+			.doc(userId)
+			.collection('weights')
+			.doc(weight.id)
+			.set(Object.assign({}, weight))
+			.then(() => true) // unica possibilità di diventare "true"
+			.catch(err => {
+				console.error(err);
+				return false;
+			});
+		this.asyncOperation.next(false);
+		return res;
+	}
+
+	// todo: remove weights
+	async deleteWeightRecord(userId: string, weight_id: string): Promise<boolean> {
+		this.asyncOperation.next(true);
+		console.info('📗 - write');
+		let res: boolean = await this.afs
+			.collection('users')
+			.doc(userId)
+			.collection('weights')
+			.doc(weight_id)
+			.delete()
+			.then(() => true) // unica possibilità di diventare "true"
 			.catch(err => {
 				console.error(err);
 				return false;

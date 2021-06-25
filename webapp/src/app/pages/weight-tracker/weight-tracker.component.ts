@@ -9,24 +9,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
 
-// const wRecs: WeightRecord [] = [ //mm/dd/yyyy;
-// 	{date: "5/5/2021", weight: 50},
-// 	{date: "11/8/2022", weight: 70},
-// 	{date: "10/7/2021", weight: 180},
-// 	{date: "6/3/2021", weight: 25},
-// 	{date: "2/3/2023", weight: 23},
-// 	{date: "12/29/2022", weight: 99},
-// ]
-
-let wRecs: WeightRecord[] = [
-	//mm/dd/yyyy;
-	{ date: '5/5/2021', weight: 50 },
-	{ date: '11/8/2022', weight: 70 },
-	{ date: '10/7/2021', weight: 180 },
-	{ date: '6/3/2021', weight: 25 },
-	{ date: '2/3/2023', weight: 23 },
-	{ date: '12/29/2022', weight: 99 },
-];
+let wRecs: WeightRecord[] = [];
 
 @Component({
 	selector: 'app-weight-tracker',
@@ -121,10 +104,10 @@ export class WeightTrackerComponent implements AfterViewInit {
 		let date = new Date(this.dateFormControl.value).toString();
 		let weight = this.weigthFormControl.value;
 
-		let newWeigthRecord = new WeightRecord(date, weight);
+		let newWeigthRecord = new WeightRecord(null, date, weight);
 		let uid = this.auth.user.uid;
 		console.log(uid, newWeigthRecord);
-		wRecs.push({ date, weight });
+		wRecs.push({ id: null, date, weight });
 		console.log(wRecs);
 		this.update();
 		// auth service function
@@ -146,10 +129,22 @@ export class WeightTrackerComponent implements AfterViewInit {
 
 	deleteRecord(element: WeightRecord) {
 		let i = wRecs.indexOf(element);
-		wRecs.splice(i, 1);
-		console.info(wRecs);
+		let deleted = wRecs.splice(i, 1)[0];
 		this.update();
-		//this.ngAfterViewInit();
+		this.auth
+			.deleteWeightRecord(this.auth.user.uid, deleted.id)
+			.then((value: boolean) => {
+				if (value) this.utils.openSnackBar('Peso eliminato correttamente', '💪😉');
+				else
+					this.utils.openSnackBar(
+						"Si è verificato un errore durante l'eliminazione del record del peso",
+						'Riprovare, per favore 🙏'
+					);
+			})
+			.catch(err => {
+				console.error(err);
+				this.utils.openSnackBar('Ops! Qualcosa è andato storto!', '💀💀💀');
+			});
 	}
 
 	editRecord(element: WeightRecord) {
@@ -158,13 +153,25 @@ export class WeightTrackerComponent implements AfterViewInit {
 	}
 
 	saveRecord(element: WeightRecord) {
-		console.info('saving');
 		let i = wRecs.indexOf(element);
 		wRecs[i].date = element.date;
 		wRecs[i].weight = element.weight;
 		element['isEdit'] = false;
-		console.info(wRecs);
 		this.update();
+		this.auth
+			.updateWeightRecord(this.auth.user.uid, element)
+			.then((value: boolean) => {
+				if (value) this.utils.openSnackBar('Peso aggiornato correttamente', '💪😉');
+				else
+					this.utils.openSnackBar(
+						"Si è verificato un errore durante l'aggiornamento del record del peso",
+						'Riprovare, per favore 🙏'
+					);
+			})
+			.catch(err => {
+				console.error(err);
+				this.utils.openSnackBar('Ops! Qualcosa è andato storto!', '💀💀💀');
+			});
 	}
 
 	sortDatabase() {
