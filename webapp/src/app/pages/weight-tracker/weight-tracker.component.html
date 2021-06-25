@@ -1,4 +1,4 @@
-<mat-card style="text-align: center">
+<mat-card style="text-align: center" class="mat-elevation-z0">
 	<mat-card-content style="display: table; margin: auto"></mat-card-content>
 	<form>
 		<div>
@@ -28,6 +28,7 @@
 		<div>
 			<button mat-raised-button color="accent" (click)="reset()">Reset</button>
 		</div>
+		<br />
 		<div>
 			<button
 				mat-raised-button
@@ -42,7 +43,7 @@
 </mat-card>
 
 <!--table-->
-<mat-card>
+<mat-card style="float: left; width: 50%" class="mat-elevation-z0">
 	<table mat-table [dataSource]="dataSourceSort" matSort class="mat-elevation-z8">
 		<ng-container matColumnDef="date">
 			<th mat-header-cell *matHeaderCellDef>Date</th>
@@ -84,7 +85,12 @@
 		<ng-container matColumnDef="delete">
 			<th mat-header-cell *matHeaderCellDef></th>
 			<td mat-cell *matCellDef="let element">
-				<mat-icon aria-hidden="false" (click)="deleteRecord(element)">delete</mat-icon>
+				<mat-icon
+					aria-hidden="false"
+					style="cursor: pointer"
+					(click)="deleteRecord(element)"
+					>delete</mat-icon
+				>
 			</td>
 		</ng-container>
 
@@ -93,6 +99,7 @@
 			<td mat-cell *matCellDef="let element">
 				<mat-icon
 					aria-hidden="false"
+					style="cursor: pointer"
 					(click)="element.isEdit ? saveRecord(element) : editRecord(element)"
 					>{{ element.isEdit ? 'done' : 'edit' }}</mat-icon
 				>
@@ -104,6 +111,8 @@
 	</table>
 </mat-card>
 
-<div id="divChart">
-	<canvas id="weightChart"></canvas>
-</div>
+<mat-card style="float: left; width: 45%" class="mat-elevation-z0">
+	<div id="divChart">
+		<canvas id="weightChart"></canvas>
+	</div>
+</mat-card>
