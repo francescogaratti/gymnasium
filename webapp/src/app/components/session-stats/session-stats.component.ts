@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, AfterViewInit } from '@angular/core';
 import { SessionRecord } from '@models/workout';
 import Chart from 'chart.js/auto';
+import { data } from 'jquery';
 
 @Component({
 	selector: 'app-session-stats',
@@ -8,10 +9,15 @@ import Chart from 'chart.js/auto';
 	styleUrls: ['./session-stats.component.sass'],
 })
 export class SessionStatsComponent implements OnInit {
+	exChart: Chart = null;
 	@Input() sessionRecords: SessionRecord[];
 	constructor() {}
 
 	ngOnInit(): void {}
+
+	selIndex: number = null;
+
+	//let selIndex = this.sessionRecords.length - 1
 
 	computeVolume(sessionRecord: SessionRecord): number {
 		let volume = 0;
@@ -132,5 +138,96 @@ export class SessionStatsComponent implements OnInit {
 			(document.getElementById('radar-body-parts') as HTMLCanvasElement).getContext('2d'),
 			config
 		);
+	}
+
+	// BUONINA
+
+	createLineChart() {
+		// !!! dividere create da update chart
+
+		this.selIndex = this.sessionRecords.length - 1;
+
+		let datasets = [];
+
+		const datasetsColors = ['red', 'blue', 'green', 'purple', 'yellow', 'orange'];
+		for (let i = 0; i < this.sessionRecords[this.selIndex].exercises.length; i++) {
+			datasets.push({
+				tension: 0.2,
+				label: this.sessionRecords[this.selIndex].exercises[i].name,
+				data: this.sessionRecords[this.selIndex].exercises[i].weights,
+				backgroundColor: 'rgba(100,0,0,0.5)',
+				borderColor: datasetsColors[i % datasetsColors.length],
+			});
+		}
+
+		// this.sessionRecords[this.selIndex].exercises.forEach(exercise => {
+		// 	datasets.push({
+		// 		tension: 0.2,
+		// 		label: exercise.name,
+		// 		data: exercise.weights,
+		// 		backgroundColor: 'rgba(100,0,0,0.5)',
+		// 		borderColor: datasetsColors[Math.floor(Math.random() * 6)],
+		// 	});
+		// });
+
+		this.exChart = new Chart('workoutChart', {
+			type: 'line',
+			data: {
+				labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+				datasets: datasets,
+			},
+			options: {
+				scales: {
+					y: {
+						beginAtZero: false,
+					},
+				},
+			},
+		});
+		console.info(this.sessionRecords[this.selIndex]);
+		console.info(this.selIndex);
+	}
+
+	updateChart() {
+		let datasets = [];
+		const datasetsColors = ['red', 'blue', 'green', 'purple', 'yellow', 'orange'];
+
+		for (let i = 0; i < this.sessionRecords[this.selIndex].exercises.length; i++) {
+			datasets.push({
+				tension: 0.2,
+				label: this.sessionRecords[this.selIndex].exercises[i].name,
+				data: this.sessionRecords[this.selIndex].exercises[i].weights,
+				backgroundColor: 'rgba(100,0,0,0.5)',
+				borderColor: datasetsColors[i % datasetsColors.length],
+			});
+		}
+
+		// this.sessionRecords[this.selIndex].exercises.forEach(exercise => {
+		// 	datasets.push({
+		// 		tension: 0.2,
+		// 		label: exercise.name,
+		// 		data: exercise.weights,
+		// 		backgroundColor: 'rgba(100,0,0,0.5)',
+		// 		borderColor: datasetsColors[Math.floor(Math.random() * 6)],
+		// 	});
+		// });
+
+		this.exChart.data.datasets = datasets;
+
+		//this.exChart.data.datasets[this.selIndex].data = datasets;
+
+		this.exChart.update();
+		console.log(this.selIndex);
+		console.log('updateee');
+		console.info(this.exChart.data.datasets[0].data);
+	}
+
+	addSelIndex() {
+		this.selIndex = this.selIndex + 1;
+		this.updateChart();
+	}
+	subtrSelIndex() {
+		this.selIndex = this.selIndex - 1;
+		this.updateChart();
 	}
 }

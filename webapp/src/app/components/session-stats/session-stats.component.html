@@ -6,5 +6,33 @@
 	<canvas id="radar-body-parts"></canvas>
 </div>
 
+<mat-card style="float: left; width: 45%" class="mat-elevation-z0">
+	<div id="divChart">
+		<canvas id="workoutChart"></canvas>
+	</div>
+</mat-card>
+
+<button
+	class="material-icons"
+	id="navDown"
+	(click)="subtrSelIndex()"
+	[disabled]="this.selIndex < 1"
+>
+	chevron_left
+</button>
+
+<button mat-raised-button (click)="createLineChart()">Create Line Chart</button>
+
+<button
+	class="material-icons"
+	id="navUp"
+	(click)="addSelIndex()"
+	[disabled]="this.selIndex == sessionRecords.length - 1"
+>
+	chevron_right
+</button>
+
+<!--[disabled]="selIndex < sessionRecords.length - 1" -->
+
 <!-- <button mat-raised-button (click)="createProgressiveLine()">Create Progressive Line</button> -->
-<button mat-raised-button (click)="createRadarBodyParts()">Create Radar Body parts</button>
+<!--button mat-raised-button (click)="createRadarBodyParts()">Create Radar Body parts</button -->

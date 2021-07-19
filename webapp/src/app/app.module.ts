@@ -64,6 +64,7 @@ import { LiveWorkoutComponent } from './components/live-workout/live-workout.com
 import { SessionStatsComponent } from './components/session-stats/session-stats.component';
 import { ExerciseComponent } from './components/exercise/exercise.component';
 import { WeightTrackerComponent } from './pages/weight-tracker/weight-tracker.component';
+import { ExtraWorkoutComponent } from './pages/extra-workout/extra-workout.component';
 
 @NgModule({
 	declarations: [
@@ -88,6 +89,7 @@ import { WeightTrackerComponent } from './pages/weight-tracker/weight-tracker.co
 		SessionStatsComponent,
 		ExerciseComponent,
 		WeightTrackerComponent,
+		ExtraWorkoutComponent,
 	],
 	imports: [
 		HttpClientModule,
