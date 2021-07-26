@@ -17,7 +17,7 @@ import { User, WeightRecord } from '@models/user';
 import { Workout } from '@models/workout';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from './user.service';
-import { ExerciseEntry } from '@models/exercise';
+import { Exercise, ExerciseEntry } from '@models/exercise';
 
 // configuration for the ui
 const uiConfig = {
@@ -42,6 +42,7 @@ export class AuthService {
 
 	users$: Subject<User[]> = new Subject<User[]>();
 	users: User[] = null;
+	allExercises: Exercise[] = null;
 
 	asyncOperation: Subject<boolean> = new Subject<boolean>(); // signal to the progress bar
 
@@ -142,6 +143,32 @@ export class AuthService {
 		this.users$.next(this.users); // send to subscribers
 		this.asyncOperation.next(false);
 		return this.users;
+	}
+
+	public async getExercises(): Promise<Exercise[]> {
+		if (this.allExercises) return this.allExercises;
+		console.info('📘 - read exercises');
+		this.asyncOperation.next(true);
+		this.allExercises = await this.afs
+			.collection('exercises')
+			.get()
+			.toPromise()
+			.then(snapshot => {
+				let exs: Exercise[] = [];
+				snapshot.docs.forEach(doc => exs.push(doc.data() as Exercise));
+				this.allExercises = exs;
+				console.info(this.allExercises);
+				return this.allExercises;
+			})
+
+			.catch(err => {
+				console.error(err);
+				return [];
+			});
+
+		this.asyncOperation.next(false);
+
+		return this.allExercises;
 	}
 
 	async updateUser(user: User): Promise<boolean> {
