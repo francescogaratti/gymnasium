@@ -1,7 +1,6 @@
 import { Component, Input, OnInit, AfterViewInit } from '@angular/core';
 import { SessionRecord } from '@models/workout';
 import Chart from 'chart.js/auto';
-import { data } from 'jquery';
 
 @Component({
 	selector: 'app-session-stats',
