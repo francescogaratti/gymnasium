@@ -20,16 +20,16 @@ const mockExWeights = [
 		weight: 50,
 		reps: 6,
 	},
-	{
-		name: 'leg curl',
-		weight: 80,
-		reps: 8,
-	},
-	{
-		name: 'tricipiti',
-		weight: 35,
-		reps: 10,
-	},
+	// {
+	// 	name: 'leg curl',
+	// 	weight: 80,
+	// 	reps: 8,
+	// },
+	// {
+	// 	name: 'tricipiti',
+	// 	weight: 35,
+	// 	reps: 10,
+	// },
 ];
 @Component({
 	selector: 'app-extra-workout',
@@ -42,7 +42,8 @@ export class ExtraWorkoutComponent implements OnInit {
 	selected_exercise: Exercise = null;
 	maxPercentage: number = null;
 	exesRecs = mockExWeights;
-
+	massimale: number = null;
+	valoriCalcolati: number[] = null;
 	esercizioFormControl: FormControl = new FormControl('', [Validators.required]);
 
 	displayedColumns: string[] = [
@@ -97,16 +98,18 @@ export class ExtraWorkoutComponent implements OnInit {
 		let perc = this.repsToPerc(reps);
 		let max = (weight * 100) / perc;
 		let percentuali = [60, 65, 70, 75, 80, 85, 90];
-		let valoricalcolati = [];
+		let percResult = [];
 
 		percentuali.forEach(p => {
-			//let v = (weight * p) / perc;
 			let v = (weight * p) / perc;
-			valoricalcolati.push(v);
+			percResult.push(v);
 		});
 
-		console.info(valoricalcolati);
-		console.info(max);
+		this.massimale = max;
+		this.valoriCalcolati = percResult;
+
+		console.info(this.valoriCalcolati);
+		console.info(this.massimale);
 	}
 
 	logCose() {

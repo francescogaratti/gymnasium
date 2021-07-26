@@ -29,49 +29,50 @@
 </mat-form-field>
 
 <button (click)="logCose()">log cose</button>
-<button (click)="calculateMassimale(45, 12)">calcola max</button>
+<button (click)="calculateMassimale(80, 6)">calcola max</button>
 
+<!-- tabella -->
 <mat-card style="float: left; width: 50%" class="mat-elevation-z0">
 	<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-		<!-- Max Column -->
-		<ng-container matColumnDef="Max">
-			<th mat-header-cell *matHeaderCellDef>Max</th>
-			<td mat-cell *matCellDef="let element"></td>
-		</ng-container>
-
 		<ng-container matColumnDef="2 reps">
 			<th mat-header-cell *matHeaderCellDef>2 reps</th>
-			<td mat-cell *matCellDef="let element"></td>
+			<td mat-cell *matCellDef="let element">{{ valoriCalcolati[0] }}</td>
 		</ng-container>
 
 		<ng-container matColumnDef="4 reps">
 			<th mat-header-cell *matHeaderCellDef>4 reps</th>
-			<td mat-cell *matCellDef="let element"></td>
+			<td mat-cell *matCellDef="let element">{{ valoriCalcolati[1] }}</td>
 		</ng-container>
 
 		<ng-container matColumnDef="6 reps">
 			<th mat-header-cell *matHeaderCellDef>6 reps</th>
-			<td mat-cell *matCellDef="let element"></td>
+			<td mat-cell *matCellDef="let element">{{ valoriCalcolati[2] }}</td>
 		</ng-container>
 
 		<ng-container matColumnDef="8 reps">
 			<th mat-header-cell *matHeaderCellDef>8 reps</th>
-			<td mat-cell *matCellDef="let element"></td>
+			<td mat-cell *matCellDef="let element">{{ valoriCalcolati[3] }}</td>
 		</ng-container>
 
 		<ng-container matColumnDef="10 reps">
 			<th mat-header-cell *matHeaderCellDef>10 reps</th>
-			<td mat-cell *matCellDef="let element"></td>
+			<td mat-cell *matCellDef="let element">{{ valoriCalcolati[4] }}</td>
 		</ng-container>
 
 		<ng-container matColumnDef="12 reps">
 			<th mat-header-cell *matHeaderCellDef>12 reps</th>
-			<td mat-cell *matCellDef="let element"></td>
+			<td mat-cell *matCellDef="let element">{{ valoriCalcolati[5] }}</td>
 		</ng-container>
 
 		<ng-container matColumnDef="15 reps">
 			<th mat-header-cell *matHeaderCellDef>15 reps</th>
-			<td mat-cell *matCellDef="let element"></td>
+			<td mat-cell *matCellDef="let element">{{ valoriCalcolati[6] }}</td>
+		</ng-container>
+
+		<!-- Massimale Column -->
+		<ng-container matColumnDef="Max">
+			<th mat-header-cell *matHeaderCellDef>Massimale</th>
+			<td mat-cell *matCellDef="let element">{{ massimale }}</td>
 		</ng-container>
 
 		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
