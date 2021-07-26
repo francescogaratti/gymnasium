@@ -1,7 +1,14 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+	Component,
+	OnInit,
+	AfterViewInit,
+	ViewChild,
+	ViewEncapsulation,
+	Input,
+} from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Exercise } from '@models/exercise';
+import { Exercise, mock } from '@models/exercise';
 import { Workout, WorkoutSession, standard, starterUomo, starterDonna } from '@models/workout';
 import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
@@ -10,6 +17,12 @@ import { Observable } from 'rxjs';
 
 import { MatAccordion } from '@angular/material/expansion';
 import { User } from '@models/user';
+import { ThrowStmt } from '@angular/compiler';
+
+let exsDatabase: Exercise[] = null;
+
+//let exercises: Exercise[] = [];
+//vedi weight tracker a riga 71 per prendere dati da database
 
 @Component({
 	selector: 'app-new-workout',
@@ -40,6 +53,10 @@ export class NewWorkoutComponent implements OnInit {
 	templates: Workout[] = [standard, starterUomo, starterDonna];
 	selected_template: Workout = null;
 
+	esercizi: Exercise[] = [];
+
+	selected_exercise: Exercise = null;
+
 	my_input: HTMLInputElement = null;
 
 	filteredUsers: Observable<User[]>;
@@ -59,12 +76,20 @@ export class NewWorkoutComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.refreshInput();
+		this.auth.getExercises().then(exercises => {
+			this.esercizi = exercises;
+		});
+		console.info(this.auth.allExercises);
+		//this.awaitExs();
+		console.info(this.esercizi);
 	}
+
+	ngAfterViewInit(): void {}
 
 	addExercise(ws: WorkoutSession) {
 		let new_exercise: Exercise = {
-			id: null,
-			name: this.esercizioFormControl.value,
+			id: this.selected_exercise.id,
+			name: this.selected_exercise.name,
 			reps: this.repsFormControl.value,
 			type: null, // todo: fix this
 			time: null, // todo: fix this
@@ -169,6 +194,17 @@ export class NewWorkoutComponent implements OnInit {
 		this.my_input.click();
 	}
 
+	selectExercise(exercise: Exercise) {
+		this.selected_exercise = exercise;
+		//this.workout_sessions = template.sessions;
+	}
+
+	changeExercise() {
+		this.workout_sessions = [];
+		this.selected_exercise = null;
+		this.esercizioFormControl.setValue(null);
+	}
+
 	getFiles() {
 		if (this.my_input.files[0])
 			this.excelFormControl.setValue(String(this.my_input.files[0].name));
@@ -180,4 +216,8 @@ export class NewWorkoutComponent implements OnInit {
 		this.my_input.setAttribute('type', 'file');
 		this.my_input.onchange = () => this.getFiles();
 	}
+
+	// async awaitExs() {
+	// 	this.esercizi = await this.auth.getExercises().then();
+	// }
 }

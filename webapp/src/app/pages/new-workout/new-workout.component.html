@@ -211,11 +211,43 @@
 						</table>
 					</form>
 					<!-- next exercise -->
+					<!-- collegare exercise a database, vedi user select component -->
 					<form>
 						<table class="example-full-width" cellspacing="0">
 							<tr>
 								<td>
-									<mat-form-field class="example-full-width" color="accent">
+									<form>
+										<mat-form-field class="example-full-width" align="center">
+											<mat-label>Scegli l'esercizio</mat-label>
+											<input
+												matInput
+												placeholder="Digita per filtrare..."
+												aria-label="Esercizio"
+												[matAutocomplete]="auto_exercises"
+												[formControl]="esercizioFormControl"
+											/>
+											<button
+												mat-button
+												*ngIf="selected_template"
+												matSuffix
+												mat-icon-button
+												aria-label="Clear"
+												(click)="changeExercise()"
+											>
+												<mat-icon color="accent">close</mat-icon>
+											</button>
+											<mat-autocomplete #auto_exercises="matAutocomplete">
+												<mat-option
+													*ngFor="let exercise of esercizi"
+													[value]="exercise.name"
+													(onSelectionChange)="selectExercise(exercise)"
+												>
+													<span>{{ exercise.name }}</span>
+												</mat-option>
+											</mat-autocomplete>
+										</mat-form-field>
+									</form>
+									<!--mat-form-field class="example-full-width" color="accent">
 										<mat-label>Esercizio</mat-label>
 										<input
 											matInput
@@ -233,7 +265,7 @@
 										>
 											<mat-icon>close</mat-icon>
 										</button>
-									</mat-form-field>
+									</mat-form-field-->
 								</td>
 								<td>
 									<mat-form-field class="number" color="accent">

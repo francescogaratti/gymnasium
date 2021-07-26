@@ -1,1 +1,57 @@
-<p>extra-workout works!</p>
+<mat-autocomplete #auto_exercises="matAutocomplete">
+	<mat-option
+		*ngFor="let exercise of esercizi"
+		[value]="exercise.name"
+		(onSelectionChange)="selectExercise(exercise)"
+	>
+		<span>{{ exercise.name }}</span>
+	</mat-option>
+</mat-autocomplete>
+
+<mat-card style="float: left; width: 50%" class="mat-elevation-z0">
+	<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+		<!-- Max Column -->
+		<ng-container matColumnDef="Max">
+			<th mat-header-cell *matHeaderCellDef>Max</th>
+			<td mat-cell *matCellDef="let element"></td>
+		</ng-container>
+
+		<ng-container matColumnDef="2 reps">
+			<th mat-header-cell *matHeaderCellDef>2 reps</th>
+			<td mat-cell *matCellDef="let element"></td>
+		</ng-container>
+
+		<ng-container matColumnDef="4 reps">
+			<th mat-header-cell *matHeaderCellDef>4 reps</th>
+			<td mat-cell *matCellDef="let element"></td>
+		</ng-container>
+
+		<ng-container matColumnDef="6 reps">
+			<th mat-header-cell *matHeaderCellDef>6 reps</th>
+			<td mat-cell *matCellDef="let element"></td>
+		</ng-container>
+
+		<ng-container matColumnDef="8 reps">
+			<th mat-header-cell *matHeaderCellDef>8 reps</th>
+			<td mat-cell *matCellDef="let element"></td>
+		</ng-container>
+
+		<ng-container matColumnDef="10 reps">
+			<th mat-header-cell *matHeaderCellDef>10 reps</th>
+			<td mat-cell *matCellDef="let element"></td>
+		</ng-container>
+
+		<ng-container matColumnDef="12 reps">
+			<th mat-header-cell *matHeaderCellDef>12 reps</th>
+			<td mat-cell *matCellDef="let element"></td>
+		</ng-container>
+
+		<ng-container matColumnDef="15 reps">
+			<th mat-header-cell *matHeaderCellDef>15 reps</th>
+			<td mat-cell *matCellDef="let element"></td>
+		</ng-container>
+
+		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+		<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+	</table>
+</mat-card>

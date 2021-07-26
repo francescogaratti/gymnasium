@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '@guards/auth.guard';
 import { LoggedGuard } from '@guards/logged.guard';
 import { ExercisesComponent } from '@pages/exercises/exercises.component';
+import { ExtraWorkoutComponent } from '@pages/extra-workout/extra-workout.component';
 import { HomeComponent } from '@pages/home/home.component';
 import { LoginComponent } from '@pages/login/login.component';
 import { NewWorkoutComponent } from '@pages/new-workout/new-workout.component';
@@ -43,6 +44,11 @@ const routes: Routes = [
 	{
 		path: 'weight-tracker',
 		component: WeightTrackerComponent,
+		canActivate: [AuthGuard],
+	},
+	{
+		path: 'extra-workout',
+		component: ExtraWorkoutComponent,
 		canActivate: [AuthGuard],
 	},
 	{ path: '', redirectTo: 'home', pathMatch: 'full' },
