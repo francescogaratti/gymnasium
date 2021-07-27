@@ -1,38 +1,40 @@
-<mat-form-field class="example-full-width" align="center">
-	<mat-label>Scegli l'esercizio</mat-label>
-	<input
-		matInput
-		placeholder="Digita per filtrare..."
-		aria-label="Esercizio"
-		[matAutocomplete]="auto_exercises"
-		[formControl]="esercizioFormControl"
-	/>
-	<button
-		mat-button
-		*ngIf="selected_exercise"
-		matSuffix
-		mat-icon-button
-		aria-label="Clear"
-		(click)="changeExercise()"
-	>
-		<mat-icon color="accent">close</mat-icon>
-	</button>
-	<mat-autocomplete #auto_exercises="matAutocomplete">
-		<mat-option
-			*ngFor="let exercise of esercizi"
-			[value]="exercise.name"
-			(onSelectionChange)="selectExercise(exercise)"
+<form style="width: 500px; margin: auto; margin-top: 30px; text-align: center">
+	<mat-form-field class="example-full-width" align="center">
+		<mat-label>Scegli l'esercizio</mat-label>
+		<input
+			matInput
+			placeholder="Digita per filtrare..."
+			aria-label="Esercizio"
+			[matAutocomplete]="auto_exercises"
+			[formControl]="esercizioFormControl"
+		/>
+		<button
+			mat-button
+			*ngIf="selected_exercise"
+			matSuffix
+			mat-icon-button
+			aria-label="Clear"
+			(click)="resetExercise()"
 		>
-			<span>{{ exercise.name }}</span>
-		</mat-option>
-	</mat-autocomplete>
-</mat-form-field>
-
-<button (click)="logCose()">log cose</button>
-<button (click)="calculateMassimale(80, 6)">calcola max</button>
+			<mat-icon color="accent">close</mat-icon>
+		</button>
+		<mat-autocomplete #auto_exercises="matAutocomplete">
+			<mat-option
+				*ngFor="let exercise of esercizi"
+				[value]="exercise.name"
+				(onSelectionChange)="selectExercise(exercise)"
+			>
+				<span>{{ exercise.name }}</span>
+			</mat-option>
+		</mat-autocomplete>
+	</mat-form-field>
+	<button mat-raised-button color="primary" (click)="calculateMassimale(80, 6)">
+		Compute Max
+	</button>
+</form>
 
 <!-- tabella -->
-<mat-card style="float: left; width: 50%" class="mat-elevation-z0">
+<mat-card style="margin: auto; width: 95%" class="mat-elevation-z0">
 	<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 		<ng-container matColumnDef="2 reps">
 			<th mat-header-cell *matHeaderCellDef>2 reps</th>

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { MatNativeDateModule } from '@angular/material/core';
 import {
 	ExerciseEntry,
 	Exercise,
@@ -10,9 +9,9 @@ import {
 	ExerciseRecord,
 } from '@models/exercise';
 import { User } from '@models/user';
+import { Workout } from '@models/workout';
 import { AuthService } from '@services/auth.service';
-import { UtilsService } from '@services/utils.service';
-import { flattenDiagnosticMessageText } from 'typescript';
+import { UserService } from '@services/user.service';
 
 const mockExWeights = [
 	{
@@ -41,13 +40,15 @@ const mockExWeights = [
 })
 export class ExtraWorkoutComponent implements OnInit {
 	user: User = null;
-	//esercizi: Exercise[] = null;
 	esercizi = mockExWeights;
 	selected_exercise = null;
 	maxPercentage: number = null;
-	exesRecs = mockExWeights;
 	massimale: number = null;
-	valoriCalcolati: number[] = null;
+
+	// ! valoriCalcolati: questo se messo a "null" dà problemi nell'html,
+	// ! assicurarsi di mettere un controllino in modo che non vada in errore
+	valoriCalcolati: number[] = [];
+
 	esercizioFormControl: FormControl = new FormControl('', [Validators.required]);
 
 	displayedColumns: string[] = [
@@ -60,28 +61,97 @@ export class ExtraWorkoutComponent implements OnInit {
 		'12 reps',
 		'15 reps',
 	];
-	dataSource = mockExWeights;
-	//dataSource = mockExWeights[this.selected_exercise];
-	constructor() {}
+	dataSource = [];
+
+	last_workout: Workout = null;
+
+	constructor(private auth: AuthService, private userService: UserService) {
+		this.userService.readUser(this.auth.getUser().uid).then(user => {
+			this.user = user;
+			this.auth
+				.readUserWorkouts(this.user)
+				.then((workouts: Workout[]) => {
+					if (workouts && workouts.length > 0) {
+						workouts.sort((w1, w2) =>
+							new Date(w1.endingDate) >= new Date(w2.endingDate) ? 1 : -1
+						);
+						this.last_workout = workouts[workouts.length - 1]; // questo prende l'ultimo
+						// TODO ***********************************
+						// TODO qui ora hai l'ultimo workout (quello che ci interessa per dire, poi magari sarà diversa la logica)
+						/**
+						 * la cosa da fare è ottenere lo storico di tutte le sessioni di allenamento per poter
+						 * calcolare quello che adesso è mockExWeights
+						 * Per farlo avrai bisogno di andare a prenderti, per ogni sessione, i relativi storici (session records)
+						 * e per ogni session record prendere gli esercizi e organizzarli in una lista nuova
+						 * come mockExWeights. La difficoltà sta appunto nel creare questa lista e anche capire come
+						 * calcolare il peso medio delle ultime serie fatte in queste stesse session records per quello specifico esercizio
+						 * Per esempio:
+						 * - workout con 3 sessioni
+						 * - ogni sessione con 5 session records
+						 * - ogni session con 3 esercizi
+						 * Praticamente devi stimare i pesi per 3x3 esercizi utilizzando però 5 serie temporali distinte
+						 * Ancora più pratico:
+						 * Ex: Session A
+						 * - Data 1
+						 * 	- esercizio 1 / 5 serie / 5 colpi --> pesi: [1,2,3,4,5] x5 colpi --> stima data1/esercizio1 = (1+2+3+4+5)/5 = 2.5 x5 colpi
+						 *  - esercizio 2 / 3 serie / 6 colpi --> pesi: [2,2,3] x6 colpi --> stima data1/esercizio2 = (2+2+3)/3 = 2.33 x6 colpi
+						 *  - esercizio 3 / 4 serie / 10 colpi --> pesi: [1,1,5,5] x10 colpi --> stima data1/esercizio3 = (1+1+5+5)/4 = 3 x10 colpi
+						 * - Data 2
+						 * 	- esercizio 1 / 5 serie / 5 colpi  --> pesi: [2,2,2,2,2] x5 colpi --> stima data2/esercizio1 = (2+2+2+2+2)/5 = 2 x5 colpi
+						 *  - esercizio 2 / 3 serie / 6 colpi --> pesi: [2,2,5] x6 colpi --> stima data2/esercizio2 = (2+2+5)/3 = 3 x6 colpi
+						 *  - esercizio 3 / 4 serie / 10 colpi --> pesi: [5,5,5,5] x10 colpi --> stima data2/esercizio3 = (5+5+5+5)/4 = 5 x10 colpi
+						 * - Data 3
+						 * 	- esercizio 1 / 5 serie / 5 colpi  --> pesi: [4,4,3,4,5] x5 colpi --> ecc...
+						 *  - esercizio 2 / 3 serie / 6 colpi --> pesi: [2,4,3] x6 colpi --> ecc..
+						 *  - esercizio 3 / 4 serie / 10 colpi --> pesi: [3,4,5,6] x10 colpi --> ecc..
+						 * - Data 4
+						 * ... ecc
+						 * - Data 5
+						 * ... ecc
+						 *
+						 * Una volta calcolate, per ogni esercizio, tutte le stime per ogni session records (per ogni data che ha fatto quell'esercizio)
+						 * Allora potrai fare una "media delle medie" di questo tipo:
+						 * - stima esercizio1 = ( data1/esercizio1 + data2/esercizio1 + data3/esercizio1 + ... + dataN/esercizio1) / N ==> peso medio / x5 colpi
+						 * - stima esercizio2 = ( data1/esercizio2 + data2/esercizio2 + data3/esercizio2 + ... + dataN/esercizio2) / N ==> peso medio / x6 colpi
+						 * - ecc...
+						 *
+						 * E quando hai le stime di tutti gli esercizi hai finito perchè ti basta ricreare
+						 * la stessa struttura che stai utilizzando adesso per mockExWeights dove al posto
+						 * di "weight" e "reps" ci metti quelle vere che hai appena calcolato per ogni esercizio
+						 *
+						 */
+
+						/**
+						 * * *** INSERT MAGIC CODE HERE ***
+						 */
+						console.info(this.last_workout);
+					}
+				})
+				.catch(err => console.error(err));
+		});
+	}
 
 	ngOnInit(): void {}
 
-	// selectExercise(exercise: Exercise) {
-	// 	this.selected_exercise = exercise;
-	// 	//this.workout_sessions = template.sessions;
-	// }
-
 	selectExercise(exercise) {
-		//this.selected_exercise = exercise;
-		console.info(exercise.id);
+		this.selected_exercise = exercise;
+		this.dataSource = mockExWeights;
 		this.calculateMassimale(exercise.weight, exercise.reps);
 	}
 
-	changeExercise() {
+	// ? ho cambiato nome a questa funzione per renderla più "parlante", cioè con un nome più evocativo
+	resetExercise() {
 		this.selected_exercise = null;
+		this.dataSource = [];
 		this.esercizioFormControl.setValue(null);
-		console.log('changing');
 	}
+
+	// *** queste due funzioni non sono niente male! Bravo!
+	// ? l'unica cosa è che quando le adatterai ai veri esercizi del database
+	// ? ci saranno un po' di modifiche ma è normale
+	// ? perchè praticamente dovrai prendere i dati non solo dagli esercizi prototipi
+	// ? ma proprio dalle sessioni dei workout dell'utente attuale
+	// ? per farlo ti preparo già il codice apposta che scarica le sessioni utenti dell'ultimo workout
 
 	repsToPerc(reps: number) {
 		let maxPercentage = null;
@@ -121,10 +191,5 @@ export class ExtraWorkoutComponent implements OnInit {
 
 		console.info(this.valoriCalcolati);
 		console.info(this.massimale);
-	}
-
-	logCose() {
-		//console.log(this.repsToPerc(6));
-		//this.repsToPerc(mockExWeights[0].reps);
 	}
 }
