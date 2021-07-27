@@ -151,10 +151,11 @@ export class NewWorkoutComponent implements OnInit {
 
 		this.auth
 			.newWorkout(workout, this.auth.user)
-			.then((value: boolean) => {
-				if (value)
+			.then((id: string) => {
+				if (id) {
 					this.utils.openSnackBar("L'allenamento è stato salvato correttamente", '💪😉');
-				else
+					this.router.navigateByUrl('train?id=' + id);
+				} else
 					this.utils.openSnackBar(
 						"Si è verificato un errore durante il salvataggio dell'allenamento",
 						'Riprovare, per favore 🙏'

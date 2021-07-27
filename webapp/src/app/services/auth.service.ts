@@ -203,7 +203,7 @@ export class AuthService {
 		return res;
 	}
 
-	async newWorkout(workout: Workout, user: User): Promise<boolean> {
+	async newWorkout(workout: Workout, user: User): Promise<string> {
 		this.asyncOperation.next(true);
 		console.info('📗 - write');
 		let workoutId: string = await this.afs
@@ -221,7 +221,7 @@ export class AuthService {
 		// ? now I have the workout ID ==> save into the user workouts list
 		let res: boolean = await this.userService.newUserWorkout(user, workoutId);
 		this.asyncOperation.next(false);
-		return res;
+		return workout.id;
 	}
 
 	// todo: extract workouts from user.workouts
