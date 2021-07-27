@@ -1,5 +1,6 @@
 <mat-card style="width: 95%; margin: auto; text-align: center" class="mat-elevation-z0">
 	<button
+		*ngIf="sessionRecords?.length > 0"
 		class="material-icons"
 		id="navDown"
 		(click)="subtrSelIndex()"
@@ -8,9 +9,12 @@
 		chevron_left
 	</button>
 
-	<button mat-raised-button (click)="createLineChart()">Create Line Chart</button>
+	<button [disabled]="!sessionRecords?.length" mat-raised-button (click)="createLineChart()">
+		Create Line Chart
+	</button>
 
 	<button
+		*ngIf="sessionRecords?.length > 0"
 		class="material-icons"
 		id="navUp"
 		(click)="addSelIndex()"
