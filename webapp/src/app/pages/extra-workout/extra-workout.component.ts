@@ -17,19 +17,22 @@ import { flattenDiagnosticMessageText } from 'typescript';
 const mockExWeights = [
 	{
 		name: 'panca',
+		id: '000',
 		weight: 50,
 		reps: 6,
 	},
-	// {
-	// 	name: 'leg curl',
-	// 	weight: 80,
-	// 	reps: 8,
-	// },
-	// {
-	// 	name: 'tricipiti',
-	// 	weight: 35,
-	// 	reps: 10,
-	// },
+	{
+		name: 'leg curl',
+		id: '001',
+		weight: 80,
+		reps: 8,
+	},
+	{
+		name: 'tricipiti',
+		id: '002',
+		weight: 35,
+		reps: 10,
+	},
 ];
 @Component({
 	selector: 'app-extra-workout',
@@ -38,8 +41,9 @@ const mockExWeights = [
 })
 export class ExtraWorkoutComponent implements OnInit {
 	user: User = null;
-	esercizi: Exercise[] = null;
-	selected_exercise: Exercise = null;
+	//esercizi: Exercise[] = null;
+	esercizi = mockExWeights;
+	selected_exercise = null;
 	maxPercentage: number = null;
 	exesRecs = mockExWeights;
 	massimale: number = null;
@@ -57,19 +61,26 @@ export class ExtraWorkoutComponent implements OnInit {
 		'15 reps',
 	];
 	dataSource = mockExWeights;
-
+	//dataSource = mockExWeights[this.selected_exercise];
 	constructor() {}
 
 	ngOnInit(): void {}
 
-	selectExercise(exercise: Exercise) {
-		this.selected_exercise = exercise;
-		//this.workout_sessions = template.sessions;
+	// selectExercise(exercise: Exercise) {
+	// 	this.selected_exercise = exercise;
+	// 	//this.workout_sessions = template.sessions;
+	// }
+
+	selectExercise(exercise) {
+		//this.selected_exercise = exercise;
+		console.info(exercise.id);
+		this.calculateMassimale(exercise.weight, exercise.reps);
 	}
 
 	changeExercise() {
 		this.selected_exercise = null;
 		this.esercizioFormControl.setValue(null);
+		console.log('changing');
 	}
 
 	repsToPerc(reps: number) {
@@ -96,13 +107,13 @@ export class ExtraWorkoutComponent implements OnInit {
 
 	calculateMassimale(weight: number, reps: number) {
 		let perc = this.repsToPerc(reps);
-		let max = (weight * 100) / perc;
+		let max = Math.round((weight * 100) / perc);
 		let percentuali = [60, 65, 70, 75, 80, 85, 90];
 		let percResult = [];
 
 		percentuali.forEach(p => {
 			let v = (weight * p) / perc;
-			percResult.push(v);
+			percResult.push(Math.round(v));
 		});
 
 		this.massimale = max;
@@ -113,7 +124,7 @@ export class ExtraWorkoutComponent implements OnInit {
 	}
 
 	logCose() {
-		console.log(this.repsToPerc(6));
+		//console.log(this.repsToPerc(6));
 		//this.repsToPerc(mockExWeights[0].reps);
 	}
 }
