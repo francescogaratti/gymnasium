@@ -135,59 +135,86 @@ export class ExtraWorkoutComponent implements OnInit {
 						// 	});
 						// });
 
-						let lastWorkExs = [];
+						//DA QUI BUONINA
 
-						let allStime = [];
-						let allExIds = [];
+						// let lastWorkExs = [];
 
-						function calcolaStima() {
-							for (let i = 0; i < lastWorkExs.length; i++) {
-								let lastWorkWeights = lastWorkExs[i].weights;
-								let wSum = 0;
-								for (let i = 0; i < lastWorkWeights.length; i++)
-									wSum += lastWorkWeights[i];
-								let exStima = { id: null, wStima: null, name: null };
-								exStima.wStima = Math.round(wSum / lastWorkWeights.length);
-								exStima.id = lastWorkExs[i].id;
-								exStima.name = lastWorkExs[i].name;
-								allStime.push(exStima);
-								allExIds.push(lastWorkExs[i].id);
-							}
+						// let allStime = [];
+						// let allExIds = [];
+
+						// function calcolaStima() {
+						// 	for (let i = 0; i < lastWorkExs.length; i++) {
+						// 		let lastWorkWeights = lastWorkExs[i].weights;
+						// 		let wSum = 0;
+						// 		for (let i = 0; i < lastWorkWeights.length; i++)
+						// 			wSum += lastWorkWeights[i];
+						// 		let exStima = { id: null, wStima: null, name: null };
+						// 		exStima.wStima = Math.round(wSum / lastWorkWeights.length);
+						// 		exStima.id = lastWorkExs[i].id;
+						// 		exStima.name = lastWorkExs[i].name;
+						// 		allStime.push(exStima);
+						// 		allExIds.push(lastWorkExs[i].id);
+						// 	}
+						// }
+						// this.last_workout.sessions[1].records.forEach(record => {
+						// 	for (let i = 0; i < record.exercises.length; i++) {
+						// 		lastWorkExs.push(record.exercises[i]);
+						// 	}
+						// });
+
+						// calcolaStima();
+
+						// let uniqueIds = [...new Set(allExIds)];
+						// let firstEx = [];
+						// let secondEx = [];
+						// let thirdEx = [];
+
+						// allStime.forEach(st => {
+						// 	if (st.id == uniqueIds[0]) {
+						// 		firstEx.push(st);
+						// 	}
+						// 	if (st.id == uniqueIds[1]) {
+						// 		secondEx.push(st);
+						// 	}
+						// 	if (st.id == uniqueIds[2]) {
+						// 		thirdEx.push(st);
+						// 	}
+						// });
+
+						// let firstMedia = null;
+						// let sum = null;
+
+						// for (let i = 0; i < firstEx.length; i++) {
+						// 	sum += firstEx[i].wStima;
+						// 	firstMedia = sum / firstEx.length;
+						// }
+
+						//FINO A QUI
+
+						// provare a loggare esercizi tramite iteratore index
+						// funzionicchia, provare ad andare avanti anche iterando session
+						// da capire come usare id degli esercizi
+
+						let sessionIndex = 1;
+						let recordIndex = 0;
+						let exerciseIndex = 0;
+
+						let ex =
+							this.last_workout.sessions[sessionIndex].records[recordIndex].exercises[
+								exerciseIndex
+							];
+
+						for (
+							let i = 0;
+							i < this.last_workout.sessions[sessionIndex].records.length;
+							i++
+						) {
+							recordIndex = i;
+							console.info(
+								this.last_workout.sessions[sessionIndex].records[recordIndex]
+									.exercises[exerciseIndex]
+							);
 						}
-						this.last_workout.sessions[1].records.forEach(record => {
-							for (let i = 0; i < record.exercises.length; i++) {
-								lastWorkExs.push(record.exercises[i]);
-							}
-						});
-
-						calcolaStima();
-
-						let uniqueIds = [...new Set(allExIds)];
-						let firstEx = [];
-						let secondEx = [];
-						let thirdEx = [];
-
-						allStime.forEach(st => {
-							if (st.id == uniqueIds[0]) {
-								firstEx.push(st);
-							}
-							if (st.id == uniqueIds[1]) {
-								secondEx.push(st);
-							}
-							if (st.id == uniqueIds[2]) {
-								thirdEx.push(st);
-							}
-						});
-
-						let firstMedia = null;
-						let sum = null;
-
-						for (let i = 0; i < firstEx.length; i++) {
-							sum += firstEx[i].wStima;
-							firstMedia = sum / firstEx.length;
-						}
-
-						console.info(firstMedia);
 					}
 				})
 
