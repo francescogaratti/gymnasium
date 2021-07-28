@@ -1,3 +1,5 @@
+import { FIRST_MEDIA } from '@angular/cdk/keycodes';
+import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import {
@@ -12,6 +14,7 @@ import { User } from '@models/user';
 import { Workout } from '@models/workout';
 import { AuthService } from '@services/auth.service';
 import { UserService } from '@services/user.service';
+import { first } from 'rxjs/operators';
 
 const mockExWeights = [
 	{
@@ -135,6 +138,7 @@ export class ExtraWorkoutComponent implements OnInit {
 						let lastWorkExs = [];
 
 						let allStime = [];
+						let allExIds = [];
 
 						function calcolaStima() {
 							for (let i = 0; i < lastWorkExs.length; i++) {
@@ -147,6 +151,7 @@ export class ExtraWorkoutComponent implements OnInit {
 								exStima.id = lastWorkExs[i].id;
 								exStima.name = lastWorkExs[i].name;
 								allStime.push(exStima);
+								allExIds.push(lastWorkExs[i].id);
 							}
 						}
 						this.last_workout.sessions[1].records.forEach(record => {
@@ -154,13 +159,38 @@ export class ExtraWorkoutComponent implements OnInit {
 								lastWorkExs.push(record.exercises[i]);
 							}
 						});
+
 						calcolaStima();
 
-						console.info(allStime);
+						let uniqueIds = [...new Set(allExIds)];
+						let firstEx = [];
+						let secondEx = [];
+						let thirdEx = [];
 
-						//console.info(lastWorkExs);
+						allStime.forEach(st => {
+							if (st.id == uniqueIds[0]) {
+								firstEx.push(st);
+							}
+							if (st.id == uniqueIds[1]) {
+								secondEx.push(st);
+							}
+							if (st.id == uniqueIds[2]) {
+								thirdEx.push(st);
+							}
+						});
+
+						let firstMedia = null;
+						let sum = null;
+
+						for (let i = 0; i < firstEx.length; i++) {
+							sum += firstEx[i].wStima;
+							firstMedia = sum / firstEx.length;
+						}
+
+						console.info(firstMedia);
 					}
 				})
+
 				.catch(err => console.error(err));
 		});
 	}
