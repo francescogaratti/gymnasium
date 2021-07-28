@@ -124,7 +124,41 @@ export class ExtraWorkoutComponent implements OnInit {
 						/**
 						 * * *** INSERT MAGIC CODE HERE ***
 						 */
-						console.info(this.last_workout);
+						// this.last_workout.sessions.forEach(session => {
+						// 	session.records.forEach(record => {
+						// 		record.exercises.forEach(exercise => {
+						// 			console.info(exercise);
+						// 		});
+						// 	});
+						// });
+
+						let lastWorkExs = [];
+
+						let allStime = [];
+
+						function calcolaStima() {
+							for (let i = 0; i < lastWorkExs.length; i++) {
+								let lastWorkWeights = lastWorkExs[i].weights;
+								let wSum = 0;
+								for (let i = 0; i < lastWorkWeights.length; i++)
+									wSum += lastWorkWeights[i];
+								let exStima = { id: null, wStima: null, name: null };
+								exStima.wStima = Math.round(wSum / lastWorkWeights.length);
+								exStima.id = lastWorkExs[i].id;
+								exStima.name = lastWorkExs[i].name;
+								allStime.push(exStima);
+							}
+						}
+						this.last_workout.sessions[1].records.forEach(record => {
+							for (let i = 0; i < record.exercises.length; i++) {
+								lastWorkExs.push(record.exercises[i]);
+							}
+						});
+						calcolaStima();
+
+						console.info(allStime);
+
+						//console.info(lastWorkExs);
 					}
 				})
 				.catch(err => console.error(err));
