@@ -187,34 +187,56 @@ export class ExtraWorkoutComponent implements OnInit {
 						// for (let i = 0; i < firstEx.length; i++) {
 						// 	sum += firstEx[i].wStima;
 						// 	firstMedia = sum / firstEx.length;
+						//console.info(firstMedia)
 						// }
 
 						//FINO A QUI
 
-						// provare a loggare esercizi tramite iteratore index
-						// funzionicchia, provare ad andare avanti anche iterando session
-						// da capire come usare id degli esercizi
-
-						let sessionIndex = 1;
+						let sessionIndex = 0;
 						let recordIndex = 0;
 						let exerciseIndex = 0;
 
-						let ex =
-							this.last_workout.sessions[sessionIndex].records[recordIndex].exercises[
-								exerciseIndex
-							];
+						let firstSes = [];
+						let secondSes = [];
 
-						for (
-							let i = 0;
-							i < this.last_workout.sessions[sessionIndex].records.length;
-							i++
-						) {
-							recordIndex = i;
-							console.info(
-								this.last_workout.sessions[sessionIndex].records[recordIndex]
-									.exercises[exerciseIndex]
-							);
+						let firstEx = [];
+						let secondEx = [];
+						let thirdEx = [];
+						let fourthEx = [];
+
+						for (let k = 0; k < this.last_workout.sessions.length; k++) {
+							sessionIndex = k;
+							for (
+								let i = 0;
+								i < this.last_workout.sessions[sessionIndex].records.length;
+								i++
+							) {
+								recordIndex = i;
+								for (
+									let t = 0;
+									t <
+									this.last_workout.sessions[sessionIndex].records[recordIndex]
+										.exercises.length;
+									t++
+								) {
+									exerciseIndex = t;
+									if (sessionIndex == 0) {
+										firstSes.push(
+											this.last_workout.sessions[sessionIndex].records[
+												recordIndex
+											].exercises[exerciseIndex]
+										);
+									} else {
+										secondSes.push(
+											this.last_workout.sessions[sessionIndex].records[
+												recordIndex
+											].exercises[exerciseIndex]
+										);
+									}
+								}
+							}
 						}
+						console.info(firstSes, secondSes);
 					}
 				})
 
