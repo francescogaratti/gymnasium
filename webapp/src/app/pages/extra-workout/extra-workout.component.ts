@@ -13,6 +13,8 @@ import { Workout } from '@models/workout';
 import { AuthService } from '@services/auth.service';
 import { UserService } from '@services/user.service';
 import { UtilsService } from '@services/utils.service';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
 const mockExWeights = [
 	{
@@ -50,7 +52,9 @@ export class ExtraWorkoutComponent implements OnInit {
 	// ! assicurarsi di mettere un controllino in modo che non vada in errore
 	valoriCalcolati: number[] = [];
 
+	exercises: Exercise[] = [];
 	esercizioFormControl: FormControl = new FormControl('', [Validators.required]);
+	filteredExercises: Observable<Exercise[]>;
 
 	displayedColumns: string[] = [
 		'Max',
@@ -71,6 +75,10 @@ export class ExtraWorkoutComponent implements OnInit {
 		private userService: UserService,
 		private utils: UtilsService
 	) {
+		this.filteredExercises = this.esercizioFormControl.valueChanges.pipe(
+			startWith(''),
+			map(value => this._filter(value))
+		);
 		this.userService.readUser(this.auth.getUser().uid).then(user => {
 			this.user = user;
 			this.auth
@@ -241,7 +249,6 @@ export class ExtraWorkoutComponent implements OnInit {
 						console.info(firstSes, secondSes);
 					}
 				})
-
 				.catch(err => {
 					console.error(err);
 					this.utils.openSnackBar(
@@ -254,6 +261,16 @@ export class ExtraWorkoutComponent implements OnInit {
 	}
 
 	ngOnInit(): void {}
+
+	getExerciseName(exercise: Exercise) {
+		return exercise ? exercise.name : '';
+	}
+
+	private _filter(value: string): Exercise[] {
+		const filterValue = value.toLowerCase();
+
+		return this.exercises.filter(exercise => exercise.name.toLowerCase().includes(filterValue));
+	}
 
 	selectExercise(exercise) {
 		this.selected_exercise = exercise;
