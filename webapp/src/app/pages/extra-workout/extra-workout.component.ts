@@ -12,6 +12,7 @@ import { User } from '@models/user';
 import { Workout } from '@models/workout';
 import { AuthService } from '@services/auth.service';
 import { UserService } from '@services/user.service';
+import { UtilsService } from '@services/utils.service';
 
 const mockExWeights = [
 	{
@@ -65,7 +66,11 @@ export class ExtraWorkoutComponent implements OnInit {
 
 	last_workout: Workout = null;
 
-	constructor(private auth: AuthService, private userService: UserService) {
+	constructor(
+		private auth: AuthService,
+		private userService: UserService,
+		private utils: UtilsService
+	) {
 		this.userService.readUser(this.auth.getUser().uid).then(user => {
 			this.user = user;
 			this.auth
@@ -237,7 +242,14 @@ export class ExtraWorkoutComponent implements OnInit {
 					}
 				})
 
-				.catch(err => console.error(err));
+				.catch(err => {
+					console.error(err);
+					this.utils.openSnackBar(
+						'Something went wrong!😵',
+						'Better check the console 👉',
+						5000
+					);
+				});
 		});
 	}
 
