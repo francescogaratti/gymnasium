@@ -236,13 +236,19 @@
 											>
 												<mat-icon color="accent">close</mat-icon>
 											</button>
-											<mat-autocomplete #auto_exercises="matAutocomplete">
+											<mat-autocomplete
+												#auto_exercises="matAutocomplete"
+												(optionSelected)="selectExercise($event)"
+												[displayWith]="getExerciseName"
+											>
 												<mat-option
-													*ngFor="let exercise of esercizi"
-													[value]="exercise.name"
-													(onSelectionChange)="selectExercise(exercise)"
+													#exercise_options
+													*ngFor="
+														let exercise of filteredExercises | async
+													"
+													[value]="exercise"
 												>
-													<span>{{ exercise.name }}</span>
+													<span>{{ getExerciseName(exercise) }}</span>
 												</mat-option>
 											</mat-autocomplete>
 										</mat-form-field>

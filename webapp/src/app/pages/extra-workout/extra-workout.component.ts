@@ -1,5 +1,3 @@
-import { FIRST_MEDIA } from '@angular/cdk/keycodes';
-import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import {
@@ -14,7 +12,6 @@ import { User } from '@models/user';
 import { Workout } from '@models/workout';
 import { AuthService } from '@services/auth.service';
 import { UserService } from '@services/user.service';
-import { first } from 'rxjs/operators';
 
 const mockExWeights = [
 	{
