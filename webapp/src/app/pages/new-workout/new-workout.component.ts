@@ -1,14 +1,7 @@
-import {
-	Component,
-	OnInit,
-	AfterViewInit,
-	ViewChild,
-	ViewEncapsulation,
-	Input,
-} from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Exercise, mock } from '@models/exercise';
+import { Exercise } from '@models/exercise';
 import { Workout, WorkoutSession, standard, starterUomo, starterDonna } from '@models/workout';
 import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
@@ -17,12 +10,8 @@ import { Observable } from 'rxjs';
 
 import { MatAccordion } from '@angular/material/expansion';
 import { User } from '@models/user';
-import { ThrowStmt } from '@angular/compiler';
-
-let exsDatabase: Exercise[] = null;
-
-//let exercises: Exercise[] = [];
-//vedi weight tracker a riga 71 per prendere dati da database
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { map, startWith } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-new-workout',
@@ -53,13 +42,13 @@ export class NewWorkoutComponent implements OnInit {
 	templates: Workout[] = [standard, starterUomo, starterDonna];
 	selected_template: Workout = null;
 
-	esercizi: Exercise[] = [];
+	exercises: Exercise[] = [];
 
 	selected_exercise: Exercise = null;
 
 	my_input: HTMLInputElement = null;
 
-	filteredUsers: Observable<User[]>;
+	filteredExercises: Observable<Exercise[]>;
 
 	formsControl: FormControl[] = [
 		this.esercizioFormControl,
@@ -77,11 +66,12 @@ export class NewWorkoutComponent implements OnInit {
 	ngOnInit(): void {
 		this.refreshInput();
 		this.auth.getExercises().then(exercises => {
-			this.esercizi = exercises;
+			this.exercises = exercises;
 		});
-		console.info(this.auth.allExercises);
-		//this.awaitExs();
-		console.info(this.esercizi);
+		this.filteredExercises = this.esercizioFormControl.valueChanges.pipe(
+			startWith(''),
+			map((value: string) => this._filter(value))
+		);
 	}
 
 	ngAfterViewInit(): void {}
@@ -91,7 +81,7 @@ export class NewWorkoutComponent implements OnInit {
 			id: this.selected_exercise.id,
 			name: this.selected_exercise.name,
 			reps: this.repsFormControl.value,
-			type: null, // todo: fix this
+			type: this.selected_exercise.type,
 			time: null, // todo: fix this
 			sets: this.setsFormControl.value,
 			rest: {
@@ -114,6 +104,7 @@ export class NewWorkoutComponent implements OnInit {
 		this.workout_sessions.push(new_workout_session);
 		this.cleanForm();
 		this.sessionFormControl.setValue('');
+		this.sessionFormControl.markAsUntouched();
 	}
 
 	selectTemplateWorkout(template: Workout) {
@@ -128,7 +119,11 @@ export class NewWorkoutComponent implements OnInit {
 	}
 
 	cleanForm() {
-		this.formsControl.forEach((f: FormControl) => f.setValue(null));
+		this.formsControl.forEach((f: FormControl) => {
+			f.setValue(null);
+			f.markAsUntouched();
+		});
+		this.selected_exercise = null;
 	}
 
 	createWorkout() {
@@ -195,9 +190,19 @@ export class NewWorkoutComponent implements OnInit {
 		this.my_input.click();
 	}
 
-	selectExercise(exercise: Exercise) {
-		this.selected_exercise = exercise;
-		//this.workout_sessions = template.sessions;
+	private _filter(value: string): Exercise[] {
+		if (typeof value !== 'string') return [];
+		const filterValue = value.toLowerCase();
+		return this.exercises.filter(exercise => exercise.name.toLowerCase().includes(filterValue));
+	}
+
+	selectExercise(event: MatAutocompleteSelectedEvent) {
+		this.selected_exercise = event.option.value as Exercise;
+		console.info(this.selected_exercise.name);
+	}
+
+	getExerciseName(exercise: Exercise) {
+		return exercise ? exercise.name : '';
 	}
 
 	changeExercise() {

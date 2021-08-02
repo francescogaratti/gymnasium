@@ -1,5 +1,3 @@
-import { FIRST_MEDIA } from '@angular/cdk/keycodes';
-import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import {
@@ -14,7 +12,9 @@ import { User } from '@models/user';
 import { Workout } from '@models/workout';
 import { AuthService } from '@services/auth.service';
 import { UserService } from '@services/user.service';
-import { first } from 'rxjs/operators';
+import { UtilsService } from '@services/utils.service';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
 const mockExWeights = [
 	{
@@ -52,7 +52,9 @@ export class ExtraWorkoutComponent implements OnInit {
 	// ! assicurarsi di mettere un controllino in modo che non vada in errore
 	valoriCalcolati: number[] = [];
 
+	exercises: Exercise[] = [];
 	esercizioFormControl: FormControl = new FormControl('', [Validators.required]);
+	filteredExercises: Observable<Exercise[]>;
 
 	displayedColumns: string[] = [
 		'Max',
@@ -68,7 +70,15 @@ export class ExtraWorkoutComponent implements OnInit {
 
 	last_workout: Workout = null;
 
-	constructor(private auth: AuthService, private userService: UserService) {
+	constructor(
+		private auth: AuthService,
+		private userService: UserService,
+		private utils: UtilsService
+	) {
+		this.filteredExercises = this.esercizioFormControl.valueChanges.pipe(
+			startWith(''),
+			map(value => this._filter(value))
+		);
 		this.userService.readUser(this.auth.getUser().uid).then(user => {
 			this.user = user;
 			this.auth
@@ -238,12 +248,28 @@ export class ExtraWorkoutComponent implements OnInit {
 						// console.info(firstSes, secondSes);
 					}
 				})
-
-				.catch(err => console.error(err));
+				.catch(err => {
+					console.error(err);
+					this.utils.openSnackBar(
+						'Something went wrong!😵',
+						'Better check the console 👉',
+						5000
+					);
+				});
 		});
 	}
 
 	ngOnInit(): void {}
+
+	getExerciseName(exercise: Exercise) {
+		return exercise ? exercise.name : '';
+	}
+
+	private _filter(value: string): Exercise[] {
+		const filterValue = value.toLowerCase();
+
+		return this.exercises.filter(exercise => exercise.name.toLowerCase().includes(filterValue));
+	}
 
 	selectExercise(exercise) {
 		this.selected_exercise = exercise;

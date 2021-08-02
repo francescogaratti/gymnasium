@@ -1,5 +1,5 @@
 <form style="width: 500px; margin: auto; margin-top: 30px; text-align: center">
-	<mat-form-field class="example-full-width" align="center">
+	<mat-form-field class="example-full-width" align="center" appearance="outline">
 		<mat-label>Scegli l'esercizio</mat-label>
 		<input
 			matInput
@@ -18,12 +18,13 @@
 		>
 			<mat-icon color="accent">close</mat-icon>
 		</button>
-		<mat-autocomplete #auto_exercises="matAutocomplete">
-			<mat-option
-				*ngFor="let exercise of esercizi"
-				[value]="exercise.name"
-				(onSelectionChange)="selectExercise(exercise)"
-			>
+		<mat-autocomplete
+			#auto_exercises="matAutocomplete"
+			(optionSelected)="selectExercise($event)"
+			[displayWith]="getExerciseName"
+		>
+			<!-- <mat-option *ngFor="let exercise of filteredExercises | async" [value]="exercise"> -->
+			<mat-option *ngFor="let exercise of esercizi" [value]="exercise">
 				<span>{{ exercise.name }}</span>
 			</mat-option>
 		</mat-autocomplete>
