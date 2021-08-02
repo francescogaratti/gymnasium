@@ -70,3 +70,5 @@ dist
 
 # server/lib
 server/lib
+
+server/service-account.json
