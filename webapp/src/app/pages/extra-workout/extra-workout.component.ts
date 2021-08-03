@@ -1,3 +1,4 @@
+import { NullTemplateVisitor } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import {
@@ -145,104 +146,37 @@ export class ExtraWorkoutComponent implements OnInit {
 						// 	});
 						// });
 
-						let lastWorkExs = [];
+						let allStime = {};
 
-						let allStime = [];
-						let allExIds = [];
+						console.info(this.last_workout.sessions);
 
 						this.last_workout.sessions.forEach(ses => {
-							lastWorkExs.push([]);
-							allStime.push([]);
-							let k = this.last_workout.sessions.indexOf(ses);
-							this.last_workout.sessions[k].records.forEach(record => {
-								for (let i = 0; i < record.exercises.length; i++) {
-									lastWorkExs[k].push(record.exercises[i]);
-								}
-							});
-						});
-
-						function calcolaStima() {
-							lastWorkExs.forEach(ses => {
-								let k = lastWorkExs.indexOf(ses);
-								console.info(k);
-
-								ses.forEach(element => {
-									//console.info(element.weights, element.id);
-									let wSum = 0;
-									element.weights.forEach(weight => {
+							ses.records.forEach(element => {
+								let wSum = 0;
+								element.exercises.forEach(exericise => {
+									exericise.weights.forEach(weight => {
 										wSum += weight;
 									});
-									let exStima = { id: null, wStima: null, name: null };
-									exStima.wStima = Math.round(wSum / element.weights.length);
-									exStima.id = element.id;
-									exStima.name = element.name;
 
-									allStime[k].push(exStima);
-									allExIds.push(element.id);
-									//console.info(exStima);
+									if (!allStime[exericise.id]) allStime[exericise.id] = [];
+
+									allStime[exericise.id].push(
+										Math.round(wSum / exericise.weights.length)
+									);
 								});
 							});
-							//console.info(allStime);
-						}
-
-						// function calcolaStima() {
-
-						// 	for (let i = 0; i < lastWorkExs.length; i++) {
-						// 		let lastWorkWeights = lastWorkExs[i].weights;
-						// 		let wSum = 0;
-						// 		for (let i = 0; i < lastWorkWeights.length; i++)
-						// 			wSum += lastWorkWeights[i];
-						// 		let exStima = { id: null, wStima: null, name: null };
-						// 		exStima.wStima = Math.round(wSum / lastWorkWeights.length);
-						// 		exStima.id = lastWorkExs[i].id;
-						// 		exStima.name = lastWorkExs[i].name;
-						// 		allStime.push(exStima);
-						// 		allExIds.push(lastWorkExs[i].id);
-						// 	}
-						// }
-						// this.last_workout.sessions[0].records.forEach(record => {
-						// 	for (let i = 0; i < record.exercises.length; i++) {
-						// 		lastWorkExs.push(record.exercises[i]);
-						// 	}
-						// });
-
-						//console.info(lastWorkExs);
-
-						calcolaStima();
-
-						let uniqueIds = [...new Set(allExIds)];
-						let allOrderedExercises = [];
-
-						uniqueIds.forEach(id => {
-							allOrderedExercises.push([]);
 						});
+						console.info(allStime);
 
-						// allStime.forEach(st => {
-						// 	let x = uniqueIds.indexOf(st.id);
-						// 	allOrderedExercises[x].push(st.wStima);
-						// 	console.info(x, st);
-						// });
-						allStime.forEach(ses => {
-							ses.forEach(st => {
-								let x = uniqueIds.indexOf(st.id);
-								allOrderedExercises[x].push(st);
+						let allMedie = {};
+
+						Object.keys(allStime).forEach(id => {
+							allMedie[id] = 0;
+
+							allStime[id].forEach(el => {
+								allMedie[id] += el;
 							});
-						});
-						//console.info(allOrderedExercises);
-
-						const allMedie = [];
-
-						allOrderedExercises.forEach(ex => {
-							let sum = 0;
-							let exMedie = { id: null, wMedia: null };
-							ex.forEach(el => {
-								sum += el.wStima;
-								exMedie.id = el.id;
-							});
-							let media = Math.round(sum / ex.length);
-							exMedie.wMedia = media;
-							//console.info(media);
-							allMedie.push(exMedie);
+							allMedie[id] = Math.round(allMedie[id] / allStime[id].length);
 						});
 						console.info(allMedie);
 					}
