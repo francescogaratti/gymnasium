@@ -10,7 +10,7 @@ import {
 	ExerciseRecord,
 } from '@models/exercise';
 import { User } from '@models/user';
-import { Workout } from '@models/workout';
+import { Workout, WorkoutSession } from '@models/workout';
 import { AuthService } from '@services/auth.service';
 import { UserService } from '@services/user.service';
 import { UtilsService } from '@services/utils.service';
@@ -37,6 +37,7 @@ const mockExWeights = [
 		reps: 10,
 	},
 ];
+
 @Component({
 	selector: 'app-extra-workout',
 	templateUrl: './extra-workout.component.html',
@@ -44,28 +45,22 @@ const mockExWeights = [
 })
 export class ExtraWorkoutComponent implements OnInit {
 	user: User = null;
-	esercizi = mockExWeights;
-	selected_exercise = null;
-	maxPercentage: number = null;
-	massimale: number = null;
 
 	// ! valoriCalcolati: questo se messo a "null" dà problemi nell'html,
 	// ! assicurarsi di mettere un controllino in modo che non vada in errore
 	valoriCalcolati: number[] = [];
-
-	exercises: Exercise[] = [];
-	esercizioFormControl: FormControl = new FormControl('', [Validators.required]);
-	filteredExercises: Observable<Exercise[]>;
+	listResults: any[] = [];
 
 	displayedColumns: string[] = [
-		'Max',
-		'2 reps',
-		'4 reps',
-		'6 reps',
-		'8 reps',
-		'10 reps',
-		'12 reps',
+		'Exercise',
 		'15 reps',
+		'12 reps',
+		'10 reps',
+		'8 reps',
+		'6 reps',
+		'4 reps',
+		'2 reps',
+		'Max',
 	];
 	dataSource = [];
 
@@ -76,10 +71,6 @@ export class ExtraWorkoutComponent implements OnInit {
 		private userService: UserService,
 		private utils: UtilsService
 	) {
-		this.filteredExercises = this.esercizioFormControl.valueChanges.pipe(
-			startWith(''),
-			map(value => this._filter(value))
-		);
 		this.userService.readUser(this.auth.getUser().uid).then(user => {
 			this.user = user;
 			this.auth
@@ -90,6 +81,7 @@ export class ExtraWorkoutComponent implements OnInit {
 							new Date(w1.endingDate) >= new Date(w2.endingDate) ? 1 : -1
 						);
 						this.last_workout = workouts[workouts.length - 1]; // questo prende l'ultimo
+						this.computePredictions(this.last_workout);
 						// TODO ***********************************
 						// TODO qui ora hai l'ultimo workout (quello che ci interessa per dire, poi magari sarà diversa la logica)
 						/**
@@ -134,51 +126,6 @@ export class ExtraWorkoutComponent implements OnInit {
 						 * di "weight" e "reps" ci metti quelle vere che hai appena calcolato per ogni esercizio
 						 *
 						 */
-
-						/**
-						 * * *** INSERT MAGIC CODE HERE ***
-						 */
-						// this.last_workout.sessions.forEach(session => {
-						// 	session.records.forEach(record => {
-						// 		record.exercises.forEach(exercise => {
-						// 			console.info(exercise);
-						// 		});
-						// 	});
-						// });
-
-						let allStime = {};
-
-						console.info(this.last_workout.sessions);
-
-						this.last_workout.sessions.forEach(ses => {
-							ses.records.forEach(element => {
-								let wSum = 0;
-								element.exercises.forEach(exericise => {
-									exericise.weights.forEach(weight => {
-										wSum += weight;
-									});
-
-									if (!allStime[exericise.id]) allStime[exericise.id] = [];
-
-									allStime[exericise.id].push(
-										Math.round(wSum / exericise.weights.length)
-									);
-								});
-							});
-						});
-						console.info(allStime);
-
-						let allMedie = {};
-
-						Object.keys(allStime).forEach(id => {
-							allMedie[id] = 0;
-
-							allStime[id].forEach(el => {
-								allMedie[id] += el;
-							});
-							allMedie[id] = Math.round(allMedie[id] / allStime[id].length);
-						});
-						console.info(allMedie);
 					}
 				})
 				.catch(err => {
@@ -192,30 +139,51 @@ export class ExtraWorkoutComponent implements OnInit {
 		});
 	}
 
+	// todo: estendi questa funzione in modo che utilizzi tutti i workout, da sempre (poi mettiamo il filtro data)
+	computePredictions(workout: Workout) {
+		let allStime = {};
+		let results = {};
+		workout.sessions.forEach(session => {
+			session.records.forEach(session_record => {
+				session_record.exercises.forEach(exercise => {
+					let reps = session.exercises.find(ex => ex.id == exercise.id).reps; // todo: change later
+					// abbiamo già sia le reps che l'id dell'esercizio
+					results[exercise.id] = {
+						name: exercise.name,
+						weight: 0,
+						reps: reps,
+					};
+					// ? creiamo le serie di medie degli esercizi per ogni sessione
+					let wSum = 0;
+					exercise.weights.forEach(weight => (wSum += weight));
+
+					if (!allStime[exercise.id]) allStime[exercise.id] = [];
+					allStime[exercise.id].push(Math.round(wSum / exercise.weights.length));
+				});
+			});
+		});
+
+		// ? questo non cambia se uso uno o più workout
+
+		Object.keys(allStime).forEach(id => {
+			let sum = 0;
+			allStime[id].forEach(el => (sum += el));
+			results[id].weight = Math.round(sum / allStime[id].length);
+			results[id].percentages = this.calculateMassimale(results[id].weight, results[id].reps);
+		});
+
+		this.listResults = [];
+		Object.keys(results).forEach(id => {
+			let entry = results[id];
+			entry.id = id;
+			this.listResults.push(entry);
+		});
+
+		console.info(results);
+		console.info(this.listResults);
+	}
+
 	ngOnInit(): void {}
-
-	getExerciseName(exercise: Exercise) {
-		return exercise ? exercise.name : '';
-	}
-
-	private _filter(value: string): Exercise[] {
-		const filterValue = value.toLowerCase();
-
-		return this.exercises.filter(exercise => exercise.name.toLowerCase().includes(filterValue));
-	}
-
-	selectExercise(exercise) {
-		this.selected_exercise = exercise;
-		this.dataSource = mockExWeights;
-		this.calculateMassimale(exercise.weight, exercise.reps);
-	}
-
-	// ? ho cambiato nome a questa funzione per renderla più "parlante", cioè con un nome più evocativo
-	resetExercise() {
-		this.selected_exercise = null;
-		this.dataSource = [];
-		this.esercizioFormControl.setValue(null);
-	}
 
 	// *** queste due funzioni non sono niente male! Bravo!
 	// ? l'unica cosa è che quando le adatterai ai veri esercizi del database
@@ -246,10 +214,10 @@ export class ExtraWorkoutComponent implements OnInit {
 		return maxPercentage;
 	}
 
-	calculateMassimale(weight: number, reps: number) {
+	calculateMassimale(weight: number, reps: number): number[] {
 		let perc = this.repsToPerc(reps);
-		let max = Math.round((weight * 100) / perc);
-		let percentuali = [60, 65, 70, 75, 80, 85, 90];
+		// let max = Math.round((weight * 100) / perc);
+		let percentuali = [60, 65, 70, 75, 80, 85, 90, 100];
 		let percResult = [];
 
 		percentuali.forEach(p => {
@@ -257,10 +225,11 @@ export class ExtraWorkoutComponent implements OnInit {
 			percResult.push(Math.round(v));
 		});
 
-		this.massimale = max;
+		// this.massimale = max;
 		this.valoriCalcolati = percResult;
 
-		console.info(this.valoriCalcolati);
-		console.info(this.massimale);
+		// console.info(this.valoriCalcolati);
+		// console.info(this.massimale);
+		return this.valoriCalcolati;
 	}
 }

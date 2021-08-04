@@ -1,81 +1,50 @@
-<form style="width: 500px; margin: auto; margin-top: 30px; text-align: center">
-	<mat-form-field class="example-full-width" align="center" appearance="outline">
-		<mat-label>Scegli l'esercizio</mat-label>
-		<input
-			matInput
-			placeholder="Digita per filtrare..."
-			aria-label="Esercizio"
-			[matAutocomplete]="auto_exercises"
-			[formControl]="esercizioFormControl"
-		/>
-		<button
-			mat-button
-			*ngIf="selected_exercise"
-			matSuffix
-			mat-icon-button
-			aria-label="Clear"
-			(click)="resetExercise()"
-		>
-			<mat-icon color="accent">close</mat-icon>
-		</button>
-		<mat-autocomplete
-			#auto_exercises="matAutocomplete"
-			(optionSelected)="selectExercise($event)"
-			[displayWith]="getExerciseName"
-		>
-			<!-- <mat-option *ngFor="let exercise of filteredExercises | async" [value]="exercise"> -->
-			<mat-option *ngFor="let exercise of esercizi" [value]="exercise">
-				<span>{{ exercise.name }}</span>
-			</mat-option>
-		</mat-autocomplete>
-	</mat-form-field>
-	<button mat-raised-button color="primary" (click)="calculateMassimale(80, 6)">
-		Compute Max
-	</button>
-</form>
-
 <!-- tabella -->
 <mat-card style="margin: auto; width: 95%" class="mat-elevation-z0">
-	<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-		<ng-container matColumnDef="2 reps">
-			<th mat-header-cell *matHeaderCellDef>2 reps</th>
-			<td mat-cell *matCellDef="let element">{{ valoriCalcolati[0] }}</td>
-		</ng-container>
-
-		<ng-container matColumnDef="4 reps">
-			<th mat-header-cell *matHeaderCellDef>4 reps</th>
-			<td mat-cell *matCellDef="let element">{{ valoriCalcolati[1] }}</td>
-		</ng-container>
-
-		<ng-container matColumnDef="6 reps">
-			<th mat-header-cell *matHeaderCellDef>6 reps</th>
-			<td mat-cell *matCellDef="let element">{{ valoriCalcolati[2] }}</td>
-		</ng-container>
-
-		<ng-container matColumnDef="8 reps">
-			<th mat-header-cell *matHeaderCellDef>8 reps</th>
-			<td mat-cell *matCellDef="let element">{{ valoriCalcolati[3] }}</td>
-		</ng-container>
-
-		<ng-container matColumnDef="10 reps">
-			<th mat-header-cell *matHeaderCellDef>10 reps</th>
-			<td mat-cell *matCellDef="let element">{{ valoriCalcolati[4] }}</td>
+	<table mat-table [dataSource]="listResults" class="mat-elevation-z8">
+		<ng-container matColumnDef="15 reps">
+			<th mat-header-cell *matHeaderCellDef>15 reps</th>
+			<td mat-cell *matCellDef="let element">{{ element.percentages[0] }}</td>
 		</ng-container>
 
 		<ng-container matColumnDef="12 reps">
 			<th mat-header-cell *matHeaderCellDef>12 reps</th>
-			<td mat-cell *matCellDef="let element">{{ valoriCalcolati[5] }}</td>
+			<td mat-cell *matCellDef="let element">{{ element.percentages[1] }}</td>
 		</ng-container>
 
-		<ng-container matColumnDef="15 reps">
-			<th mat-header-cell *matHeaderCellDef>15 reps</th>
-			<td mat-cell *matCellDef="let element">{{ valoriCalcolati[6] }}</td>
+		<ng-container matColumnDef="10 reps">
+			<th mat-header-cell *matHeaderCellDef>10 reps</th>
+			<td mat-cell *matCellDef="let element">{{ element.percentages[2] }}</td>
+		</ng-container>
+
+		<ng-container matColumnDef="8 reps">
+			<th mat-header-cell *matHeaderCellDef>8 reps</th>
+			<td mat-cell *matCellDef="let element">{{ element.percentages[3] }}</td>
+		</ng-container>
+
+		<ng-container matColumnDef="6 reps">
+			<th mat-header-cell *matHeaderCellDef>6 reps</th>
+			<td mat-cell *matCellDef="let element">{{ element.percentages[4] }}</td>
+		</ng-container>
+
+		<ng-container matColumnDef="4 reps">
+			<th mat-header-cell *matHeaderCellDef>4 reps</th>
+			<td mat-cell *matCellDef="let element">{{ element.percentages[5] }}</td>
+		</ng-container>
+
+		<ng-container matColumnDef="2 reps">
+			<th mat-header-cell *matHeaderCellDef>2 reps</th>
+			<td mat-cell *matCellDef="let element">{{ element.percentages[6] }}</td>
 		</ng-container>
 
 		<!-- Massimale Column -->
 		<ng-container matColumnDef="Max">
 			<th mat-header-cell *matHeaderCellDef>Massimale</th>
-			<td mat-cell *matCellDef="let element">{{ massimale }}</td>
+			<td mat-cell *matCellDef="let element">{{ element.percentages[7] }}</td>
+		</ng-container>
+
+		<ng-container matColumnDef="Exercise">
+			<th mat-header-cell *matHeaderCellDef>Exercise</th>
+			<td mat-cell *matCellDef="let element">{{ element.name }}</td>
 		</ng-container>
 
 		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
