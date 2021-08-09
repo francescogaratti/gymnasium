@@ -17,27 +17,6 @@ import { UtilsService } from '@services/utils.service';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
-const mockExWeights = [
-	{
-		name: 'panca',
-		id: '000',
-		weight: 50,
-		reps: 6,
-	},
-	{
-		name: 'leg curl',
-		id: '001',
-		weight: 80,
-		reps: 8,
-	},
-	{
-		name: 'tricipiti',
-		id: '002',
-		weight: 35,
-		reps: 10,
-	},
-];
-
 @Component({
 	selector: 'app-extra-workout',
 	templateUrl: './extra-workout.component.html',
@@ -63,8 +42,12 @@ export class ExtraWorkoutComponent implements OnInit {
 		'Max',
 	];
 	dataSource = [];
+	allWorkouts: Workout[] = [];
 
 	last_workout: Workout = null;
+
+	allStime = {};
+	results = {};
 
 	constructor(
 		private auth: AuthService,
@@ -80,8 +63,17 @@ export class ExtraWorkoutComponent implements OnInit {
 						workouts.sort((w1, w2) =>
 							new Date(w1.endingDate) >= new Date(w2.endingDate) ? 1 : -1
 						);
+						//this.allWorkouts.push(workouts[0]);
+
+						this.allWorkouts = workouts;
 						this.last_workout = workouts[workouts.length - 1]; // questo prende l'ultimo
-						this.computePredictions(this.last_workout);
+						workouts.forEach(workout => {
+							this.computePredictions(workout);
+						});
+
+						//this.computePredictions(workouts[1]);
+
+						//this.computePredictions(this.last_workout);
 						// TODO ***********************************
 						// TODO qui ora hai l'ultimo workout (quello che ci interessa per dire, poi magari sarà diversa la logica)
 						/**
@@ -140,15 +132,16 @@ export class ExtraWorkoutComponent implements OnInit {
 	}
 
 	// todo: estendi questa funzione in modo che utilizzi tutti i workout, da sempre (poi mettiamo il filtro data)
+
 	computePredictions(workout: Workout) {
-		let allStime = {};
-		let results = {};
+		//let allStime = {};
+		//let results = {};
 		workout.sessions.forEach(session => {
 			session.records.forEach(session_record => {
 				session_record.exercises.forEach(exercise => {
 					let reps = session.exercises.find(ex => ex.id == exercise.id).reps; // todo: change later
 					// abbiamo già sia le reps che l'id dell'esercizio
-					results[exercise.id] = {
+					this.results[exercise.id] = {
 						name: exercise.name,
 						weight: 0,
 						reps: reps,
@@ -157,40 +150,40 @@ export class ExtraWorkoutComponent implements OnInit {
 					let wSum = 0;
 					exercise.weights.forEach(weight => (wSum += weight));
 
-					if (!allStime[exercise.id]) allStime[exercise.id] = [];
-					allStime[exercise.id].push(Math.round(wSum / exercise.weights.length));
+					if (!this.allStime[exercise.id]) this.allStime[exercise.id] = [];
+					this.allStime[exercise.id].push(Math.round(wSum / exercise.weights.length));
 				});
 			});
 		});
+		console.info(this.allStime);
+		//console.info(workout);
+
+		//console.info(this.allWorkouts);
 
 		// ? questo non cambia se uso uno o più workout
 
-		Object.keys(allStime).forEach(id => {
+		Object.keys(this.allStime).forEach(id => {
 			let sum = 0;
-			allStime[id].forEach(el => (sum += el));
-			results[id].weight = Math.round(sum / allStime[id].length);
-			results[id].percentages = this.calculateMassimale(results[id].weight, results[id].reps);
+			this.allStime[id].forEach(el => (sum += el));
+			this.results[id].weight = Math.round(sum / this.allStime[id].length);
+			this.results[id].percentages = this.calculateMassimale(
+				this.results[id].weight,
+				this.results[id].reps
+			);
 		});
 
 		this.listResults = [];
-		Object.keys(results).forEach(id => {
-			let entry = results[id];
+		Object.keys(this.results).forEach(id => {
+			let entry = this.results[id];
 			entry.id = id;
 			this.listResults.push(entry);
 		});
 
-		console.info(results);
-		console.info(this.listResults);
+		// console.info(this.results);
+		// console.info(this.listResults);
 	}
 
 	ngOnInit(): void {}
-
-	// *** queste due funzioni non sono niente male! Bravo!
-	// ? l'unica cosa è che quando le adatterai ai veri esercizi del database
-	// ? ci saranno un po' di modifiche ma è normale
-	// ? perchè praticamente dovrai prendere i dati non solo dagli esercizi prototipi
-	// ? ma proprio dalle sessioni dei workout dell'utente attuale
-	// ? per farlo ti preparo già il codice apposta che scarica le sessioni utenti dell'ultimo workout
 
 	repsToPerc(reps: number) {
 		let maxPercentage = null;
