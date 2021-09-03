@@ -173,14 +173,26 @@
 											/>
 											<span matSuffix>kg</span>
 										</mat-form-field>
+										<button
+											mat-stroked-button
+											color="primary"
+											style="vertical-align: super; margin-left: 5px"
+										>
+											{{ exercise.reps }} reps
+										</button>
 										<mat-icon
 											*ngIf="inputset.value"
 											(click)="insertSet(inputset, exercise, stepper)"
 											style="padding: 10px; cursor: pointer"
 											>add_circle</mat-icon
 										>
+										<br />
+										<!-- todo: previous history here -->
 									</form>
-									<div *ngIf="resting" style="margin-bottom: 30px">
+									<div
+										*ngIf="resting"
+										style="margin-bottom: 30px; text-align: center"
+									>
 										<span>
 											Resting 😌😌
 											<button
@@ -193,7 +205,6 @@
 											</button>
 										</span>
 										<mat-progress-bar
-											style="width: 200px"
 											mode="determinate"
 											[value]="exercise_rest"
 										></mat-progress-bar>
@@ -237,6 +248,9 @@
 								</ng-template>
 							</mat-vertical-stepper>
 						</div>
+					</mat-tab>
+					<mat-tab label="History">
+						<app-history [sessionRecords]="workout_session.records"> </app-history>
 					</mat-tab>
 					<!-- * statistics -->
 					<mat-tab label="Statistics">

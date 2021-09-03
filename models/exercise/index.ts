@@ -28,7 +28,6 @@ export interface ExerciseEntry {
 	authorId?: string;
 	compound?: boolean;
 	tags?: string[];
-	
 }
 
 export class ExerciseEntry implements ExerciseEntry {
@@ -72,6 +71,7 @@ export interface ExerciseRecord {
 	type: string; // cardio / weight
 	sets: number | null; // number of sets
 	rest: Rest;
+	reps: number;
 	currentSet: number | null; // keeps track of the current set
 	weights: number[] | null; // one value for each set
 	durations: number[] | null; // one value for each set
@@ -85,6 +85,7 @@ export class ExerciseRecord implements ExerciseRecord {
 		this.type = exercise.type;
 		this.sets = exercise.sets;
 		this.rest = exercise.rest;
+		this.reps = exercise.reps;
 		this.currentSet = 0;
 		this.weights = null;
 		this.durations = null;
@@ -110,7 +111,6 @@ export class Exercise implements Exercise {
 		this.reps = null;
 	}
 }
-
 
 export const mock: Exercise[] = [
 	{
@@ -153,5 +153,3 @@ export const mock: Exercise[] = [
 		time: null,
 	},
 ];
-
-
