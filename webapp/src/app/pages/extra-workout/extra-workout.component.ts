@@ -155,7 +155,7 @@ export class ExtraWorkoutComponent implements OnInit {
 				});
 			});
 		});
-		console.info(this.allStime);
+		console.info(this.results);
 		//console.info(workout);
 
 		//console.info(this.allWorkouts);
@@ -164,6 +164,7 @@ export class ExtraWorkoutComponent implements OnInit {
 
 		Object.keys(this.allStime).forEach(id => {
 			let sum = 0;
+			console.info(typeof id);
 			this.allStime[id].forEach(el => (sum += el));
 			this.results[id].weight = Math.round(sum / this.allStime[id].length);
 			this.results[id].percentages = this.calculateMassimale(
@@ -178,7 +179,7 @@ export class ExtraWorkoutComponent implements OnInit {
 			entry.id = id;
 			this.listResults.push(entry);
 		});
-
+		console.info(this.allStime);
 		// console.info(this.results);
 		// console.info(this.listResults);
 	}

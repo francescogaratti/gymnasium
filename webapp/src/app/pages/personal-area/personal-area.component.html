@@ -7,7 +7,16 @@
 			<app-workouts id="workouts"></app-workouts>
 		</mat-tab>
 		<mat-tab label="Statistiche">
-			<h2>Coming soon 🔥</h2>
+			<br />
+			<button
+				color="primary"
+				mat-raised-button
+				(click)="router.navigateByUrl('extra-workout')"
+				style="vertical-align: auto"
+			>
+				Extra workout stats
+				<i class="material-icons-outlined">trending_up</i>
+			</button>
 		</mat-tab>
 	</mat-tab-group>
 </mat-card>
