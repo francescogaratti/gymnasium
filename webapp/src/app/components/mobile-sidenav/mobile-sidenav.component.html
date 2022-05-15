@@ -1,0 +1,91 @@
+<mat-sidenav-container>
+	<mat-sidenav #sidenav mode="over" id="sidenav">
+		<h3 style="color: white">Menù</h3>
+		<div *ngIf="user; then authenticated; else guest"></div>
+		<ng-template #guest>
+			<button color="primary" mat-raised-button (click)="router.navigateByUrl('login')">
+				<i class="material-icons md-48">login</i>
+				Login
+			</button>
+		</ng-template>
+		<ng-template #authenticated>
+			<!-- exercises -->
+			<button
+				color="primary"
+				mat-raised-button
+				(click)="router.navigateByUrl('exercises')"
+				class="menu-tab"
+			>
+				Exercises
+				<i class="material-icons-round">fact_check</i>
+			</button>
+			<!-- train -->
+			<button
+				color="primary"
+				mat-raised-button
+				(click)="router.navigateByUrl('workouts')"
+				class="menu-tab"
+			>
+				Workouts
+				<i class="material-icons-round">fitness_center</i>
+			</button>
+			<!-- new workout -->
+			<button
+				color="primary"
+				mat-raised-button
+				(click)="router.navigateByUrl('new-workout')"
+				class="menu-tab"
+			>
+				New Training Program
+				<i class="material-icons-round">add</i>
+			</button>
+			<button
+				color="primary"
+				mat-raised-button
+				(click)="router.navigateByUrl('personal-area')"
+				class="menu-tab"
+			>
+				Personal Area
+				<i class="material-icons">account_circle</i>
+			</button>
+			<!-- exercises -->
+			<button
+				color="primary"
+				mat-raised-button
+				(click)="router.navigateByUrl('weight-tracker')"
+				class="menu-tab"
+			>
+				Weight Tracker
+				<i class="material-icons-outlined">trending_down</i>
+			</button>
+			<button
+				color="primary"
+				mat-raised-button
+				(click)="router.navigateByUrl('extra-workout')"
+				class="menu-tab"
+			>
+				Extra workout stats
+				<i class="material-icons-outlined">trending_down</i>
+			</button>
+			<button mat-button (click)="auth.signOut()" class="menu-tab">
+				<i class="material-icons" style="color: white">exit_to_app</i>
+			</button>
+		</ng-template>
+	</mat-sidenav>
+	<mat-sidenav-content>
+		<mat-toolbar color="primary">
+			<div class="example-sidenav-content">
+				<button type="button" mat-button (click)="sidenav.toggle()">
+					<i class="material-icons">list</i>
+				</button>
+			</div>
+			<span (click)="router.navigateByUrl('home')" style="cursor: pointer">
+				<h1>
+					{{ title }}
+					{{ user ? '| ' + user.displayName : '' }}
+				</h1>
+			</span>
+			<span class="fill-remaining-space"></span>
+		</mat-toolbar>
+	</mat-sidenav-content>
+</mat-sidenav-container>

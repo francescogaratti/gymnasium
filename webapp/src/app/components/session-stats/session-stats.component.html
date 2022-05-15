@@ -1,0 +1,28 @@
+<mat-card style="width: 95%; margin: auto; text-align: center" class="mat-elevation-z0">
+	<button
+		*ngIf="sessionRecords?.length > 0"
+		class="material-icons"
+		id="navDown"
+		(click)="subtrSelIndex()"
+		[disabled]="this.selIndex < 1"
+	>
+		chevron_left
+	</button>
+
+	<button [disabled]="!sessionRecords?.length" mat-raised-button (click)="createLineChart()">
+		Create Line Chart
+	</button>
+
+	<button
+		*ngIf="sessionRecords?.length > 0"
+		class="material-icons"
+		id="navUp"
+		(click)="addSelIndex()"
+		[disabled]="this.selIndex == sessionRecords?.length - 1"
+	>
+		chevron_right
+	</button>
+	<div id="divChart" style="margin-top: 30px">
+		<canvas id="workoutChart"></canvas>
+	</div>
+</mat-card>

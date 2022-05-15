@@ -1,0 +1,12 @@
+<mat-accordion class="example-headers-align" multi *ngIf="workouts?.length > 0" id="workouts">
+	<mat-expansion-panel *ngFor="let workout of workouts">
+		<mat-expansion-panel-header>
+			<mat-panel-title> Allenamento: {{ workout.name }} </mat-panel-title>
+			<mat-panel-description>
+				Data inizio:
+				{{ workout.startingDate ? (workout.startingDate | date: 'dd/MM/yyyy') : '' }}
+			</mat-panel-description>
+		</mat-expansion-panel-header>
+		<app-workout [workout]="workout"></app-workout>
+	</mat-expansion-panel>
+</mat-accordion>

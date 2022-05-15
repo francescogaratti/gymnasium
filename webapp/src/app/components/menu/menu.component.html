@@ -1,0 +1,96 @@
+<mat-toolbar color="primary">
+	<span (click)="router.navigateByUrl('home')" style="cursor: pointer">
+		<h1>
+			{{ title }}
+			{{ user ? '| ' + user.displayName : '' }}
+			<img
+				*ngIf="user?.photoURL"
+				class="example-option-img"
+				aria-hidden
+				[src]="user.photoURL"
+				height="40"
+				style="border-radius: 100%; border: 1px solid white"
+			/>
+			<i
+				*ngIf="!user?.photoURL"
+				class="material-icons md-48 example-option-img"
+				style="font-size: xxx-large"
+				>account_circle</i
+			>
+		</h1>
+	</span>
+	<span class="fill-remaining-space"></span>
+	<span>
+		<div *ngIf="user; then authenticated; else guest"></div>
+		<ng-template #guest>
+			<button color="primary" mat-raised-button (click)="router.navigateByUrl('login')">
+				<i class="material-icons md-48">login</i>
+				Login
+			</button>
+		</ng-template>
+		<ng-template #authenticated>
+			<!-- exercises -->
+			<button
+				color="primary"
+				mat-raised-button
+				(click)="router.navigateByUrl('exercises')"
+				class="menu-tab"
+			>
+				Exercises
+				<i class="material-icons-round">fact_check</i>
+			</button>
+			<!-- train -->
+			<button
+				color="primary"
+				mat-raised-button
+				(click)="router.navigateByUrl('workouts')"
+				class="menu-tab"
+			>
+				Workouts
+				<i class="material-icons-round">fitness_center</i>
+			</button>
+			<!-- new workout -->
+			<button
+				color="primary"
+				mat-raised-button
+				(click)="router.navigateByUrl('new-workout')"
+				class="menu-tab"
+			>
+				New Training Program
+				<i class="material-icons-round">add</i>
+			</button>
+			<button
+				color="primary"
+				mat-raised-button
+				(click)="router.navigateByUrl('personal-area')"
+				class="menu-tab"
+			>
+				Personal Area
+				<i class="material-icons">account_circle</i>
+			</button>
+			<!-- exercises -->
+			<button
+				color="primary"
+				mat-raised-button
+				(click)="router.navigateByUrl('weight-tracker')"
+				class="menu-tab"
+			>
+				Weight Tracker
+				<i class="material-icons-outlined">trending_down</i>
+			</button>
+			<!-- <button
+				color="primary"
+				mat-raised-button
+				(click)="router.navigateByUrl('extra-workout')"
+				class="menu-tab"
+			>
+				Extra workout stats
+				<i class="material-icons-outlined">trending_up</i>
+			</button> -->
+
+			<button mat-button (click)="auth.signOut()" class="menu-tab">
+				<mat-icon>exit_to_app</mat-icon>
+			</button>
+		</ng-template>
+	</span>
+</mat-toolbar>

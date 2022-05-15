@@ -1,0 +1,462 @@
+<div style="box-sizing: border-box !important" align="center">
+	<mat-card
+		[class.mat-elevation-z0]="true"
+		align="center"
+		style="overflow: hidden; box-sizing: border-box"
+		class="example-full-width"
+	>
+		<mat-card-title style="margin-bottom: 20px">Crea un nuovo allenamento</mat-card-title>
+
+		<mat-card-subtitle
+			>Oppure carica un template
+			<mat-card-content style="display: table; margin: auto">
+				<form>
+					<mat-form-field class="example-full-width" align="center">
+						<mat-label>Template</mat-label>
+						<input
+							matInput
+							placeholder="Digita per filtrare..."
+							aria-label="Template"
+							[matAutocomplete]="auto_templates"
+							[formControl]="templateWorkoutFormControl"
+						/>
+						<button
+							mat-button
+							*ngIf="selected_template"
+							matSuffix
+							mat-icon-button
+							aria-label="Clear"
+							(click)="changeTemplate()"
+						>
+							<mat-icon color="accent">close</mat-icon>
+						</button>
+						<mat-autocomplete #auto_templates="matAutocomplete">
+							<mat-option
+								*ngFor="let template of templates"
+								[value]="template.name"
+								(onSelectionChange)="selectTemplateWorkout(template)"
+							>
+								<span>{{ template.name }}</span>
+							</mat-option>
+						</mat-autocomplete>
+					</mat-form-field>
+				</form>
+			</mat-card-content>
+		</mat-card-subtitle>
+
+		<!-- input workout data -->
+		<form>
+			<mat-form-field style="margin: 10px" color="accent">
+				<mat-label>Nome Allenamento</mat-label>
+				<input type="text" matInput [formControl]="nameFormControl" required />
+			</mat-form-field>
+			<mat-form-field style="margin: 10px">
+				<mat-label>Data Inizio</mat-label>
+				<input
+					matInput
+					[matDatepicker]="pickerInizio"
+					(focus)="pickerInizio.open()"
+					[formControl]="startingDateFormControl"
+					readonly
+					required
+				/>
+				<mat-error *ngIf="startingDateFormControl.hasError('required')">
+					Data inizio <strong>obbligatoria</strong>
+				</mat-error>
+			</mat-form-field>
+			<mat-datepicker #pickerInizio></mat-datepicker>
+			<mat-form-field style="margin: 10px">
+				<mat-label>Data Fine</mat-label>
+				<input
+					matInput
+					[matDatepicker]="pickerFine"
+					(focus)="pickerFine.open()"
+					[formControl]="endingDateFormControl"
+					readonly
+					required
+				/>
+				<mat-error *ngIf="endingDateFormControl.hasError('required')">
+					Data fine <strong>obbligatoria</strong>
+				</mat-error>
+			</mat-form-field>
+			<mat-datepicker #pickerFine></mat-datepicker>
+		</form>
+
+		<!-- workout sessions as accordions -->
+		<mat-card-content>
+			<mat-accordion class="example-headers-align" multi>
+				<mat-expansion-panel *ngFor="let workout_session of workout_sessions">
+					<mat-expansion-panel-header>
+						<mat-panel-title>
+							{{ workout_session.name }}
+						</mat-panel-title>
+						<mat-panel-description>
+							{{ workout_session.notes ? workout_session.notes : '' }}
+							<mat-icon>fitness_center</mat-icon>
+						</mat-panel-description>
+					</mat-expansion-panel-header>
+					<!-- exercise list -->
+					<form *ngFor="let exercise of workout_session.exercises">
+						<table class="example-full-width" cellspacing="0">
+							<tr>
+								<td>
+									<mat-form-field class="example-full-width" color="accent">
+										<mat-label>Esercizio</mat-label>
+										<input
+											matInput
+											[value]="exercise.name"
+											[disabled]="!exercise['edit']"
+										/>
+									</mat-form-field>
+								</td>
+								<td>
+									<mat-form-field class="number" color="accent">
+										<mat-label>Sets</mat-label>
+										<input
+											matInput
+											type="number"
+											[value]="exercise.sets"
+											[disabled]="!exercise['edit']"
+										/>
+									</mat-form-field>
+								</td>
+								<td>
+									<mat-form-field class="number" color="accent">
+										<mat-label>Reps</mat-label>
+										<input
+											matInput
+											type="number"
+											[value]="exercise.reps"
+											[disabled]="!exercise['edit']"
+										/>
+									</mat-form-field>
+								</td>
+								<td>
+									<mat-form-field class="number" color="accent">
+										<mat-label>Min</mat-label>
+										<input
+											matInput
+											type="number"
+											[value]="exercise.rest.minutes"
+											[disabled]="!exercise['edit']"
+										/>
+									</mat-form-field>
+								</td>
+								<td>
+									<mat-form-field class="number" color="accent">
+										<mat-label>Sec</mat-label>
+										<input
+											matInput
+											type="number"
+											[value]="exercise.rest.seconds"
+											[disabled]="!exercise['edit']"
+										/>
+									</mat-form-field>
+								</td>
+								<td *ngIf="exercise.notes || exercise['edit']">
+									<mat-form-field class="example-full-width" color="accent">
+										<mat-label>Note</mat-label>
+										<input
+											matInput
+											[value]="exercise.notes"
+											[disabled]="!exercise['edit']"
+										/>
+									</mat-form-field>
+								</td>
+								<td *ngIf="!exercise['edit']">
+									<p class="small">
+										<button
+											mat-icon-button
+											color="accent"
+											(click)="editExercise(exercise)"
+										>
+											<mat-icon style="cursor: pointer">edit</mat-icon>
+										</button>
+									</p>
+								</td>
+								<td *ngIf="exercise['edit']">
+									<p class="small">
+										<button
+											mat-icon-button
+											color="accent"
+											(click)="saveChanges(exercise)"
+										>
+											<mat-icon style="cursor: pointer">save</mat-icon>
+										</button>
+									</p>
+								</td>
+								<td *ngIf="exercise['edit']">
+									<p class="small">
+										<button
+											mat-icon-button
+											color="accent"
+											(click)="cancelChanges(exercise)"
+										>
+											<mat-icon style="cursor: pointer">cancel</mat-icon>
+										</button>
+									</p>
+								</td>
+								<td>
+									<p class="small">
+										<button
+											mat-icon-button
+											color="accent"
+											(click)="removeExercise(exercise, workout_session)"
+										>
+											<mat-icon style="cursor: pointer">delete</mat-icon>
+										</button>
+									</p>
+								</td>
+							</tr>
+						</table>
+					</form>
+					<!-- next exercise -->
+					<!-- collegare exercise a database, vedi user select component -->
+					<form>
+						<table class="example-full-width" cellspacing="0">
+							<tr>
+								<td>
+									<form>
+										<mat-form-field class="example-full-width" align="center">
+											<mat-label>Scegli l'esercizio</mat-label>
+											<input
+												matInput
+												placeholder="Digita per filtrare..."
+												aria-label="Esercizio"
+												[matAutocomplete]="auto_exercises"
+												[formControl]="esercizioFormControl"
+											/>
+											<button
+												mat-button
+												*ngIf="selected_template"
+												matSuffix
+												mat-icon-button
+												aria-label="Clear"
+												(click)="changeExercise()"
+											>
+												<mat-icon color="accent">close</mat-icon>
+											</button>
+											<mat-autocomplete
+												#auto_exercises="matAutocomplete"
+												(optionSelected)="selectExercise($event)"
+												[displayWith]="getExerciseName"
+											>
+												<mat-option
+													#exercise_options
+													*ngFor="
+														let exercise of filteredExercises | async
+													"
+													[value]="exercise"
+												>
+													<span>{{ getExerciseName(exercise) }}</span>
+												</mat-option>
+											</mat-autocomplete>
+										</mat-form-field>
+									</form>
+									<!--mat-form-field class="example-full-width" color="accent">
+										<mat-label>Esercizio</mat-label>
+										<input
+											matInput
+											required
+											placeholder="Panca piana"
+											[formControl]="esercizioFormControl"
+										/>
+										<button
+											mat-button
+											*ngIf="esercizioFormControl.value"
+											matSuffix
+											mat-icon-button
+											aria-label="Clear"
+											(click)="esercizioFormControl.setValue(null)"
+										>
+											<mat-icon>close</mat-icon>
+										</button>
+									</mat-form-field-->
+								</td>
+								<td>
+									<mat-form-field class="number" color="accent">
+										<mat-label>Sets</mat-label>
+										<input
+											matInput
+											required
+											type="number"
+											placeholder="3"
+											[formControl]="setsFormControl"
+										/>
+									</mat-form-field>
+								</td>
+								<td>
+									<mat-form-field class="number" color="accent">
+										<mat-label>Reps</mat-label>
+										<input
+											matInput
+											required
+											type="number"
+											placeholder="10"
+											[formControl]="repsFormControl"
+										/>
+									</mat-form-field>
+								</td>
+								<td>
+									<mat-form-field class="number" color="accent">
+										<mat-label>Rest Min</mat-label>
+										<input
+											matInput
+											type="number"
+											placeholder="1"
+											[formControl]="restMinFormControl"
+										/>
+									</mat-form-field>
+								</td>
+								<td>
+									<mat-form-field class="number" color="accent">
+										<mat-label>Rest Sec</mat-label>
+										<input
+											matInput
+											type="number"
+											placeholder="30"
+											[formControl]="restSecFormControl"
+										/>
+									</mat-form-field>
+								</td>
+								<td>
+									<mat-form-field class="example-full-width" color="accent">
+										<mat-label>Note</mat-label>
+										<input
+											matInput
+											placeholder="Ex. Controllo esecuzione"
+											[formControl]="notesFormControl"
+										/>
+										<button
+											mat-button
+											*ngIf="notesFormControl.value"
+											matSuffix
+											mat-icon-button
+											aria-label="Clear"
+											(click)="notesFormControl.setValue(null)"
+										>
+											<mat-icon>close</mat-icon>
+										</button>
+									</mat-form-field>
+								</td>
+								<td>
+									<p class="number">
+										<button
+											mat-icon-button
+											color="accent"
+											(click)="addExercise(workout_session)"
+											[disabled]="
+												!workout_sessions ||
+												workout_sessions.length == 0 ||
+												!esercizioFormControl.valid ||
+												!setsFormControl.valid ||
+												!repsFormControl.valid
+											"
+										>
+											<mat-icon style="cursor: pointer"
+												>add_circle_outline</mat-icon
+											>
+										</button>
+									</p>
+								</td>
+							</tr>
+						</table>
+					</form>
+				</mat-expansion-panel>
+			</mat-accordion>
+		</mat-card-content>
+
+		<!-- workout sessions -->
+		<mat-card-content style="display: table; margin: auto">
+			<form>
+				<table class="example-full-width" cellspacing="0">
+					<!-- workout session -->
+					<tr>
+						<td>
+							<mat-form-field class="example-full-width" color="accent">
+								<mat-label>Sessione</mat-label>
+								<input
+									matInput
+									required
+									placeholder="Allenamento A"
+									[formControl]="sessionFormControl"
+								/>
+								<button
+									mat-button
+									*ngIf="sessionFormControl.value"
+									matSuffix
+									mat-icon-button
+									aria-label="Clear"
+									(click)="sessionFormControl.setValue(null)"
+								>
+									<mat-icon>close</mat-icon>
+								</button>
+							</mat-form-field>
+						</td>
+						<td>
+							<p class="number">
+								<button
+									mat-icon-button
+									color="accent"
+									(click)="addWorkoutSession()"
+									[disabled]="!sessionFormControl.valid"
+								>
+									<mat-icon style="cursor: pointer">add_circle_outline</mat-icon>
+								</button>
+							</p>
+						</td>
+					</tr>
+				</table>
+			</form>
+		</mat-card-content>
+
+		<mat-card-actions>
+			<button mat-button (click)="accordion.openAll()">Mostra tutti</button>
+			<button mat-button (click)="accordion.closeAll()">Chiudi tutti</button>
+			<button mat-raised-button color="accent" (click)="resetExercises()">Reset</button>
+			<button
+				mat-raised-button
+				color="primary"
+				(click)="createWorkout()"
+				[disabled]="
+					!workout_sessions ||
+					workout_sessions.length == 0 ||
+					nameFormControl.invalid ||
+					startingDateFormControl.invalid ||
+					endingDateFormControl.invalid
+				"
+			>
+				Crea Allenamento
+			</button>
+		</mat-card-actions>
+	</mat-card>
+	<!-- <mat-card
+		[class.mat-elevation-z0]="true"
+		align="center"
+		style="box-sizing: border-box"
+		class="example-full-width"
+	>
+		<mat-card-title>Carica un file excel</mat-card-title>
+		<mat-card-content>
+			<form>
+				<button
+					mat-raised-button
+					*ngIf="!excelFormControl.value"
+					aria-label="Upload"
+					(click)="uploadWorkout()"
+				>
+					Allega un file
+					<i class="material-icons-two-tone">add_a_photo</i>
+				</button>
+				<button
+					*ngIf="excelFormControl.value"
+					mat-icon-button
+					aria-label="Clear"
+					(click)="excelFormControl.setValue(null); refreshInput()"
+				>
+					<mat-icon>clear</mat-icon>
+				</button>
+			</form>
+		</mat-card-content>
+	</mat-card> -->
+</div>

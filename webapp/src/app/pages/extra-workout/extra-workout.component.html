@@ -1,0 +1,53 @@
+<!-- tabella -->
+<mat-card style="margin: auto; width: 95%" class="mat-elevation-z0">
+	<table mat-table [dataSource]="listResults" class="mat-elevation-z8">
+		<ng-container matColumnDef="15 reps">
+			<th mat-header-cell *matHeaderCellDef>15 reps</th>
+			<td mat-cell *matCellDef="let element">{{ element.percentages[0] }}</td>
+		</ng-container>
+
+		<ng-container matColumnDef="12 reps">
+			<th mat-header-cell *matHeaderCellDef>12 reps</th>
+			<td mat-cell *matCellDef="let element">{{ element.percentages[1] }}</td>
+		</ng-container>
+
+		<ng-container matColumnDef="10 reps">
+			<th mat-header-cell *matHeaderCellDef>10 reps</th>
+			<td mat-cell *matCellDef="let element">{{ element.percentages[2] }}</td>
+		</ng-container>
+
+		<ng-container matColumnDef="8 reps">
+			<th mat-header-cell *matHeaderCellDef>8 reps</th>
+			<td mat-cell *matCellDef="let element">{{ element.percentages[3] }}</td>
+		</ng-container>
+
+		<ng-container matColumnDef="6 reps">
+			<th mat-header-cell *matHeaderCellDef>6 reps</th>
+			<td mat-cell *matCellDef="let element">{{ element.percentages[4] }}</td>
+		</ng-container>
+
+		<ng-container matColumnDef="4 reps">
+			<th mat-header-cell *matHeaderCellDef>4 reps</th>
+			<td mat-cell *matCellDef="let element">{{ element.percentages[5] }}</td>
+		</ng-container>
+
+		<ng-container matColumnDef="2 reps">
+			<th mat-header-cell *matHeaderCellDef>2 reps</th>
+			<td mat-cell *matCellDef="let element">{{ element.percentages[6] }}</td>
+		</ng-container>
+
+		<!-- Massimale Column -->
+		<ng-container matColumnDef="Max">
+			<th mat-header-cell *matHeaderCellDef>Massimale</th>
+			<td mat-cell *matCellDef="let element">{{ element.percentages[7] }}</td>
+		</ng-container>
+
+		<ng-container matColumnDef="Exercise">
+			<th mat-header-cell *matHeaderCellDef>Exercise</th>
+			<td mat-cell *matCellDef="let element">{{ element.name }}</td>
+		</ng-container>
+
+		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+		<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+	</table>
+</mat-card>

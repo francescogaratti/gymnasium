@@ -1,0 +1,13 @@
+<mat-card [class.mat-elevation-z0]="true" style="margin-top: 50px" align="center">
+	<mat-card-title>
+		<strong>{{ title }}</strong> webapp
+	</mat-card-title>
+	<mat-card-content>
+		<h2>Benvenuto sull'applicazione del Gymnasium</h2>
+	</mat-card-content>
+	<mat-card-actions>
+		<button mat-raised-button color="primary" (click)="router.navigateByUrl('personal-area')">
+			Area Personale
+		</button>
+	</mat-card-actions>
+</mat-card>
