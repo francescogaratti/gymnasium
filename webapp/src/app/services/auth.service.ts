@@ -1,14 +1,11 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 
-import * as firebase from 'firebase/app';
-import { getApp } from 'firebase/app';
 import 'firebase/messaging';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFireStorage } from '@angular/fire/storage';
-import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
-
-import * as firebaseui from 'firebaseui';
+import { getApp } from 'firebase/app';
+import { getAuth } from '@firebase/auth';
+import { getStorage } from '@firebase/storage';
+import { getFirestore } from '@firebase/firestore';
 
 import { Subject } from 'rxjs';
 import { first } from 'rxjs/operators';
@@ -19,14 +16,6 @@ import { HttpClient } from '@angular/common/http';
 import { UserService } from './user.service';
 import { Exercise, ExerciseEntry } from '@models/exercise';
 
-// configuration for the ui
-const uiConfig = {
-	signInSuccessUrl: '/',
-	signInOptions: [auth.GoogleAuthProvider.PROVIDER_ID, auth.EmailAuthProvider.PROVIDER_ID],
-	tosUrl: 'terms-of-service',
-	privacyPolicyUrl: 'privacy-policy',
-};
-
 @Injectable({
 	providedIn: 'root',
 })
@@ -34,8 +23,6 @@ export class AuthService {
 	host: string = 'https://ultra-gymnasium.herokuapp.com/';
 	localhost: string = 'http://localhost:5000/';
 	adminUids: string[] = ['WRcrJKbtjpfe2nIQJpQWhkrwOdx2'];
-	ui: firebaseui.auth.AuthUI =
-		firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth()); // login firebase ui
 
 	user$: Subject<User> = new Subject<User>(); // future user
 	user: User = null;
@@ -46,13 +33,12 @@ export class AuthService {
 
 	asyncOperation: Subject<boolean> = new Subject<boolean>(); // signal to the progress bar
 
-	constructor(
-		private afAuth: AngularFireAuth,
-		private afs: AngularFirestore,
-		private afstr: AngularFireStorage,
-		private http: HttpClient,
-		private userService: UserService
-	) {
+	app = getApp();
+	auth = getAuth(this.app);
+	firestore = getFirestore(this.app);
+	storage = getStorage(this.app);
+
+	constructor(private http: HttpClient, private userService: UserService) {
 		this.user$.subscribe(user => {
 			if (user) {
 				this.userService.readUser(user.uid);

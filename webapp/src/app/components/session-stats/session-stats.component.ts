@@ -135,7 +135,7 @@ export class SessionStatsComponent implements OnInit {
 
 		let chart = new Chart(
 			(document.getElementById('radar-body-parts') as HTMLCanvasElement).getContext('2d'),
-			config
+			config as any
 		);
 	}
 
