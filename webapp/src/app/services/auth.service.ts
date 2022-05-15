@@ -1,6 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { getAuth, signInWithRedirect, GoogleAuthProvider } from '@firebase/auth';
+import {
+	getAuth,
+	signInWithRedirect,
+	GoogleAuthProvider,
+	onAuthStateChanged,
+} from '@firebase/auth';
 import { addDoc, getDoc, getDocs, getFirestore, setDoc } from '@firebase/firestore';
 import { getStorage, getDownloadURL, uploadBytes, ref } from '@firebase/storage';
 import { Exercise, ExerciseEntry } from '@models/exercise';
@@ -10,7 +15,6 @@ import { getApp } from 'firebase/app';
 import { collection, deleteDoc, doc } from 'firebase/firestore';
 import { getMessaging, getToken } from 'firebase/messaging';
 import { Subject } from 'rxjs';
-import { first } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { UserService } from './user.service';
 
@@ -29,31 +33,31 @@ export class AuthService {
 
 	asyncOperation: Subject<boolean> = new Subject<boolean>(); // signal to the progress bar
 
-	app = getApp();
-	auth = getAuth(this.app);
-	firestore = getFirestore(this.app);
-	storage = getStorage(this.app);
-	messaging = getMessaging(this.app);
+	auth = getAuth();
+	firestore = getFirestore();
+	storage = getStorage();
+	messaging = getMessaging();
 
 	constructor(private http: HttpClient, private userService: UserService) {
-		this.user$.subscribe(user => {
-			if (user) {
-				this.userService.readUser(user.uid);
-				this.startMessaging(user);
-			}
-		});
 		// store all the users here
+		this.user$.subscribe(user => (this.user = user));
 		this.users$.subscribe((users: User[]) => (this.users = users));
+		onAuthStateChanged(this.auth, async firebaseUser => {
+			if (firebaseUser) {
+				const user = await this.userService.readUser(firebaseUser.uid);
+				this.startMessaging(user);
+			} else this.user$.next(null);
+		});
 	}
 
-	async grantAccess(): Promise<boolean> {
-		// for logged access
-		if (!this.user) {
-			this.user = await this.getFirebaseUser()
-				.then(user => user)
-				.catch(() => null);
-		}
-		return !!this.user;
+	async isLogged(): Promise<boolean> {
+		if (this.user) return true;
+		return new Promise((resolve, reject) => {
+			this.user$.subscribe((user: any) => {
+				if (user) resolve(true);
+				else reject(false);
+			});
+		});
 	}
 
 	isAdmin(): boolean {
