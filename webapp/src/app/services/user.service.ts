@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
+import { getFirestore } from 'firebase/firestore';
 import { User } from '@models/user';
 import { Subject } from 'rxjs';
 
@@ -16,7 +16,8 @@ export class UserService {
 
 	asyncOperation: Subject<boolean> = new Subject<boolean>(); // signal to the progress bar
 
-	constructor(private afs: AngularFirestore) {}
+	firestore = getFirestore();
+	constructor() {}
 
 	// *** READ ***
 
@@ -24,7 +25,7 @@ export class UserService {
 		if (this.user) return this.user;
 		console.info('📘 - read user ' + id);
 		this.asyncOperation.next(true);
-		this.user = await this.afs
+		this.user = await this.firestore
 			.collection('users')
 			.doc(id)
 			.get()
@@ -43,7 +44,7 @@ export class UserService {
 		if (this.users) return this.users;
 		console.info('📘 - read users');
 		this.asyncOperation.next(true);
-		this.users = await this.afs
+		this.users = await this.firestore
 			.collection('users')
 			.get()
 			.toPromise()
@@ -66,10 +67,10 @@ export class UserService {
 	async newUser(user: User): Promise<string> {
 		this.asyncOperation.next(true);
 		console.info('📗 - write');
-		let res: string = await this.afs
+		let res: string = await this.firestore
 			.collection('users')
 			.add(user)
-			.then(async (docRef: DocumentReference) => docRef.id)
+			.then(docRef => docRef.id)
 			.catch(err => {
 				console.error(err);
 				return null;
@@ -81,7 +82,7 @@ export class UserService {
 	async updateUser(user: User, deepCopy?: boolean): Promise<boolean> {
 		this.asyncOperation.next(true);
 		console.info('📗 - update user');
-		let res: boolean = await this.afs
+		let res: boolean = await this.firestore
 			.collection('users')
 			.doc(user.uid)
 			.set(deepCopy ? JSON.parse(JSON.stringify(user)) : user, { merge: true })

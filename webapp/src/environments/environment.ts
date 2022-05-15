@@ -16,6 +16,7 @@ export const environment = {
 	},
 	cloudMessagingKeyPair:
 		'BJLjqKOOeBq3Owi3c3WaoGvQ999gkXnqAk53XdL0geWr2Fm2AbZjRKfZCg8_hRsO_03rolTplGT1BTMcULiHHLA',
+	serverURL: 'https://ultra-gymnasium.herokuapp.com/',
 };
 
 /*

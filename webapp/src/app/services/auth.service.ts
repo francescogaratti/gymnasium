@@ -20,9 +20,7 @@ import { Exercise, ExerciseEntry } from '@models/exercise';
 	providedIn: 'root',
 })
 export class AuthService {
-	host: string = 'https://ultra-gymnasium.herokuapp.com/';
-	localhost: string = 'http://localhost:5000/';
-	adminUids: string[] = ['WRcrJKbtjpfe2nIQJpQWhkrwOdx2'];
+	host: string = environment.serverURL;
 
 	user$: Subject<User> = new Subject<User>(); // future user
 	user: User = null;
