@@ -1,5 +1,14 @@
 import { Injectable } from '@angular/core';
-import { getFirestore } from 'firebase/firestore';
+import {
+	addDoc,
+	collection,
+	deleteDoc,
+	doc,
+	getDoc,
+	getDocs,
+	getFirestore,
+	setDoc,
+} from 'firebase/firestore';
 import { User } from '@models/user';
 import { Subject } from 'rxjs';
 
@@ -23,14 +32,9 @@ export class UserService {
 
 	public async readUser(id: string): Promise<User> {
 		if (this.user) return this.user;
-		console.info('📘 - read user ' + id);
 		this.asyncOperation.next(true);
-		this.user = await this.firestore
-			.collection('users')
-			.doc(id)
-			.get()
-			.toPromise()
-			.then(snapshot => snapshot.data() as User)
+		this.user = await getDoc(doc(this.firestore, 'users', id))
+			.then(doc => doc.data() as User)
 			.catch(err => {
 				console.error(err);
 				return null;
@@ -42,17 +46,9 @@ export class UserService {
 
 	public async readUsers(): Promise<User[]> {
 		if (this.users) return this.users;
-		console.info('📘 - read users');
 		this.asyncOperation.next(true);
-		this.users = await this.firestore
-			.collection('users')
-			.get()
-			.toPromise()
-			.then(snapshot => {
-				let values: User[] = [];
-				snapshot.forEach(doc => values.push(doc.data() as User));
-				return values;
-			})
+		this.users = await getDocs(collection(this.firestore, 'users'))
+			.then(snapshot => snapshot.docs.map(doc => doc.data() as User))
 			.catch(err => {
 				console.error(err);
 				return [];
@@ -66,10 +62,8 @@ export class UserService {
 
 	async newUser(user: User): Promise<string> {
 		this.asyncOperation.next(true);
-		console.info('📗 - write');
-		let res: string = await this.firestore
-			.collection('users')
-			.add(user)
+
+		const res: string = await addDoc(collection(this.firestore, 'users'), user)
 			.then(docRef => docRef.id)
 			.catch(err => {
 				console.error(err);
@@ -79,13 +73,14 @@ export class UserService {
 		return res;
 	}
 
-	async updateUser(user: User, deepCopy?: boolean): Promise<boolean> {
+	async updateUser(user: User): Promise<boolean> {
 		this.asyncOperation.next(true);
-		console.info('📗 - update user');
-		let res: boolean = await this.firestore
-			.collection('users')
-			.doc(user.uid)
-			.set(deepCopy ? JSON.parse(JSON.stringify(user)) : user, { merge: true })
+
+		const res: boolean = await setDoc(
+			doc(this.firestore, 'users', user.uid),
+			{ ...user },
+			{ merge: true }
+		)
 			.then(() => true)
 			.catch(err => {
 				console.error(err);
@@ -97,14 +92,14 @@ export class UserService {
 
 	async newUserWorkout(user: User, workoutId: string): Promise<boolean> {
 		this.asyncOperation.next(true);
-		let new_workout_ref: DocumentReference = this.afs.collection('workouts').doc(workoutId).ref;
+		const new_workout_ref = doc(this.firestore, 'workouts', workoutId);
 		if (user.workouts) user.workouts.push(new_workout_ref);
 		else user.workouts = [new_workout_ref];
-		console.info('📗 - append workout');
-		let res: boolean = await this.afs
-			.collection('users')
-			.doc(user.uid)
-			.set({ workouts: user.workouts }, { merge: true })
+		const res: boolean = await setDoc(
+			doc(this.firestore, 'users', user.uid),
+			{ ...user },
+			{ merge: true }
+		)
 			.then(() => true)
 			.catch(err => {
 				console.error(err);
@@ -118,11 +113,7 @@ export class UserService {
 
 	async deleteUser(id: string): Promise<boolean> {
 		this.asyncOperation.next(true);
-		console.info('📕 - delete');
-		let res: boolean = await this.afs
-			.collection('users')
-			.doc(id)
-			.delete()
+		const res: boolean = await deleteDoc(doc(this.firestore, 'users', id))
 			.then(() => true)
 			.catch(err => {
 				console.error(err);

@@ -62,6 +62,10 @@ import { WeightTrackerComponent } from './pages/weight-tracker/weight-tracker.co
 import { ExtraWorkoutComponent } from './pages/extra-workout/extra-workout.component';
 import { HistoryComponent } from './components/history/history.component';
 
+import { initializeApp } from 'firebase/app';
+
+initializeApp(environment.firebaseConfig);
+
 @NgModule({
 	declarations: [
 		AppComponent,

@@ -1,20 +1,17 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
-
-import 'firebase/messaging';
-import { getApp } from 'firebase/app';
 import { getAuth } from '@firebase/auth';
-import { getStorage } from '@firebase/storage';
 import { getFirestore } from '@firebase/firestore';
-
-import { Subject } from 'rxjs';
-import { first } from 'rxjs/operators';
-
+import { getStorage } from '@firebase/storage';
+import { Exercise, ExerciseEntry } from '@models/exercise';
 import { User, WeightRecord } from '@models/user';
 import { Workout } from '@models/workout';
-import { HttpClient } from '@angular/common/http';
+import { getApp } from 'firebase/app';
+import 'firebase/messaging';
+import { Subject } from 'rxjs';
+import { first } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 import { UserService } from './user.service';
-import { Exercise, ExerciseEntry } from '@models/exercise';
 
 @Injectable({
 	providedIn: 'root',
@@ -47,7 +44,7 @@ export class AuthService {
 		this.users$.subscribe((users: User[]) => (this.users = users));
 	}
 
-	async grantAccess(type?: string): Promise<boolean> {
+	async grantAccess(): Promise<boolean> {
 		// for logged access
 		if (!this.user) {
 			this.user = await this.getFirebaseUser()
@@ -203,7 +200,6 @@ export class AuthService {
 				return null;
 			});
 		// ? now I have the workout ID ==> save into the user workouts list
-		let res: boolean = await this.userService.newUserWorkout(user, workoutId);
 		this.asyncOperation.next(false);
 		return workout.id;
 	}
