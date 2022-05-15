@@ -1,13 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { getAuth } from '@firebase/auth';
-import { getFirestore } from '@firebase/firestore';
-import { getStorage } from '@firebase/storage';
+import { getAuth, signInWithRedirect, GoogleAuthProvider } from '@firebase/auth';
+import { addDoc, getDoc, getDocs, getFirestore, setDoc } from '@firebase/firestore';
+import { getStorage, getDownloadURL, uploadBytes, ref } from '@firebase/storage';
 import { Exercise, ExerciseEntry } from '@models/exercise';
 import { User, WeightRecord } from '@models/user';
 import { Workout } from '@models/workout';
 import { getApp } from 'firebase/app';
-import 'firebase/messaging';
+import { collection, deleteDoc, doc } from 'firebase/firestore';
+import { getMessaging, getToken } from 'firebase/messaging';
 import { Subject } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
@@ -32,6 +33,7 @@ export class AuthService {
 	auth = getAuth(this.app);
 	firestore = getFirestore(this.app);
 	storage = getStorage(this.app);
+	messaging = getMessaging(this.app);
 
 	constructor(private http: HttpClient, private userService: UserService) {
 		this.user$.subscribe(user => {
@@ -54,23 +56,14 @@ export class AuthService {
 		return !!this.user;
 	}
 
-	isAdmin(uid: string): boolean {
-		return !!this.adminUids.find(id => id == uid);
+	isAdmin(): boolean {
+		return this.user && this.user.admin;
 	}
 
+	// todo: fix this
 	async getFirebaseUser(): Promise<User> {
 		if (this.user) return this.user;
-		console.info('🔥 Firebase User');
-		const firebaseUser: firebase.User = await this.afAuth.authState
-			.pipe(first())
-			.toPromise()
-			.then(u => u)
-			.catch(() => null);
-		return firebaseUser
-			? this.readUser(firebaseUser.uid)
-					.then(u => u)
-					.catch(() => null)
-			: null;
+		else return null;
 	}
 
 	getUser(): User {
@@ -78,22 +71,26 @@ export class AuthService {
 	}
 
 	startUi() {
-		this.ui.start('#firebaseui-auth-container', uiConfig);
+		signInWithRedirect(this.auth, new GoogleAuthProvider())
+			.then(user => {
+				console.log(user);
+				this.user$.next(user);
+			})
+			.catch(err => {
+				console.log(err);
+				this.user$.next(null);
+			});
 	}
 
 	signOut() {
-		this.afAuth.signOut();
+		this.auth.signOut();
 	}
 
 	async readUser(id: string): Promise<User> {
 		if (this.user) return this.user;
-		console.info('📘 - get user ' + id);
+
 		this.asyncOperation.next(true);
-		this.user = await this.afs
-			.collection('users')
-			.doc(id)
-			.get()
-			.toPromise()
+		this.user = await getDoc(doc(this.firestore, 'users', id))
 			.then(snapshot => snapshot.data() as User)
 			.catch(err => {
 				console.error(err);
@@ -104,16 +101,13 @@ export class AuthService {
 		return this.user;
 	}
 
-	public async readUsers(): Promise<User[]> {
+	async readUsers(): Promise<User[]> {
 		if (this.users) return this.users;
-		console.info('📘 - read users');
+
 		this.asyncOperation.next(true);
-		this.users = await this.afs
-			.collection('users')
-			.get()
-			.toPromise()
+		this.users = await getDocs(collection(this.firestore, 'users'))
 			.then(snapshot => {
-				let values: User[] = [];
+				const values: User[] = [];
 				snapshot.forEach(doc => values.push(doc.data() as User));
 				return values;
 			})
@@ -126,19 +120,15 @@ export class AuthService {
 		return this.users;
 	}
 
-	public async getExercises(): Promise<Exercise[]> {
+	async getExercises(): Promise<Exercise[]> {
 		if (this.allExercises) return this.allExercises;
-		console.info('📘 - read exercises');
+
 		this.asyncOperation.next(true);
-		this.allExercises = await this.afs
-			.collection('exercises')
-			.get()
-			.toPromise()
+		this.allExercises = await getDocs(collection(this.firestore, 'exercises'))
 			.then(snapshot => {
-				let exs: Exercise[] = [];
+				const exs: Exercise[] = [];
 				snapshot.docs.forEach(doc => exs.push(doc.data() as Exercise));
 				this.allExercises = exs;
-				console.info(this.allExercises);
 				return this.allExercises;
 			})
 
@@ -154,11 +144,8 @@ export class AuthService {
 
 	async updateUser(user: User): Promise<boolean> {
 		this.asyncOperation.next(true);
-		console.info('📗 - update user');
-		let res: boolean = await this.afs
-			.collection('users')
-			.doc(user.uid)
-			.set(user)
+
+		const res: boolean = await setDoc(doc(this.firestore, 'users', user.uid), { ...user })
 			.then(() => true)
 			.catch(err => {
 				console.error(err);
@@ -170,11 +157,14 @@ export class AuthService {
 
 	async updateWorkout(workout: Workout): Promise<boolean> {
 		this.asyncOperation.next(true);
-		console.info('📗 - update workout');
-		let res: boolean = await this.afs
-			.collection('workouts')
-			.doc(workout.id)
-			.set(Object.assign({}, workout), { merge: true })
+
+		const res: boolean = await setDoc(
+			doc(this.firestore, 'workouts', workout.id),
+			{
+				...workout,
+			},
+			{ merge: true }
+		)
 			.then(() => true)
 			.catch(err => {
 				console.error(err);
@@ -184,42 +174,28 @@ export class AuthService {
 		return res;
 	}
 
-	async newWorkout(workout: Workout, user: User): Promise<string> {
+	async newWorkout(workout: Workout, _user: User): Promise<string> {
 		this.asyncOperation.next(true);
-		console.info('📗 - write');
-		let workoutId: string = await this.afs
-			.collection('workouts')
-			.add(workout)
-			.then(async (docRef: DocumentReference) => {
-				workout.id = docRef.id;
-				let update_workout_res = await this.updateWorkout(workout);
-				return update_workout_res ? workout.id : null;
-			})
-			.catch(err => {
+		workout.id = (
+			await addDoc(collection(this.firestore, 'workouts'), workout).catch(err => {
 				console.error(err);
 				return null;
-			});
-		// ? now I have the workout ID ==> save into the user workouts list
+			})
+		).id;
+		await this.updateWorkout(workout);
 		this.asyncOperation.next(false);
 		return workout.id;
 	}
 
 	// todo: extract workouts from user.workouts
-	public async readUserWorkouts(user: User): Promise<Workout[]> {
-		console.info('📘 - read user workouts');
+	async readUserWorkouts(user: User): Promise<Workout[]> {
 		this.asyncOperation.next(true);
-		let workouts: Workout[] = await this.afs
-			.collection('users')
-			.doc(user.uid)
-			.get()
-			.toPromise()
+		const workouts: Workout[] = await getDoc(doc(this.firestore, 'users', user.uid))
 			.then(async snapshot => {
-				let refs: DocumentReference[] = snapshot.get('workouts');
-				let promises: Promise<Workout>[] = [];
+				const refs: any[] = snapshot.get('workouts');
+				const promises: Promise<Workout>[] = [];
 				if (!refs) return [];
-				refs.forEach((ref: DocumentReference) =>
-					promises.push(ref.get().then(res => res.data() as Workout))
-				);
+				refs.forEach(ref => promises.push(ref.get().then(res => res.data() as Workout)));
 				const workouts = await Promise.all(promises);
 				return workouts;
 			})
@@ -231,53 +207,41 @@ export class AuthService {
 		return workouts;
 	}
 
+	async deleteWorkoutFromUser(workout: Workout, user: User): Promise<boolean> {
+		const updated_workouts = await getDocs(collection(this.firestore, 'users', workout.userId))
+			.then(async (snapshot: any) =>
+				snapshot.get('workouts').filter((ref: any) => ref.id !== workout.id)
+			)
+			.catch(err => {
+				console.error(err);
+				return [];
+			});
+		user.workouts = updated_workouts;
+		return await this.userService.updateUser(user);
+	}
+
 	async deleteWorkout(workout: Workout, user?: User): Promise<boolean> {
 		this.asyncOperation.next(true);
-		console.info('📕 - delete');
-		// delete from the workouts list
-		let res: boolean = await this.afs
-			.collection('workouts')
-			.doc(workout.id)
-			.delete()
-			.then(() => true) // unica possibilità di diventare "true"
+
+		const deleteFromWorkouts = await deleteDoc(doc(this.firestore, 'workouts', workout.id))
+			.then(() => true)
 			.catch(err => {
 				console.error(err);
 				return false;
 			});
-		// delete from users list
-		if (res) {
-			console.info('📘 - read');
-			let updated_workouts: DocumentReference[] = await this.afs
-				.collection('users')
-				.doc(workout.userId)
-				.get()
-				.toPromise()
-				.then(async snapshot => {
-					let refs: DocumentReference[] = snapshot.get('workouts');
-					console.info({ refs });
-					let new_list: DocumentReference[] = refs.filter(
-						(ref: DocumentReference) => ref.id !== workout.id
-					);
-					return new_list;
-				})
-				.catch(err => {
-					console.error(err);
-					return [];
-				});
-			user.workouts = updated_workouts;
-			res = await this.userService.updateUser(user, false);
+		if (!deleteFromWorkouts) {
+			this.asyncOperation.next(false);
+			return false;
+		} else {
+			const deleteFromUserResult = await this.deleteWorkoutFromUser(workout, user);
+			this.asyncOperation.next(false);
+			return deleteFromUserResult;
 		}
-		this.asyncOperation.next(false);
-		return res;
 	}
 
 	async getWorkout(id: string): Promise<Workout> {
 		this.asyncOperation.next(true);
-		let res: Workout = await this.afs
-			.collection('workouts')
-			.doc(id)
-			.get()
-			.toPromise()
+		const res: Workout = await getDoc(doc(this.firestore, 'workouts', id))
 			.then(snapshot => snapshot.data() as Workout)
 			.catch(err => {
 				console.error(err);
@@ -295,7 +259,7 @@ export class AuthService {
 			responseType: 'arrayBuffer',
 		};
 
-		let res: boolean = await this.http
+		const res: boolean = await this.http
 			.post<any>(this.host + 'workout/send', body)
 			.toPromise()
 			.then((res: { sent: boolean; message: string }) => {
@@ -310,6 +274,7 @@ export class AuthService {
 		return res;
 	}
 
+	// todo: refactor with axios
 	async generateExcel(filename: string, workoutId: string): Promise<boolean> {
 		this.asyncOperation.next(true);
 		// some costants & params
@@ -321,7 +286,7 @@ export class AuthService {
 			responseType: 'arrayBuffer',
 		};
 		// http request
-		let res: boolean = await this.http
+		const res: boolean = await this.http
 			.get<any>(generateExcelURL, requestOptions)
 			.toPromise()
 			.then((res: ArrayBuffer) => {
@@ -347,21 +312,15 @@ export class AuthService {
 	}
 
 	async uploadImageToUser(image: File, userId: string): Promise<string> {
-		console.info('📗 - upload file');
-		let ref = this.afstr.ref('');
-		let fileRef = ref.child('profile-images/' + userId + '/' + image.name);
-		return await fileRef.put(image).then((snapshot: any) => {
+		const fileRef = ref(this.storage, 'profile-images/' + userId + '/' + image.name);
+		return await uploadBytes(fileRef, image).then((snapshot: any) => {
 			console.log('Uploaded', snapshot);
 			return snapshot.ref.location.path_;
 		});
 	}
 
 	async getFile(path: string): Promise<string> {
-		console.info('📘 - read file');
-		return await this.afstr
-			.ref(path)
-			.getDownloadURL()
-			.toPromise()
+		return await getDownloadURL(ref(this.storage, path))
 			.then(url => (url ? url : null))
 			.catch(() => null);
 	}
@@ -369,11 +328,8 @@ export class AuthService {
 	/** Exercises */
 	async newExercise(ee: ExerciseEntry): Promise<string> {
 		this.asyncOperation.next(true);
-		console.info('📗 - write');
-		let res: string = await this.afs
-			.collection('exercises')
-			.add(Object.assign({}, ee))
-			.then(async (docRef: DocumentReference) => docRef.id)
+		const res: string = await addDoc(collection(this.firestore, 'exercises'), { ...ee })
+			.then(docRef => docRef.id)
 			.catch(err => {
 				console.error(err);
 				return null;
@@ -384,11 +340,11 @@ export class AuthService {
 
 	async updateExercise(ee: ExerciseEntry): Promise<boolean> {
 		this.asyncOperation.next(true);
-		console.info('📗 - update exercise');
-		let res: boolean = await this.afs
-			.collection('exercises')
-			.doc(ee.id)
-			.set(Object.assign({}, ee), { merge: true })
+		const res: boolean = await setDoc(
+			doc(this.firestore, 'exercises', ee.id),
+			{ ...ee },
+			{ merge: true }
+		)
 			.then(() => true)
 			.catch(err => {
 				console.error(err);
@@ -401,33 +357,26 @@ export class AuthService {
 	/** Exercises */
 	async newWeightRecord(userId: string, record: WeightRecord): Promise<boolean> {
 		this.asyncOperation.next(true);
-		console.info('📗 - write');
-		let res: boolean = await this.afs
-			.collection('users')
-			.doc(userId)
-			.collection('weights')
-			.add(Object.assign({}, record)) // ? id = undefined
-			.then(async (docRef: DocumentReference) => {
-				record.id = docRef.id; // ? set real id
-				return await this.updateWeightRecord(userId, record);
-			})
+		const id = await addDoc(collection(this.firestore, 'users', userId, 'weights'), {
+			...record,
+		})
+			.then(ref => ref.id)
 			.catch(err => {
 				console.error(err);
-				return false;
+				return null;
 			});
+		record.id = id;
+		const res = await this.updateWeightRecord(userId, record);
 		this.asyncOperation.next(false);
 		return res;
 	}
 
 	async updateWeightRecord(userId: string, weight: WeightRecord): Promise<boolean> {
 		this.asyncOperation.next(true);
-		console.info('📗 - write');
-		let res: boolean = await this.afs
-			.collection('users')
-			.doc(userId)
-			.collection('weights')
-			.doc(weight.id)
-			.set(Object.assign({}, weight))
+		const res: boolean = await setDoc(
+			doc(this.firestore, 'users', userId, 'weights', weight.id),
+			{ ...weight }
+		)
 			.then(() => true) // unica possibilità di diventare "true"
 			.catch(err => {
 				console.error(err);
@@ -440,14 +389,10 @@ export class AuthService {
 	// todo: remove weights
 	async deleteWeightRecord(userId: string, weight_id: string): Promise<boolean> {
 		this.asyncOperation.next(true);
-		console.info('📗 - write');
-		let res: boolean = await this.afs
-			.collection('users')
-			.doc(userId)
-			.collection('weights')
-			.doc(weight_id)
-			.delete()
-			.then(() => true) // unica possibilità di diventare "true"
+		const res: boolean = await deleteDoc(
+			doc(this.firestore, 'users', userId, 'weights', weight_id)
+		)
+			.then(() => true)
 			.catch(err => {
 				console.error(err);
 				return false;
@@ -457,20 +402,12 @@ export class AuthService {
 	}
 
 	// todo: get weights per user
-	public async getUserWeightRecords(user: User): Promise<WeightRecord[]> {
-		console.info('📘 - read user weight records');
+	async getUserWeightRecords(user: User): Promise<WeightRecord[]> {
 		this.asyncOperation.next(true);
-		let weightRecords: WeightRecord[] = await this.afs
-			.collection('users')
-			.doc(user.uid)
-			.collection('weights')
-			.get()
-			.toPromise()
-			.then(async snapshot => {
-				let weights: WeightRecord[] = [];
-				snapshot.docs.forEach(doc => weights.push(doc.data() as WeightRecord));
-				return weights;
-			})
+		const weightRecords: WeightRecord[] = await getDocs(
+			collection(this.firestore, 'users', user.uid, 'weights')
+		)
+			.then(async snapshot => snapshot.docs.map(doc => doc.data() as WeightRecord))
 			.catch(err => {
 				console.error(err);
 				return [];
@@ -483,11 +420,10 @@ export class AuthService {
 	async startMessaging(user: User) {
 		// Get registration token. Initially this makes a network call, once retrieved
 		// subsequent calls to getToken will return from cache.
-		firebase
-			.messaging()
-			.getToken({
-				vapidKey: environment.cloudMessagingKeyPair,
-			})
+
+		getToken(this.messaging, {
+			vapidKey: environment.cloudMessagingKeyPair,
+		})
 			.then(async (currentToken: string) => {
 				if (currentToken) {
 					// no token saved

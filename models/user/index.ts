@@ -26,6 +26,7 @@ interface Metadata {
 export interface User {
 	uid: string;
 	email: string;
+	admin: boolean;
 	displayName: string;
 	photoURL: string;
 	photoPath: string;
