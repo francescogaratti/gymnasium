@@ -1,17 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {
-	getAuth,
-	signInWithRedirect,
-	GoogleAuthProvider,
-	onAuthStateChanged,
-} from '@firebase/auth';
+import { Router } from '@angular/router';
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from '@firebase/auth';
 import { addDoc, getDoc, getDocs, getFirestore, setDoc } from '@firebase/firestore';
 import { getStorage, getDownloadURL, uploadBytes, ref } from '@firebase/storage';
 import { Exercise, ExerciseEntry } from '@models/exercise';
 import { User, WeightRecord } from '@models/user';
 import { Workout } from '@models/workout';
-import { getApp } from 'firebase/app';
 import { collection, deleteDoc, doc } from 'firebase/firestore';
 import { getMessaging, getToken } from 'firebase/messaging';
 import { Subject } from 'rxjs';
@@ -38,14 +33,18 @@ export class AuthService {
 	storage = getStorage();
 	messaging = getMessaging();
 
-	constructor(private http: HttpClient, private userService: UserService) {
+	constructor(
+		private http: HttpClient,
+		private userService: UserService,
+		private router: Router
+	) {
 		// store all the users here
 		this.user$.subscribe(user => (this.user = user));
 		this.users$.subscribe((users: User[]) => (this.users = users));
 		onAuthStateChanged(this.auth, async firebaseUser => {
 			if (firebaseUser) {
 				const user = await this.userService.readUser(firebaseUser.uid);
-				this.startMessaging(user);
+				this.user$.next(user);
 			} else this.user$.next(null);
 		});
 	}
@@ -75,15 +74,47 @@ export class AuthService {
 	}
 
 	startUi() {
-		signInWithRedirect(this.auth, new GoogleAuthProvider())
-			.then(user => {
-				console.log(user);
+		signInWithPopup(this.auth, new GoogleAuthProvider())
+			.then(async result => {
+				// This gives you a Google Access Token. You can use it to access the Google API.
+				const credential = GoogleAuthProvider.credentialFromResult(result);
+				const token = credential.accessToken;
+				// The signed-in user info.
+				const fUser = result.user;
+				console.info(fUser);
+				const user = await this.userService.readUser(fUser.uid);
 				this.user$.next(user);
+				// ...
 			})
-			.catch(err => {
-				console.log(err);
-				this.user$.next(null);
+			.catch(error => {
+				// Handle Errors here.
+				const errorCode = error.code;
+				const errorMessage = error.message;
+				// The email of the user's account used.
+				const email = error.email;
+				// The AuthCredential type that was used.
+				const credential = GoogleAuthProvider.credentialFromError(error);
+				// ...
 			});
+		// getRedirectResult(auth)
+		// 	.then(result => {
+		// 		// This gives you a Google Access Token. You can use it to access Google APIs.
+		// 		const credential = GoogleAuthProvider.credentialFromResult(result);
+		// 		const token = credential.accessToken;
+
+		// 		// The signed-in user info.
+		// 		const user = result.user;
+		// 	})
+		// 	.catch(error => {
+		// 		// Handle Errors here.
+		// 		const errorCode = error.code;
+		// 		const errorMessage = error.message;
+		// 		// The email of the user's account used.
+		// 		const email = error.email;
+		// 		// The AuthCredential type that was used.
+		// 		const credential = GoogleAuthProvider.credentialFromError(error);
+		// 		// ...
+		// 	});
 	}
 
 	signOut() {
