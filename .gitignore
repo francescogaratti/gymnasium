@@ -72,3 +72,5 @@ dist
 server/lib
 
 server/service-account.json
+
+**/.vscode

@@ -1,19 +1,17 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { ExerciseEntry, Exercise, ExerciseCategories, ExerciseType, mock} from '@models/exercise';
+import { ExerciseEntry, Exercise, ExerciseCategories, ExerciseType, mock } from '@models/exercise';
 import { User } from '@models/user';
 import { AuthService } from '@services/auth.service';
 import { UtilsService } from '@services/utils.service';
-import {COMMA, ENTER, SPACE} from '@angular/cdk/keycodes';
-import {MatChipInputEvent} from '@angular/material/chips';
+import { COMMA, ENTER, SPACE } from '@angular/cdk/keycodes';
+import { MatChipInputEvent } from '@angular/material/chips';
 
 @Component({
 	selector: 'app-exercises',
 	templateUrl: './exercises.component.html',
 	styleUrls: ['./exercises.component.sass'],
 })
-
-
 export class ExercisesComponent implements OnInit {
 	user: User = null;
 	exercises: Exercise[] = mock;
@@ -31,45 +29,39 @@ export class ExercisesComponent implements OnInit {
 	readonly separatorKeysCodes = [ENTER, COMMA, SPACE] as const;
 	tags: string[] = [];
 
-
 	formsControl: FormControl[] = [
 		this.nameFormControl,
 		this.descriptionFormControl,
 		this.typeFormControl,
 		this.categoryFormControl,
-		this.compoundFormControl
+		this.compoundFormControl,
 	];
-	
-	
-	
-	  constructor(private auth: AuthService, private utils: UtilsService) {}
+
+	constructor(private auth: AuthService, private utils: UtilsService) {}
 
 	ngOnInit(): void {}
-    reset() {
+	reset() {
 		this.formsControl.forEach((f: FormControl) => f.setValue(null));
 	}
-	
+
 	add(event: MatChipInputEvent): void {
-		
 		const value = (event.value || '').trim();
 		// Add our tags
 		if (value) {
-
-		  this.tags.push(value);
-		  console.log(this.tags);
+			this.tags.push(value);
+			console.log(this.tags);
 		}
-		let inputTag = document.getElementById("inputTag");
-		(inputTag as HTMLInputElement).value = null; 
-	  }
-	
-	  remove(tag: string): void {
+		let inputTag = document.getElementById('inputTag');
+		(inputTag as HTMLInputElement).value = null;
+	}
+
+	remove(tag: string): void {
 		const index = this.tags.indexOf(tag);
-	
-		if (index >= 0) {
-		  this.tags.splice(index, 1);
-		}
-	  }
 
+		if (index >= 0) {
+			this.tags.splice(index, 1);
+		}
+	}
 
 	createExercise() {
 		let name = this.nameFormControl.value;
@@ -126,6 +118,3 @@ export class ExercisesComponent implements OnInit {
 			});
 	}
 }
-
-	
-

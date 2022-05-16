@@ -1,3 +1,5 @@
+import { Workout } from '@models/workout';
+
 /**
  * @interface Metadata
  * @description contains additional info about the user
@@ -20,12 +22,13 @@ interface Metadata {
  * @param {metadata} Metadata additonal information
  * @param {tokenIds} string[] list of tokens for notifications
  * @param {notifications} any preferences for notifications
- * @param {workouts} Workout[] list of workouts
+ * @param {workouts} string[] list of workouts ids
  * @author Davide Ghiotto
  */
 export interface User {
 	uid: string;
 	email: string;
+	admin: boolean;
 	displayName: string;
 	photoURL: string;
 	photoPath: string;
@@ -35,7 +38,7 @@ export interface User {
 		mail: boolean;
 		push: boolean;
 	};
-	workouts: any[] | null;
+	workouts: string[];
 }
 
 export class User implements User {

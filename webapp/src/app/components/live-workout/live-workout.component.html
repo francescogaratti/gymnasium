@@ -249,7 +249,7 @@
 							</mat-vertical-stepper>
 						</div>
 					</mat-tab>
-					<mat-tab label="History">
+					<mat-tab label="History" *ngIf="workout_session.records">
 						<app-history [sessionRecords]="workout_session.records"> </app-history>
 					</mat-tab>
 					<!-- * statistics -->
