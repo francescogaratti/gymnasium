@@ -1,21 +1,9 @@
-import { NullTemplateVisitor } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
-import {
-	ExerciseEntry,
-	Exercise,
-	ExerciseCategories,
-	ExerciseType,
-	mock,
-	ExerciseRecord,
-} from '@models/exercise';
 import { User } from '@models/user';
-import { Workout, WorkoutSession } from '@models/workout';
+import { Workout } from '@models/workout';
 import { AuthService } from '@services/auth.service';
 import { UserService } from '@services/user.service';
 import { UtilsService } from '@services/utils.service';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-extra-workout',

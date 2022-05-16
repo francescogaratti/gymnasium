@@ -17,9 +17,8 @@ const routes: Routes = [
 	{
 		path: 'home',
 		component: HomeComponent,
-		canActivate: [AuthGuard],
 	},
-	{ path: 'login', component: LoginComponent, canActivate: [LoggedGuard] },
+	{ path: 'login', component: LoginComponent },
 	{
 		path: 'new-workout',
 		component: NewWorkoutComponent,
@@ -55,7 +54,6 @@ const routes: Routes = [
 	{
 		path: '**',
 		component: NotFoundComponent,
-		canActivate: [AuthGuard],
 	},
 ];
 

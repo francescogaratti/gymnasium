@@ -38,7 +38,7 @@ export class UploadPhotoComponent implements OnInit, AfterViewInit, OnChanges {
 
 	ngOnChanges(changes: SimpleChanges) {
 		// changes.prop contains the old and the new value...
-		if (changes && changes.src && this.photo && this.photo.nativeElement)
+		if (changes && changes['src'] && this.photo && this.photo.nativeElement)
 			this.photo.nativeElement.src = this.src;
 	}
 

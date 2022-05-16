@@ -6,12 +6,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
-import { AngularFireModule } from '@angular/fire';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
-// import { AngularFireStorageModule } from '@angular/fire/storage';
-import { AngularFireAuthModule } from '@angular/fire/auth';
-import { LoginComponent } from './pages/login/login.component';
-
 import { environment } from '../environments/environment';
 
 /** @angular/material */
@@ -44,6 +38,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTabsModule } from '@angular/material/tabs';
 
+import { LoginComponent } from './pages/login/login.component';
 import { HomeComponent } from './pages/home/home.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { PersonalAreaComponent } from './pages/personal-area/personal-area.component';
@@ -66,6 +61,11 @@ import { ExerciseComponent } from './components/exercise/exercise.component';
 import { WeightTrackerComponent } from './pages/weight-tracker/weight-tracker.component';
 import { ExtraWorkoutComponent } from './pages/extra-workout/extra-workout.component';
 import { HistoryComponent } from './components/history/history.component';
+
+import { initializeApp } from 'firebase/app';
+import { ServiceWorkerModule } from '@angular/service-worker';
+
+initializeApp(environment.firebaseConfig);
 
 @NgModule({
 	declarations: [
@@ -109,9 +109,6 @@ import { HistoryComponent } from './components/history/history.component';
 		MatDatepickerModule,
 		MatStepperModule,
 		ReactiveFormsModule,
-		AngularFireModule.initializeApp(environment.firebaseConfig),
-		AngularFirestoreModule,
-		AngularFireAuthModule,
 		MatSelectModule,
 		MatProgressBarModule,
 		MatRadioModule,
@@ -130,6 +127,12 @@ import { HistoryComponent } from './components/history/history.component';
 		MatSidenavModule,
 		MatSlideToggleModule,
 		MatTabsModule,
+  ServiceWorkerModule.register('ngsw-worker.js', {
+    enabled: environment.production,
+    // Register the ServiceWorker as soon as the application is stable
+    // or after 30 seconds (whichever comes first).
+    registrationStrategy: 'registerWhenStable:30000'
+  }),
 	],
 	providers: [
 		MatDatepickerModule,
