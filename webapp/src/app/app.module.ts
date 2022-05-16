@@ -63,6 +63,7 @@ import { ExtraWorkoutComponent } from './pages/extra-workout/extra-workout.compo
 import { HistoryComponent } from './components/history/history.component';
 
 import { initializeApp } from 'firebase/app';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 initializeApp(environment.firebaseConfig);
 
@@ -126,6 +127,12 @@ initializeApp(environment.firebaseConfig);
 		MatSidenavModule,
 		MatSlideToggleModule,
 		MatTabsModule,
+  ServiceWorkerModule.register('ngsw-worker.js', {
+    enabled: environment.production,
+    // Register the ServiceWorker as soon as the application is stable
+    // or after 30 seconds (whichever comes first).
+    registrationStrategy: 'registerWhenStable:30000'
+  }),
 	],
 	providers: [
 		MatDatepickerModule,

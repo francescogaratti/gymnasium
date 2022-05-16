@@ -1,13 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from '@firebase/auth';
+import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup } from '@firebase/auth';
 import { addDoc, getDoc, getDocs, getFirestore, setDoc } from '@firebase/firestore';
-import { getStorage, getDownloadURL, uploadBytes, ref } from '@firebase/storage';
+import { getDownloadURL, getStorage, ref, uploadBytes } from '@firebase/storage';
 import { Exercise, ExerciseEntry } from '@models/exercise';
 import { User, WeightRecord } from '@models/user';
 import { Workout } from '@models/workout';
-import { collection, deleteDoc, doc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, query, where } from 'firebase/firestore';
 import { getMessaging, getToken } from 'firebase/messaging';
 import { Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -33,11 +32,7 @@ export class AuthService {
 	storage = getStorage();
 	messaging = getMessaging();
 
-	constructor(
-		private http: HttpClient,
-		private userService: UserService,
-		private router: Router
-	) {
+	constructor(private http: HttpClient, private userService: UserService) {
 		// store all the users here
 		this.user$.subscribe(user => (this.user = user));
 		this.users$.subscribe((users: User[]) => (this.users = users));
@@ -76,45 +71,12 @@ export class AuthService {
 	startUi() {
 		signInWithPopup(this.auth, new GoogleAuthProvider())
 			.then(async result => {
-				// This gives you a Google Access Token. You can use it to access the Google API.
-				const credential = GoogleAuthProvider.credentialFromResult(result);
-				const token = credential.accessToken;
-				// The signed-in user info.
 				const fUser = result.user;
-				console.info(fUser);
+				if (!fUser) return;
 				const user = await this.userService.readUser(fUser.uid);
 				this.user$.next(user);
-				// ...
 			})
-			.catch(error => {
-				// Handle Errors here.
-				const errorCode = error.code;
-				const errorMessage = error.message;
-				// The email of the user's account used.
-				const email = error.email;
-				// The AuthCredential type that was used.
-				const credential = GoogleAuthProvider.credentialFromError(error);
-				// ...
-			});
-		// getRedirectResult(auth)
-		// 	.then(result => {
-		// 		// This gives you a Google Access Token. You can use it to access Google APIs.
-		// 		const credential = GoogleAuthProvider.credentialFromResult(result);
-		// 		const token = credential.accessToken;
-
-		// 		// The signed-in user info.
-		// 		const user = result.user;
-		// 	})
-		// 	.catch(error => {
-		// 		// Handle Errors here.
-		// 		const errorCode = error.code;
-		// 		const errorMessage = error.message;
-		// 		// The email of the user's account used.
-		// 		const email = error.email;
-		// 		// The AuthCredential type that was used.
-		// 		const credential = GoogleAuthProvider.credentialFromError(error);
-		// 		// ...
-		// 	});
+			.catch(err => console.error(err));
 	}
 
 	signOut() {
@@ -209,7 +171,7 @@ export class AuthService {
 		return res;
 	}
 
-	async newWorkout(workout: Workout, _user: User): Promise<string> {
+	async newWorkout(workout: Workout, user: User): Promise<string> {
 		this.asyncOperation.next(true);
 		workout.id = (
 			await addDoc(collection(this.firestore, 'workouts'), workout).catch(err => {
@@ -218,22 +180,17 @@ export class AuthService {
 			})
 		).id;
 		await this.updateWorkout(workout);
+		await this.userService.newUserWorkout(user, workout);
 		this.asyncOperation.next(false);
 		return workout.id;
 	}
 
-	// todo: extract workouts from user.workouts
 	async readUserWorkouts(user: User): Promise<Workout[]> {
 		this.asyncOperation.next(true);
-		const workouts: Workout[] = await getDoc(doc(this.firestore, 'users', user.uid))
-			.then(async snapshot => {
-				const refs: any[] = snapshot.get('workouts');
-				const promises: Promise<Workout>[] = [];
-				if (!refs) return [];
-				refs.forEach(ref => promises.push(ref.get().then(res => res.data() as Workout)));
-				const workouts = await Promise.all(promises);
-				return workouts;
-			})
+		const workouts: Workout[] = await getDocs(
+			query(collection(this.firestore, 'workouts'), where('userId', '==', user.uid))
+		)
+			.then(snapshot => snapshot.docs.map(doc => doc.data() as Workout))
 			.catch(err => {
 				console.error(err);
 				return [];

@@ -1,19 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<meta charset="utf-8" />
+		<meta charset="utf-8"/>
 		<title>Ultra Gymnasium</title>
-		<base href="/" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="icon" type="image/x-icon" href="favicon.ico" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" />
-		<link
-			href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap"
-			rel="stylesheet"
-		/>
-		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-	</head>
+		<base href="/"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<link rel="icon" type="image/x-icon" href="favicon.ico"/>
+		<link rel="preconnect" href="https://fonts.gstatic.com"/>
+		<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&amp;display=swap" rel="stylesheet"/>
+		<link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<meta name="mobile-web-app-capable" content="yes"/>
+		<meta name="apple-mobile-web-app-capable" content="yes"/>
+		<meta name="mapplication-starturl" content="/"/>
+		<meta name="theme-color" content="#317EFB"/>
+
+		<link rel="manifest" href="manifest.json"/>
+	  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#1976d2">
+</head>
 	<body class="mat-typography">
 		<app-root></app-root>
-	</body>
+		<script>
+			if ('serviceWorker' in navigator) {
+				navigator.serviceWorker
+					.register('/service-worker.js')
+					.then(registration => {
+						console.info('SW registered');
+					})
+					.catch(err => console.error(err));
+			}
+			// Handle incoming messages. Called when:
+			// - a message is received while the app has focus
+			// - the user clicks on an app notification created by a service worker
+			//   `messaging.setBackgroundMessageHandler` handler.
+			// messaging.onMessage(payload => {
+			// 	console.log('Message received. ', payload);
+			// 	// ...
+			// });
+		</script>
+	  <noscript>Please enable JavaScript to continue using this application.</noscript>
+</body>
 </html>

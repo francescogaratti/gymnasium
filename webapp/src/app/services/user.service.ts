@@ -11,6 +11,7 @@ import {
 } from 'firebase/firestore';
 import { User } from '@models/user';
 import { Subject } from 'rxjs';
+import { Workout } from '@models/workout';
 
 @Injectable({
 	providedIn: 'root',
@@ -90,11 +91,10 @@ export class UserService {
 		return res;
 	}
 
-	async newUserWorkout(user: User, workoutId: string): Promise<boolean> {
+	async newUserWorkout(user: User, workout: Workout): Promise<boolean> {
 		this.asyncOperation.next(true);
-		const new_workout_ref = doc(this.firestore, 'workouts', workoutId);
-		if (user.workouts) user.workouts.push(new_workout_ref);
-		else user.workouts = [new_workout_ref];
+		if (user.workouts) user.workouts.push(workout.id);
+		else user.workouts = [workout.id];
 		const res: boolean = await setDoc(
 			doc(this.firestore, 'users', user.uid),
 			{ ...user },
