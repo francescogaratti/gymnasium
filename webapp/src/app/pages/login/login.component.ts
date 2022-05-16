@@ -12,6 +12,6 @@ export class LoginComponent implements OnInit {
 
 	ngOnInit(): void {}
 	login() {
-		this.auth.startUi();
+		this.auth.loginWithGoogle();
 	}
 }

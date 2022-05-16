@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup } from '@firebase/auth';
 import { addDoc, getDoc, getDocs, getFirestore, setDoc } from '@firebase/firestore';
 import { getDownloadURL, getStorage, ref, uploadBytes } from '@firebase/storage';
@@ -32,7 +33,11 @@ export class AuthService {
 	storage = getStorage();
 	messaging = getMessaging();
 
-	constructor(private http: HttpClient, private userService: UserService) {
+	constructor(
+		private http: HttpClient,
+		private userService: UserService,
+		private router: Router
+	) {
 		// store all the users here
 		this.user$.subscribe(user => (this.user = user));
 		this.users$.subscribe((users: User[]) => (this.users = users));
@@ -68,13 +73,14 @@ export class AuthService {
 		return this.user ? this.user : null;
 	}
 
-	startUi() {
+	loginWithGoogle() {
 		signInWithPopup(this.auth, new GoogleAuthProvider())
 			.then(async result => {
 				const fUser = result.user;
 				if (!fUser) return;
 				const user = await this.userService.readUser(fUser.uid);
 				this.user$.next(user);
+				this.router.navigateByUrl('/');
 			})
 			.catch(err => console.error(err));
 	}
