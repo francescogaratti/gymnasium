@@ -5,6 +5,7 @@
 		"ng": "ng",
 		"start": "ng serve",
 		"build": "ng build",
+		"build:prod": "ng build --prod",
 		"watch": "ng build --watch --configuration development",
 		"test": "ng test",
 		"pwa:test": "ng build && sw-precache --root=../dist --config=precache-config.js",
